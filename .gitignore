@@ -1,0 +1,17 @@
+.classpath
+.project
+*.log
+*.log.*
+*.class
+*.jar
+target/*
+.idea/*
+*.idea
+*.iml
+out/*
+gradle/*
+*.csv
+webapp-cache.xml
+MANIFEST.MF
+*.war
+pom.properties
