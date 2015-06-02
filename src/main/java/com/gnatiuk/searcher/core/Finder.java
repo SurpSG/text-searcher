@@ -1,11 +1,10 @@
-package com; /**
+package com.gnatiuk.searcher.core; /**
  * Created with IntelliJ IDEA.
  * User: segn1014
  * Date: 1/12/15
  * Time: 2:17 PM
  * To change this template use File | Settings | File Templates.
  */
-import javax.print.attribute.standard.Fidelity;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
@@ -38,8 +37,8 @@ public class Finder {
     }
 
 
-    private String textToFind;
-    private String[] filePaths;
+    private List<String> textsToFind;
+    private List<String> filePaths;
     private List<Pattern> fileFilterPatterns;
 
     public static void main(String[] args) {
@@ -52,33 +51,35 @@ public class Finder {
         textToFind = "segn";
 
         String[] filePaths = {
-//                    "/cryptfs/builds/shr26-700/root_pac/build_mips",
-                    "/cryptfs/logs",
+                    "/cryptfs/builds/shr26-700/root_pac/build_mips",
+//                    "/cryptfs/logs",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/druid",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/middleware_core",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/centrals",
         };
 
-        List<String> fileFilters = Arrays.asList(/*"\\.java$","\\.c$"*/);
+        List<String> fileFilters = Arrays.asList(/*"\\.java$"/*,"\\.c$"*/);
 
 
 
-        Finder finder = new Finder(textToFind, filePaths, fileFilters);
+        Finder finder = new Finder(textToFind, Arrays.asList(filePaths), fileFilters);
 //        finder = new FinderPatternBased(textToFind, filePaths, fileFilters);
-        finder.run();
+        finder.start();
 
     }
 
-    public Finder(String textToFind, String[] filePaths, List<String> fileFilters){
-        int  availableProcessors = Runtime.getRuntime().availableProcessors();
-        processors = (availableProcessors > 1) ? availableProcessors - 1 : availableProcessors;
-        this.textToFind = textToFind;
+    public Finder(String textToFind, List<String> filePaths, List<String> fileFilters){
+        this(Arrays.asList(textToFind), filePaths, fileFilters);
+    }
+
+    public Finder(List<String> textsToFind, List<String> filePaths, List<String> fileFilters){
+        processors = Runtime.getRuntime().availableProcessors();
+        this.textsToFind = textsToFind;
         this.filePaths = filePaths;
         fileFilterPatterns = createPatterns(fileFilters);
-
     }
 
-    public void run(){
+    public void start(){
         final long t1 = System.currentTimeMillis();
 
 
@@ -91,14 +92,14 @@ public class Finder {
 
                     while( (currentSearchThreads = getCurrentSearchThreads()) > 0){
 
-//                        System.err.println("threads: " + currentSearchThreads);
+                        System.err.println("threads: " + currentSearchThreads);
                         System.err.println("FilesNumber="+filesNumber);
                         if(currentSearchThreads > 100){
                             System.exit(1);
                         }
 
                         try {
-                            Thread.sleep(500);
+                            Thread.sleep(5000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -136,10 +137,10 @@ public class Finder {
 
     private class Core implements Runnable{
 
-        private String[] files;
+        private List<String> filesPaths;
 
-        public Core(String[] files){
-            this.files = files;
+        public Core(List<String> filesPaths){
+            this.filesPaths = filesPaths;
         }
 
         @Override
@@ -147,10 +148,9 @@ public class Finder {
             sleepThreadIfToMuchOtherThreads();
             increaseSearchThreads();
 
-            for (int i = 0; i < files.length; i++) {
+            for (String filePath : filesPaths) {
                 increaseFilesNumber();
-                File file = new File(files[i]);
-//                System.out.println("\t\tfile: "+file.getAbsolutePath());
+                File file = new File(filePath);
 
                 if(file.isDirectory() && !Files.isSymbolicLink(file.toPath())){
                     String[] files = file.list();
@@ -169,10 +169,7 @@ public class Finder {
                         stringBuilder.setLength(0);
                     }
 
-                    new Thread(new Core(files)).start();
-//                    new Thread(new Core(Arrays.copyOfRange(files, 0, files.length / 2), textToFind)).start();
-//                    new Thread(new Core(Arrays.copyOfRange(files, files.length/2, files.length), textToFind)).start();
-
+                    new Thread(new Core(Arrays.asList(files))).start();
                 }else{
                     checkFileWithSearchParams(file);
 
@@ -180,6 +177,8 @@ public class Finder {
             }
             decreaseHierarchyThreads();
         }
+
+
     }
 
     private void checkFileWithSearchParams(File file){
@@ -196,7 +195,7 @@ public class Finder {
     }
 
     private void sleepThreadIfToMuchOtherThreads(){
-        while ((processors - getCurrentSearchThreads() - getCurrentSearchThreads()) <= 0){
+        while ((processors - getCurrentSearchThreads()) <= 0){
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
@@ -208,7 +207,7 @@ public class Finder {
 
     private void getFilesWithText(File file) {
 
-        if(textToFind.isEmpty()){
+        if(isEmpty(textsToFind)){
             return;
         }
 
@@ -226,7 +225,7 @@ public class Finder {
             String line;
 
             while ((line = reader.readLine()) != null) {
-                if (checkRow(line)) {
+                if (isLineContainsKeywords(line)) {
                     return true;
                 }
             }
@@ -238,8 +237,36 @@ public class Finder {
         return false;
     }
 
-    protected boolean checkRow(String row){
-        return row.contains(textToFind);
+    private boolean isLineContainsKeywords(String line){
+        for (String textToFind : textsToFind) {
+            if(isLineContainsKeyword(line, textToFind)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    protected boolean isLineContainsKeyword(String line, String keyword){
+        return line.contains(keyword);
+    }
+
+    private boolean isEmpty(List<String> list){
+        for (String element : list) {
+            if(!element.isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static Finder build(FinderType finderType, String textToFind, List<String> filePaths, List<String> fileFilters){
+        switch (finderType){
+            case PATTERN_BASED:
+                return new FinderPatternBased(textToFind, filePaths, fileFilters);
+            default:
+                return new Finder(textToFind, filePaths, fileFilters);
+        }
     }
 
 

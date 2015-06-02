@@ -1,4 +1,4 @@
-package com;
+package com.gnatiuk.searcher.core;
 
 import java.io.File;
 import java.util.*;

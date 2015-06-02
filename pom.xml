@@ -41,7 +41,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.pack.Finder</mainClass>
+                            <mainClass>com.gnatiuk.searcher.core.Finder</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
