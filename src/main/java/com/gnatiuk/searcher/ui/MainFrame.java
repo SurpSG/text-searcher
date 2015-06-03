@@ -1,16 +1,13 @@
 package com.gnatiuk.searcher.ui;
 
 import com.gnatiuk.searcher.core.Finder;
-import com.gnatiuk.searcher.core.FinderType;
+import com.gnatiuk.searcher.core.utils.FinderType;
 import com.gnatiuk.searcher.ui.utils.FileJTreePanel;
 
 import javax.swing.*;
-import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
 import java.util.*;
-import java.util.List;
 
 /**
  * Created by sgnatiuk on 5/28/15.

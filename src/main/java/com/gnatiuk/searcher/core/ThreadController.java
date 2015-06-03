@@ -1,12 +1,11 @@
 package com.gnatiuk.searcher.core;
 
-import com.gnatiuk.searcher.core.utils.IThreadCompleteListener;
-import com.gnatiuk.searcher.core.utils.ThreadCompleteEvent;
+import com.gnatiuk.searcher.core.utils.ITaskCompleteListener;
+import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
+import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
+import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.*;
 
 /**
  * Created by sgnatiuk on 6/2/15.
@@ -15,15 +14,15 @@ public class ThreadController {
 
     private static final int CPU_UNITS = Runtime.getRuntime().availableProcessors();
 
-    private final SynchronousQueue<SearchRunnable> threadsQueue;
-    private final List<SearchRunnable> runningThreads;
+    private final ITaskCompleteListener taskCompleteListener;
 
-    private ThreadCompleteListener threadCompleteListener;
+    private final ThreadPoolExecutor executorService;
+
+    private IWorkCompleteListener workCompleteListener;
 
     private ThreadController(){
-        threadsQueue = new SynchronousQueue<>();
-        runningThreads = Collections.synchronizedList(new CopyOnWriteArrayList<SearchRunnable>());
-        threadCompleteListener = new ThreadCompleteListener();
+        taskCompleteListener = createTaskCompleteListener();
+        executorService =(ThreadPoolExecutor) Executors.newFixedThreadPool(CPU_UNITS);
     }
 
     public static class ThreadControllerHolder {
@@ -34,43 +33,44 @@ public class ThreadController {
         return ThreadControllerHolder.HOLDER_INSTANCE;
     }
 
-    public void registerThread(SearchRunnable searchThread){
-        threadsQueue.add(searchThread);
-        invokeNext();
-    }
-
-    private synchronized void invokeNext(){
-        while (runningThreads.size() < CPU_UNITS && threadsQueue.size() > 0){
-            synchronized (threadsQueue){
-                if(threadsQueue.size() > 0){
-                    SearchRunnable searchRunnable = threadsQueue.poll();
-                    searchRunnable.addThreadCompleteListener(threadCompleteListener);
-                    runningThreads.add(searchRunnable);
-                    invoke(searchRunnable);
+    private ITaskCompleteListener createTaskCompleteListener(){
+        ITaskCompleteListener taskCompleteListener = new ITaskCompleteListener() {
+            @Override
+            public void actionPerformed(TaskCompleteEvent event) {
+                if(workCompleteListener != null && executorService.getQueue().isEmpty()){
+                    alertTasksFinished();
                 }
             }
-        }
+        };
+        return taskCompleteListener;
     }
 
-    private void invoke(SearchRunnable runnable){
-        new Thread(runnable).start();
-    }
-
-    private void clear(int threadId){
-        for (SearchRunnable runningThread : runningThreads) {
-            if(runningThread.getId() == threadId){
-                runningThreads.remove(runningThread);
-                invokeNext();
-                return;
+    private synchronized void alertTasksFinished(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(executorService.getQueue().isEmpty() && executorService.getActiveCount() == 0){
+                    workCompleteListener.actionPerformed(new WorkCompleteEvent());
+                    executorService.shutdown();
+                }
             }
-        }
+        }).start();
     }
 
-    private class ThreadCompleteListener implements IThreadCompleteListener{
+    public void registerThread(SearchRunnable searchThread){
+        searchThread.addTaskCompleteListener(taskCompleteListener);
+        executorService.execute(searchThread);
+    }
 
-        @Override
-        public void actionPerformed(ThreadCompleteEvent event) {
-            clear(event.getThreadId());
-        }
+    public void addWorkCompleteListener(IWorkCompleteListener workCompleteListener){
+        this.workCompleteListener = workCompleteListener;
+    }
+
+    public void removeWorkCompleteListener(){
+        workCompleteListener = null;
+    }
+
+    void shutdown(){
+        executorService.shutdown();
     }
 }

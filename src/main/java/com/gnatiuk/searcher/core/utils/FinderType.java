@@ -1,4 +1,4 @@
-package com.gnatiuk.searcher.core;
+package com.gnatiuk.searcher.core.utils;
 
 /**
  * Created by sgnatiuk on 5/29/15.
