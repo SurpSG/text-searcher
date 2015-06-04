@@ -17,6 +17,7 @@ public class SearchFileRunnable extends SearchRunnable {
 
     @Override
     protected void performSearch() {
+        System.out.println("1111111");
         getFilesWithText(fileToRead);
     }
 

@@ -61,8 +61,9 @@ public class MainFrame extends JFrame{
 
     private void addFilesTreePanel(){
 //        fileJTreePanel = new FileJTreePanel("/home/sgnatiuk");
-        fileJTreePanel = new FileJTreePanel("/cryptfs/builds/shr-26h/root_pac/build_mips");
-//        fileJTreePanel = new FileJTreePanel();
+//        fileJTreePanel = new FileJTreePanel("/cryptfs/builds/shr-26h/root_pac/build_mips");
+//        fileJTreePanel = new FileJTreePanel("C:/");
+        fileJTreePanel = new FileJTreePanel();
         rightPanel.add(new JScrollPane(fileJTreePanel));
     }
 

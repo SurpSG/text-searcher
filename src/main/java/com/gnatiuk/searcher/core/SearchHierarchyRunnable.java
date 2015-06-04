@@ -2,7 +2,7 @@ package com.gnatiuk.searcher.core;
 
 import java.io.File;
 import java.nio.file.Files;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class SearchHierarchyRunnable extends SearchRunnable {
 
     private List<String> filePaths;
-    private List<Pattern> fileFilterPatterns;
+    protected List<Pattern> fileFilterPatterns;
 
     public SearchHierarchyRunnable(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters) {
         super(textsToFind);
@@ -22,33 +22,51 @@ public class SearchHierarchyRunnable extends SearchRunnable {
 
     protected void performSearch() {
         for (String filePath : filePaths) {
-            File file = new File(filePath);
-
-            if (file.isDirectory() && !Files.isSymbolicLink(file.toPath())) {
-                String[] files = file.list();
-                if (files == null) {
-                    continue;
-                }
-
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int j = 0; j < files.length; j++) {
-
-                    stringBuilder.append(file.getAbsolutePath())
-                            .append("/")
-                            .append(files[j]);
-
-                    files[j] = stringBuilder.toString();
-                    stringBuilder.setLength(0);
-                }
-
-                ThreadController.getInstance().registerThread(new SearchHierarchyRunnable(textsToFind, Arrays.asList(files), fileFilterPatterns));
-            } else {
-                invokeFileReadThread(file);
-            }
+            processFile(new File(filePath));
         }
     }
 
-    private void invokeFileReadThread(File file) {
+    protected void processFile(File file){
+        if (file.isDirectory()) {
+            invokeNewHierarchyThread(file);
+        } else {
+            invokeFileReadThread(file);
+        }
+    }
+
+    private List<String> buildFullPathForChildren(String parentAbsolutePath, String[] children){
+        List<String> fullPathChildren = new ArrayList<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int j = 0; j < children.length; j++) {
+
+            stringBuilder.append(parentAbsolutePath)
+                    .append("/").append(children[j]);
+
+            fullPathChildren.add(stringBuilder.toString());
+            stringBuilder.setLength(0);
+        }
+        return fullPathChildren;
+    }
+
+    protected void invokeNewHierarchyThread(File file){
+        if(Files.isSymbolicLink(file.toPath())){
+            return;
+        }
+        String[] files = file.list();
+        if (files == null) {
+            return;
+        }
+
+        invokeNewHierarchyThread(buildFullPathForChildren(file.getAbsolutePath(), files));
+    }
+
+    protected void invokeNewHierarchyThread(List<String> filePaths){
+        ThreadController.getInstance().registerThread(SearchHierarchyRunnable.build(textsToFind, filePaths,
+                fileFilterPatterns));
+    }
+
+
+    protected void invokeFileReadThread(File file) {
         if(fileFilterPatterns.isEmpty()){
             ThreadController.getInstance().registerThread(new SearchFileRunnable(textsToFind, file));
         }else{
@@ -59,5 +77,9 @@ public class SearchHierarchyRunnable extends SearchRunnable {
                 }
             }
         }
+    }
+
+    public static SearchHierarchyRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
+        return new SearchHierarchyRunnable(textsToFind, filePaths, fileFilters);
     }
 }

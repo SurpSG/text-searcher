@@ -7,6 +7,7 @@ package com.gnatiuk.searcher.core; /**
  */
 import com.gnatiuk.searcher.core.utils.FinderType;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
+import com.gnatiuk.searcher.core.utils.SearcherByFilesNameRunnable;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
 import java.util.*;
@@ -28,7 +29,7 @@ public class Finder {
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/druid",
         };
 
-        List<String> fileFilters = Arrays.asList(/*"\\.java$"/*,"\\.c$"*/);
+        List<String> fileFilters = Arrays.asList("\\.java$"/*,"\\.c$"*/);
 
 
 
@@ -56,7 +57,8 @@ public class Finder {
     }
 
     public void start(){
-        ThreadController.getInstance().registerThread(new SearchHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
+//        ThreadController.getInstance().registerThread(new SearchHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
+        ThreadController.getInstance().registerThread(SearcherByFilesNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
     }
 
     protected List<Pattern> createPatterns(List<String> stringPatterns){
