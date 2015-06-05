@@ -1,8 +1,10 @@
 package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.runnable.SearchRunnable;
+import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -20,6 +22,11 @@ public class SearcherFileRunnable extends SearchRunnable {
     @Override
     protected void performSearch() {
         getFilesWithText(fileToRead);
+    }
+
+    @Override
+    protected TaskStartedEvent createTaskStartedEvent() {
+        return new TaskStartedEvent(getId(), Arrays.asList(fileToRead.getAbsolutePath()));
     }
 
     private void getFilesWithText(File file) {

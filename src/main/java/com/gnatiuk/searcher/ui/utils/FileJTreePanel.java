@@ -40,6 +40,7 @@ public class FileJTreePanel extends JPanel {
         fileTree.setCellRenderer(new FileTreeRenderer());
         fileTree.setOpaque(false);
         add(fileTree);
+
     }
 
     public FileJTreePanel(String directory) {

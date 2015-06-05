@@ -1,10 +1,7 @@
 package com.gnatiuk.searcher.core;
 
 import com.gnatiuk.searcher.core.runnable.SearchRunnable;
-import com.gnatiuk.searcher.core.utils.ITaskCompleteListener;
-import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
-import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
-import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
+import com.gnatiuk.searcher.core.utils.*;
 
 import java.util.concurrent.*;
 
@@ -16,6 +13,7 @@ public class ThreadController {
     private static final int CPU_UNITS = Runtime.getRuntime().availableProcessors();
 
     private final ITaskCompleteListener taskCompleteListener;
+    private ITaskStartedListener taskStartedListener;
 
     private final ThreadPoolExecutor executorService;
 
@@ -53,13 +51,14 @@ public class ThreadController {
                 if(executorService.getQueue().isEmpty() && executorService.getActiveCount() == 0){
                     System.out.println("time: "+(System.currentTimeMillis() - Finder.t1));
                     workCompleteListener.actionPerformed(new WorkCompleteEvent());
-                    executorService.shutdown();
+//                    executorService.shutdown();
                 }
             }
         }).start();
     }
 
     public void registerThread(SearchRunnable searchThread){
+        searchThread.addTaskStartedListener(taskStartedListener);
         searchThread.addTaskCompleteListener(taskCompleteListener);
         executorService.execute(searchThread);
     }
@@ -68,11 +67,7 @@ public class ThreadController {
         this.workCompleteListener = workCompleteListener;
     }
 
-    public void removeWorkCompleteListener(){
-        workCompleteListener = null;
-    }
-
-    void shutdown(){
-        executorService.shutdown();
+    public void addTaskStartedListener(ITaskStartedListener taskStartedListener){
+        this.taskStartedListener = taskStartedListener;
     }
 }

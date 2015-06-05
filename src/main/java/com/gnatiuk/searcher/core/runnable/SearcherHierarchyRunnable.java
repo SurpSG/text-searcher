@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.ThreadController;
+import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -26,6 +27,11 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
         for (String filePath : filePaths) {
             processFile(new File(filePath));
         }
+    }
+
+    @Override
+    protected TaskStartedEvent createTaskStartedEvent() {
+        return new TaskStartedEvent(getId(), filePaths);
     }
 
     protected void processFile(File file){

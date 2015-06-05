@@ -25,7 +25,7 @@ public class SearcherByFileNameRunnable extends SearcherHierarchyRunnable {
     private void checkFileMatchWithFileFilters(String filePath){
         for (Pattern fileFilterPattern : fileFilterPatterns) {
             if(fileFilterPattern.matcher(filePath).find()){
-                System.out.println("\tFound! file: "+filePath);
+//                System.out.println("\tFound! file: "+filePath);
             }
         }
     }
