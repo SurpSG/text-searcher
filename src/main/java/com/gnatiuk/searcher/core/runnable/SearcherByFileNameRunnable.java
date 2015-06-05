@@ -1,7 +1,5 @@
-package com.gnatiuk.searcher.core.utils;
+package com.gnatiuk.searcher.core.runnable;
 
-import com.gnatiuk.searcher.core.SearchHierarchyRunnable;
-import com.gnatiuk.searcher.core.SearchRunnable;
 import com.gnatiuk.searcher.core.ThreadController;
 
 import java.io.File;
@@ -11,8 +9,8 @@ import java.util.regex.Pattern;
 /**
  * Created by Sergiy on 6/4/2015.
  */
-public class SearcherByFilesNameRunnable extends SearchHierarchyRunnable {
-    public SearcherByFilesNameRunnable(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters) {
+public class SearcherByFileNameRunnable extends SearcherHierarchyRunnable {
+    public SearcherByFileNameRunnable(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters) {
         super(textsToFind, filePaths, fileFilters);
     }
 
@@ -34,11 +32,11 @@ public class SearcherByFilesNameRunnable extends SearchHierarchyRunnable {
 
     @Override
     protected void invokeNewHierarchyThread(List<String> filePaths){
-        ThreadController.getInstance().registerThread(SearcherByFilesNameRunnable.build(textsToFind, filePaths,
+        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths,
                 fileFilterPatterns));
     }
 
-    public static SearcherByFilesNameRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
-        return new SearcherByFilesNameRunnable(textsToFind, filePaths, fileFilters);
+    public static SearcherByFileNameRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
+        return new SearcherByFileNameRunnable(textsToFind, filePaths, fileFilters);
     }
 }

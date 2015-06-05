@@ -1,4 +1,6 @@
-package com.gnatiuk.searcher.core;
+package com.gnatiuk.searcher.core.runnable;
+
+import com.gnatiuk.searcher.core.ThreadController;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -9,12 +11,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Sergiy on 6/3/2015.
  */
-public class SearchHierarchyRunnable extends SearchRunnable {
+public class SearcherHierarchyRunnable extends SearchRunnable {
 
     private List<String> filePaths;
     protected List<Pattern> fileFilterPatterns;
 
-    public SearchHierarchyRunnable(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters) {
+    public SearcherHierarchyRunnable(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters) {
         super(textsToFind);
         this.filePaths = filePaths;
         fileFilterPatterns = fileFilters;
@@ -61,25 +63,21 @@ public class SearchHierarchyRunnable extends SearchRunnable {
     }
 
     protected void invokeNewHierarchyThread(List<String> filePaths){
-        ThreadController.getInstance().registerThread(SearchHierarchyRunnable.build(textsToFind, filePaths,
+        ThreadController.getInstance().registerThread(SearcherHierarchyRunnable.build(textsToFind, filePaths,
                 fileFilterPatterns));
     }
 
 
     protected void invokeFileReadThread(File file) {
-        if(fileFilterPatterns.isEmpty()){
-            ThreadController.getInstance().registerThread(new SearchFileRunnable(textsToFind, file));
-        }else{
-            for (Pattern fileFilterPattern : fileFilterPatterns) {
-                if (fileFilterPattern.matcher(file.getName()).find()) {
-                    ThreadController.getInstance().registerThread(new SearchFileRunnable(textsToFind, file));
-                    return;
-                }
+       for (Pattern fileFilterPattern : fileFilterPatterns) {
+            if (fileFilterPattern.matcher(file.getName()).find()) {
+                ThreadController.getInstance().registerThread(new SearcherFileRunnable(textsToFind, file));
+                return;
             }
-        }
+       }
     }
 
-    public static SearchHierarchyRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
-        return new SearchHierarchyRunnable(textsToFind, filePaths, fileFilters);
+    public static SearcherHierarchyRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
+        return new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilters);
     }
 }

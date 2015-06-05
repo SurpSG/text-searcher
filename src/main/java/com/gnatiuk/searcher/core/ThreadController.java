@@ -1,5 +1,6 @@
 package com.gnatiuk.searcher.core;
 
+import com.gnatiuk.searcher.core.runnable.SearchRunnable;
 import com.gnatiuk.searcher.core.utils.ITaskCompleteListener;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
@@ -50,6 +51,7 @@ public class ThreadController {
             @Override
             public void run() {
                 if(executorService.getQueue().isEmpty() && executorService.getActiveCount() == 0){
+                    System.out.println("time: "+(System.currentTimeMillis() - Finder.t1));
                     workCompleteListener.actionPerformed(new WorkCompleteEvent());
                     executorService.shutdown();
                 }

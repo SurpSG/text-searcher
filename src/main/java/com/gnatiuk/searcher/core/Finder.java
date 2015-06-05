@@ -7,7 +7,7 @@ package com.gnatiuk.searcher.core; /**
  */
 import com.gnatiuk.searcher.core.utils.FinderType;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
-import com.gnatiuk.searcher.core.utils.SearcherByFilesNameRunnable;
+import com.gnatiuk.searcher.core.runnable.SearcherByFileNameRunnable;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
 import java.util.*;
@@ -19,14 +19,21 @@ public class Finder {
     private List<String> filePaths;
     private List<Pattern> fileFilterPatterns;
 
+    public static long t1;
+
+    public static synchronized void add(long val){
+    }
+
     public static void main(String[] args) {
 
         String textToFind = "new PurchaseProblems\\(.*,.*,.*\\)";
-        textToFind = "!(obj instanceof EqualsTest";
+        textToFind = "HmcConfig";
 
         String[] filePaths = {
-                    "E:\\downloads",
+//                    "E:\\downloads",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/druid",
+//                "/cryptfs/builds/shr26-700/root_pac/build_mips",
+                "/home/sgnatiuk/Documents/temp",
         };
 
         List<String> fileFilters = Arrays.asList("\\.java$"/*,"\\.c$"*/);
@@ -43,6 +50,7 @@ public class Finder {
             }
         });
 
+        t1 = System.currentTimeMillis();
         finder.start();
     }
 
@@ -57,8 +65,8 @@ public class Finder {
     }
 
     public void start(){
-//        ThreadController.getInstance().registerThread(new SearchHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
-        ThreadController.getInstance().registerThread(SearcherByFilesNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
+//        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
+        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
     }
 
     protected List<Pattern> createPatterns(List<String> stringPatterns){

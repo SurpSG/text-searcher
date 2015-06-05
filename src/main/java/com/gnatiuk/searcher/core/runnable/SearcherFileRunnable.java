@@ -1,4 +1,6 @@
-package com.gnatiuk.searcher.core;
+package com.gnatiuk.searcher.core.runnable;
+
+import com.gnatiuk.searcher.core.runnable.SearchRunnable;
 
 import java.io.*;
 import java.util.List;
@@ -6,18 +8,17 @@ import java.util.List;
 /**
  * Created by Sergiy on 6/3/2015.
  */
-public class SearchFileRunnable extends SearchRunnable {
+public class SearcherFileRunnable extends SearchRunnable {
 
     private File fileToRead;
 
-    public SearchFileRunnable(List<String> textsToFind, File fileToRead) {
+    public SearcherFileRunnable(List<String> textsToFind, File fileToRead) {
         super(textsToFind);
         this.fileToRead = fileToRead;
     }
 
     @Override
     protected void performSearch() {
-        System.out.println("1111111");
         getFilesWithText(fileToRead);
     }
 
@@ -52,7 +53,7 @@ public class SearchFileRunnable extends SearchRunnable {
         return false;
     }
 
-    private boolean isLineContainsKeywords(String line) {
+    protected boolean isLineContainsKeywords(String line) {
         for (String textToFind : textsToFind) {
             if (isLineContainsKeyword(line, textToFind)) {
                 return true;

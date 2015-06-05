@@ -1,4 +1,4 @@
-package com.gnatiuk.searcher.core;
+package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.utils.ITaskCompleteListener;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
