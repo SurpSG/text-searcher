@@ -26,7 +26,8 @@ public class SearcherFileRunnable extends SearchRunnable {
 
     @Override
     protected TaskStartedEvent createTaskStartedEvent() {
-        return new TaskStartedEvent(getId(), Arrays.asList(fileToRead.getAbsolutePath()));
+//        return new TaskStartedEvent(getId(), Arrays.asList(fileToRead.getAbsolutePath()));
+        return new TaskStartedEvent(getId(), Arrays.asList(fileToRead.getAbsolutePath()));//TODO it seems that is should be a Path
     }
 
     private void getFilesWithText(File file) {

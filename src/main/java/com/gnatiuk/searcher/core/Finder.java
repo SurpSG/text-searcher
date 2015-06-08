@@ -5,6 +5,7 @@ package com.gnatiuk.searcher.core; /**
  * Time: 2:17 PM
  * To change this template use File | Settings | File Templates.
  */
+import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.FinderType;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.runnable.SearcherByFileNameRunnable;
@@ -65,8 +66,8 @@ public class Finder {
     }
 
     public void start(){
-//        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
-        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
+        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
+//        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
     }
 
     protected List<Pattern> createPatterns(List<String> stringPatterns){

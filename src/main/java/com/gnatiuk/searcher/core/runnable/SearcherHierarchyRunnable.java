@@ -31,7 +31,11 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
 
     @Override
     protected TaskStartedEvent createTaskStartedEvent() {
-        return new TaskStartedEvent(getId(), filePaths);
+        List<String> fileNames = new ArrayList<>();
+        for (String filePath : filePaths) {
+            fileNames.add(new File(filePath).getAbsolutePath());
+        }
+        return new TaskStartedEvent(getId(), fileNames);//TODO it seems that is should be a Path
     }
 
     protected void processFile(File file){

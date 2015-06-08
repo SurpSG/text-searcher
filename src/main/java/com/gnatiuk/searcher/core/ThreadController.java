@@ -58,6 +58,11 @@ public class ThreadController {
     }
 
     public void registerThread(SearchRunnable searchThread){
+//        try {
+//            Thread.sleep(200);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         searchThread.addTaskStartedListener(taskStartedListener);
         searchThread.addTaskCompleteListener(taskCompleteListener);
         executorService.execute(searchThread);
