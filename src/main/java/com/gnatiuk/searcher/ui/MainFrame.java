@@ -4,6 +4,7 @@ import com.gnatiuk.searcher.core.Finder;
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.utils.*;
 import com.gnatiuk.searcher.ui.utils.FileSearchStatus;
+import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;
 import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
 
 import javax.swing.*;
@@ -18,8 +19,8 @@ public class MainFrame extends JFrame{
 
     private JButton runJButton;
     private JComboBox<String> keywordsJComboBox;
-    private JTextArea keywordsTextArea;
     private JFXFilesTreePanel jfxFilesTreePanel;
+    private FoundListViewPanel foundListViewPanel;
     private JTextField fileFilterField;
 
     private JPanel leftPanel;
@@ -32,7 +33,7 @@ public class MainFrame extends JFrame{
     public MainFrame(){
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        rootDir = "E:\\DropBox\\Dropbox1\\workJAVA";
+        rootDir = "/home/sgnatiuk/Downloads";
         initComponents();
     }
 
@@ -41,7 +42,7 @@ public class MainFrame extends JFrame{
         initPanels();
 
         addKeywordsJComboBox();
-        addKeywordsTextArea();
+        addFoundListView();
         addFilesTreePanel();
         addFileFilterField();
         addRunButton();
@@ -55,16 +56,21 @@ public class MainFrame extends JFrame{
             }
         });
 
-        ThreadController.getInstance().addTaskStartedListener(new ITaskStartedListener() {
+        ThreadController.getInstance().registerTaskStartedListener(new ITaskStartedListener() {
             @Override
             public void actionPerformed(TaskStartedEvent event) {
                 for (String file : event.getFilesToProcess()) {
-                    jfxFilesTreePanel.setNodeStatusByPath(file, FileSearchStatus.IN_SEARCH_COLOR);
-//                    TreeFile treeFile = fileJTreePanel.getFileTreeNodeByFilePath(files);
-//                    if(treeFile != null){
-//                        treeFile.setColorStatus(Color.orange);
-//                    }
+                    synchronized (jfxFilesTreePanel) {
+                        jfxFilesTreePanel.setNodeStatusByPath(file, FileSearchStatus.IN_SEARCH_COLOR);
+                    }
                 }
+            }
+        });
+
+        ThreadController.getInstance().registerFileFoundListener(new IFileFoundListener() {
+            @Override
+            public void alertFileFound(FileFoundEvent fileFoundEvent) {
+                foundListViewPanel.addItem(fileFoundEvent.getFilePath());
             }
         });
     }
@@ -73,6 +79,11 @@ public class MainFrame extends JFrame{
         leftPanel = new JPanel();
         rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
+    }
+
+    private void addFoundListView(){
+        foundListViewPanel = new FoundListViewPanel();
+        leftPanel.add(foundListViewPanel);
     }
 
     private void addSplitPane(){
@@ -121,23 +132,18 @@ public class MainFrame extends JFrame{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
+                foundListViewPanel.clear();
                 String textToFind = keywordsJComboBox.getSelectedItem().toString();
                 Finder finder = Finder.build(FinderType.DEFAULT,
                         textToFind,
 //                        fileJTreePanel.getSelectedFilePaths(),
                         Arrays.asList(rootDir),
                         Arrays.asList(fileFilterField.getText()));
+                Finder.t1 = System.currentTimeMillis();
                 finder.start();
             }
         });
         leftPanel.add(runJButton);
-    }
-
-    private void addKeywordsTextArea(){
-        keywordsTextArea = new JTextArea();
-        keywordsTextArea.setPreferredSize(/**/new Dimension(300,200));
-        keywordsTextArea.setEditable(false);
-        leftPanel.add(keywordsTextArea);
     }
 
     public static void main(String[] args) {

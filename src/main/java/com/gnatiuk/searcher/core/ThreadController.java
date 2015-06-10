@@ -12,12 +12,13 @@ public class ThreadController {
 
     private static final int CPU_UNITS = Runtime.getRuntime().availableProcessors();
 
-    private final ITaskCompleteListener taskCompleteListener;
+    private ITaskCompleteListener taskCompleteListener;
     private ITaskStartedListener taskStartedListener;
+    private IWorkCompleteListener workCompleteListener;
+    private IFileFoundListener fileFoundListener;
 
     private final ThreadPoolExecutor executorService;
 
-    private IWorkCompleteListener workCompleteListener;
 
     private ThreadController(){
         taskCompleteListener = createTaskCompleteListener();
@@ -58,13 +59,9 @@ public class ThreadController {
     }
 
     public void registerThread(SearchRunnable searchThread){
-//        try {
-//            Thread.sleep(200);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
         searchThread.addTaskStartedListener(taskStartedListener);
         searchThread.addTaskCompleteListener(taskCompleteListener);
+        searchThread.addFileFoundListener(fileFoundListener);
         executorService.execute(searchThread);
     }
 
@@ -72,7 +69,11 @@ public class ThreadController {
         this.workCompleteListener = workCompleteListener;
     }
 
-    public void addTaskStartedListener(ITaskStartedListener taskStartedListener){
+    public void registerTaskStartedListener(ITaskStartedListener taskStartedListener){
         this.taskStartedListener = taskStartedListener;
+    }
+
+    public void registerFileFoundListener(IFileFoundListener fileFoundListener){
+        this.fileFoundListener = fileFoundListener;
     }
 }

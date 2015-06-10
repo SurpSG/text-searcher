@@ -62,9 +62,12 @@ public class JFXFilesTreePanel extends JFXPanel {
             String[] children = rootFile.list();
             ObservableList<TreeItem<TreeFile>> rootChildren = rootItem.getChildren();
             for (String child : children) {
-                TreeItem<TreeFile> treeItem = new TreeItem<>(createFile(child, rootFile.getAbsolutePath()));
-                rootChildren.add(treeItem);
-                initChildren(treeItem);
+                TreeFile childFile = createFile(child, rootFile.getAbsolutePath());
+                if(childFile.isDirectory()){
+                    TreeItem<TreeFile> treeItem = new TreeItem<>(childFile);
+                    rootChildren.add(treeItem);
+                    initChildren(treeItem);
+                }
             }
         }
     }
@@ -100,10 +103,10 @@ public class JFXFilesTreePanel extends JFXPanel {
         Path currentRootNodePath = currentRootNodeFile.toPath();
         if(currentRootNodePath.equals(filePath)){
             currentRootNodeFile.setSearchStatus(searchStatus);
-//            if(!currentRootNode.isLeaf() && currentRootNode.getValue().isDirectory() && !currentRootNode.isExpanded()){
-//                System.out.println(currentRootNodeFile);
-//                currentRootNode.setExpanded(true);
-//            }
+            if(!currentRootNode.isLeaf() && currentRootNode.getValue().isDirectory() && !currentRootNode.isExpanded()){
+                System.out.println(currentRootNodeFile);
+                currentRootNode.setExpanded(true);
+            }
             currentRootNode.setValue(null);
             currentRootNode.setValue(currentRootNodeFile);
             return true;

@@ -5,10 +5,10 @@ package com.gnatiuk.searcher.core; /**
  * Time: 2:17 PM
  * To change this template use File | Settings | File Templates.
  */
+import com.gnatiuk.searcher.core.runnable.SearcherByFileNameRunnable;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.FinderType;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
-import com.gnatiuk.searcher.core.runnable.SearcherByFileNameRunnable;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
 import java.util.*;
@@ -22,22 +22,23 @@ public class Finder {
 
     public static long t1;
 
-    public static synchronized void add(long val){
-    }
-
     public static void main(String[] args) {
 
         String textToFind = "new PurchaseProblems\\(.*,.*,.*\\)";
-        textToFind = "HmcConfig";
+        textToFind = "Osd";
+        textToFind = "Cine SKY HD";
+        textToFind = "APG_CHAN_IND_ADV_URI";
+        textToFind = "descriptorLoop";
 
         String[] filePaths = {
 //                    "E:\\downloads",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/druid",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips",
-                "/home/sgnatiuk/Documents/temp",
+//                "/home/sgnatiuk/Documents/temp",
+                "/cryptfs/builds/shr26p-6/root_pac/build_mips/",
         };
 
-        List<String> fileFilters = Arrays.asList("\\.java$"/*,"\\.c$"*/);
+        List<String> fileFilters = Arrays.asList("ChannelObject.*\\.c"/*,"\\.java$"/*,"\\.c$"*/);
 
 
 
@@ -48,6 +49,7 @@ public class Finder {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
                 System.out.println("done!!!!!");
+
             }
         });
 
@@ -66,8 +68,8 @@ public class Finder {
     }
 
     public void start(){
-        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
-//        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
+//        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
+        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
     }
 
     protected List<Pattern> createPatterns(List<String> stringPatterns){

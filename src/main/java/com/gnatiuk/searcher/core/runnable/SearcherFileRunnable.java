@@ -37,20 +37,27 @@ public class SearcherFileRunnable extends SearchRunnable {
         }
 
         if (file.isFile()) {
-            if (fileContainsText(file)) {
-                System.out.println("\t[FOUND]: " + file.getAbsolutePath());
+            String line = getFirstLineContainsKeyword(file);
+            if (line != null) {
+                alertFileFound(file.getAbsolutePath(), line);
             }
         }
     }
 
     private boolean fileContainsText(File file) {
+        return getFirstLineContainsKeyword(file) != null;
+    }
+
+    private String getFirstLineContainsKeyword(File file) {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
 
             while ((line = reader.readLine()) != null) {
                 if (isLineContainsKeywords(line)) {
-                    return true;
+                    System.out.println("\t[FOUND]: " + file.getAbsolutePath());
+                    System.out.println("\t\t\t[LINE] "+line);
+                    return line;
                 }
             }
         } catch (FileNotFoundException e) {
@@ -58,7 +65,7 @@ public class SearcherFileRunnable extends SearchRunnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return false;
+        return null;
     }
 
     protected boolean isLineContainsKeywords(String line) {

@@ -16,7 +16,7 @@ public class SearcherByFileNameRunnable extends SearcherHierarchyRunnable {
 
     @Override
     protected void processFile(File file){
-        checkFileMatchWithFileFilters(file.getName());
+        checkFileMatchWithFileFilters(file.getAbsolutePath());
         if (file.isDirectory()) {
             invokeNewHierarchyThread(file);
         }
@@ -25,7 +25,8 @@ public class SearcherByFileNameRunnable extends SearcherHierarchyRunnable {
     private void checkFileMatchWithFileFilters(String filePath){
         for (Pattern fileFilterPattern : fileFilterPatterns) {
             if(fileFilterPattern.matcher(filePath).find()){
-//                System.out.println("\tFound! file: "+filePath);
+                alertFileFound(filePath, null);
+                System.out.println("\tFound! file: "+filePath);
             }
         }
     }

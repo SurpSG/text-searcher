@@ -79,12 +79,16 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
 
 
     protected void invokeFileReadThread(File file) {
-       for (Pattern fileFilterPattern : fileFilterPatterns) {
-            if (fileFilterPattern.matcher(file.getName()).find()) {
-                ThreadController.getInstance().registerThread(new SearcherFileRunnable(textsToFind, file));
-                return;
+        if(fileFilterPatterns.isEmpty()){
+            ThreadController.getInstance().registerThread(new SearcherFileRunnable(textsToFind, file));
+        }else{
+            for (Pattern fileFilterPattern : fileFilterPatterns) {
+                if (fileFilterPattern.matcher(file.getName()).find()) {
+                    ThreadController.getInstance().registerThread(new SearcherFileRunnable(textsToFind, file));
+                    return;
+                }
             }
-       }
+        }
     }
 
     public static SearcherHierarchyRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
