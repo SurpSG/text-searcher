@@ -13,6 +13,7 @@ public class ThreadController {
     private static final int CPU_UNITS = Runtime.getRuntime().availableProcessors();
 
     private ITaskCompleteListener taskCompleteListener;
+    private ITaskCompleteListener externalTaskCompleteListener;
     private ITaskStartedListener taskStartedListener;
     private IWorkCompleteListener workCompleteListener;
     private IFileFoundListener fileFoundListener;
@@ -37,6 +38,9 @@ public class ThreadController {
         ITaskCompleteListener taskCompleteListener = new ITaskCompleteListener() {
             @Override
             public void actionPerformed(TaskCompleteEvent event) {
+                if(externalTaskCompleteListener != null){
+                    externalTaskCompleteListener.actionPerformed(event);
+                }
                 if(workCompleteListener != null && executorService.getQueue().isEmpty()){
                     alertTasksFinished();
                 }
@@ -52,7 +56,7 @@ public class ThreadController {
                 if(executorService.getQueue().isEmpty() && executorService.getActiveCount() == 0){
                     System.out.println("time: "+(System.currentTimeMillis() - Finder.t1));
                     workCompleteListener.actionPerformed(new WorkCompleteEvent());
-//                    executorService.shutdown();
+                    executorService.shutdown();
                 }
             }
         }).start();
@@ -67,6 +71,11 @@ public class ThreadController {
 
     public void addWorkCompleteListener(IWorkCompleteListener workCompleteListener){
         this.workCompleteListener = workCompleteListener;
+    }
+
+
+    public void registerTaskCompleteListener(ITaskCompleteListener taskCompleteListener){
+        this.externalTaskCompleteListener = taskCompleteListener;
     }
 
     public void registerTaskStartedListener(ITaskStartedListener taskStartedListener){

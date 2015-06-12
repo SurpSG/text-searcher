@@ -67,6 +67,17 @@ public class MainFrame extends JFrame{
             }
         });
 
+        ThreadController.getInstance().registerTaskCompleteListener(new ITaskCompleteListener() {
+            @Override
+            public void actionPerformed(TaskCompleteEvent event) {
+                for (String file : event.getProcessedFiles()) {
+                    synchronized (jfxFilesTreePanel) {
+                        jfxFilesTreePanel.setNodeStatusByPath(file, event.getStatusColor());
+                    }
+                }
+            }
+        });
+
         ThreadController.getInstance().registerFileFoundListener(new IFileFoundListener() {
             @Override
             public void alertFileFound(FileFoundEvent fileFoundEvent) {
@@ -95,13 +106,8 @@ public class MainFrame extends JFrame{
     }
 
     private void addFilesTreePanel(){
-//        fileJTreePanel = new FileJTreePanel("/home/sgnatiuk");
-//        fileJTreePanel = new FileJTreePanel("/cryptfs/builds/shr-26h/root_pac/build_mips");
-//        fileJTreePanel = new FileJTreePanel("E:\\downloads");
-//        fileJTreePanel = new FileJTreePanel("/home/sgnatiuk");
-//        rightPanel.add(new JScrollPane(fileJTreePanel));
-
-        rightPanel.add((jfxFilesTreePanel = new JFXFilesTreePanel(rootDir)));
+        jfxFilesTreePanel = new JFXFilesTreePanel(rootDir);
+        rightPanel.add(jfxFilesTreePanel);
     }
 
     private void addFileFilterField(){

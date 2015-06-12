@@ -23,6 +23,11 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
         fileFilterPatterns = fileFilters;
     }
 
+    @Override
+    protected List<String> getProcessedFiles() {
+        return filePaths;
+    }
+
     protected void performSearch() {
         for (String filePath : filePaths) {
             processFile(new File(filePath));

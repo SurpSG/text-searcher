@@ -28,17 +28,19 @@ public class Finder {
         textToFind = "Osd";
         textToFind = "Cine SKY HD";
         textToFind = "APG_CHAN_IND_ADV_URI";
-        textToFind = "descriptorLoop";
+        textToFind = "internetStreaming";
+        textToFind = "setAuthorization";
 
         String[] filePaths = {
 //                    "E:\\downloads",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips/druid",
 //                "/cryptfs/builds/shr26-700/root_pac/build_mips",
 //                "/home/sgnatiuk/Documents/temp",
-                "/cryptfs/builds/shr26p-6/root_pac/build_mips/",
+//                "/cryptfs/builds/sh20/scripts/",
+                "/cryptfs/builds/sh20/root_pac/build_mips",
         };
 
-        List<String> fileFilters = Arrays.asList("ChannelObject.*\\.c"/*,"\\.java$"/*,"\\.c$"*/);
+        List<String> fileFilters = Arrays.asList(".*Test.*java$"/*,"\\.java$"/*,"\\.c$"*/);
 
 
 
@@ -68,8 +70,8 @@ public class Finder {
     }
 
     public void start(){
-//        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
-        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
+        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilterPatterns));
+//        ThreadController.getInstance().registerThread(SearcherByFileNameRunnable.build(textsToFind, filePaths, fileFilterPatterns));
     }
 
     protected List<Pattern> createPatterns(List<String> stringPatterns){

@@ -20,6 +20,11 @@ public class SearcherFileRunnable extends SearchRunnable {
     }
 
     @Override
+    protected List<String> getProcessedFiles() {
+        return Arrays.asList(fileToRead.getAbsolutePath());
+    }
+
+    @Override
     protected void performSearch() {
         getFilesWithText(fileToRead);
     }

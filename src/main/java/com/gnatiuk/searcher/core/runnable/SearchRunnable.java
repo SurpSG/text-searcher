@@ -1,7 +1,9 @@
 package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.utils.*;
+import com.gnatiuk.searcher.ui.utils.FileSearchStatus;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,10 +36,12 @@ public abstract class SearchRunnable implements Runnable {
             performSearch();
         } finally {
             if (taskCompleteListener != null) {
-                taskCompleteListener.actionPerformed(new TaskCompleteEvent(id));
+                taskCompleteListener.actionPerformed(new TaskCompleteEvent(getProcessedFiles(), FileSearchStatus.FILTERED_COLOR));
             }
         }
     }
+
+    protected abstract List<String> getProcessedFiles();
 
     protected abstract void performSearch();
 
