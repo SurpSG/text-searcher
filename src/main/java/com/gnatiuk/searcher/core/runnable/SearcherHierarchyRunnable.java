@@ -1,13 +1,17 @@
 package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.ThreadController;
+import com.gnatiuk.searcher.core.filters.FilterExecutor;
+import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.utils.FileSearchStatus;
+import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Created by Sergiy on 6/3/2015.
@@ -15,20 +19,14 @@ import java.util.regex.Pattern;
 public class SearcherHierarchyRunnable extends SearchRunnable {
 
     private List<String> filePaths;
-    protected List<Pattern> fileFilterPatterns;
+    private IFilter filter;
 
-    public SearcherHierarchyRunnable(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters) {
-        super(textsToFind);
+    public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter) {
+        this.filter = filter;
         this.filePaths = filePaths;
-        fileFilterPatterns = fileFilters;
     }
 
-    @Override
-    protected List<String> getProcessedFiles() {
-        return filePaths;
-    }
-
-    protected void performSearch() {
+    protected void doWork() {
         for (String filePath : filePaths) {
             processFile(new File(filePath));
         }
@@ -43,11 +41,16 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
         return new TaskStartedEvent(getId(), fileNames);//TODO it seems that is should be a Path
     }
 
+    @Override
+    protected TaskCompleteEvent createTaskCompleteEvent() {
+        return new TaskCompleteEvent(filePaths, FileSearchStatus.IN_PROGRESS);
+    }
+
     protected void processFile(File file){
         if (file.isDirectory()) {
             invokeNewHierarchyThread(file);
         } else {
-            invokeFileReadThread(file);
+            invokeNewFilterThread(file);
         }
     }
 
@@ -78,25 +81,10 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
     }
 
     protected void invokeNewHierarchyThread(List<String> filePaths){
-        ThreadController.getInstance().registerThread(SearcherHierarchyRunnable.build(textsToFind, filePaths,
-                fileFilterPatterns));
+        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(filePaths, filter));
     }
 
-
-    protected void invokeFileReadThread(File file) {
-        if(fileFilterPatterns.isEmpty()){
-            ThreadController.getInstance().registerThread(new SearcherFileRunnable(textsToFind, file));
-        }else{
-            for (Pattern fileFilterPattern : fileFilterPatterns) {
-                if (fileFilterPattern.matcher(file.getName()).find()) {
-                    ThreadController.getInstance().registerThread(new SearcherFileRunnable(textsToFind, file));
-                    return;
-                }
-            }
-        }
-    }
-
-    public static SearcherHierarchyRunnable build(List<String> textsToFind, List<String> filePaths, List<Pattern> fileFilters){
-        return new SearcherHierarchyRunnable(textsToFind, filePaths, fileFilters);
+    protected void invokeNewFilterThread(File file) {
+        ThreadController.getInstance().registerThread(new FilterExecutor(filter, file));
     }
 }

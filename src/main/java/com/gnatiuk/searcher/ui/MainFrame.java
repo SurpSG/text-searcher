@@ -1,16 +1,14 @@
 package com.gnatiuk.searcher.ui;
 
-import com.gnatiuk.searcher.core.Finder;
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.utils.*;
-import com.gnatiuk.searcher.ui.utils.FileSearchStatus;
+import com.gnatiuk.searcher.ui.utils.FileSearchStatusColored;
 import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;
 import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 
 /**
  * Created by sgnatiuk on 5/28/15.
@@ -61,7 +59,7 @@ public class MainFrame extends JFrame{
             public void actionPerformed(TaskStartedEvent event) {
                 for (String file : event.getFilesToProcess()) {
                     synchronized (jfxFilesTreePanel) {
-                        jfxFilesTreePanel.setNodeStatusByPath(file, FileSearchStatus.IN_SEARCH_COLOR);
+                        jfxFilesTreePanel.setNodeStatusByPath(file, FileSearchStatusColored.IN_PROGRESS_COLOR);
                     }
                 }
             }
@@ -72,7 +70,8 @@ public class MainFrame extends JFrame{
             public void actionPerformed(TaskCompleteEvent event) {
                 for (String file : event.getProcessedFiles()) {
                     synchronized (jfxFilesTreePanel) {
-                        jfxFilesTreePanel.setNodeStatusByPath(file, event.getStatusColor());
+                        jfxFilesTreePanel.setNodeStatusByPath(file,
+                                FileSearchStatusColored.determineFileSearchStatusColored(event.getSearchStatus()));
                     }
                 }
             }
@@ -139,14 +138,14 @@ public class MainFrame extends JFrame{
             public void actionPerformed(ActionEvent actionEvent) {
 
                 foundListViewPanel.clear();
-                String textToFind = keywordsJComboBox.getSelectedItem().toString();
-                Finder finder = Finder.build(FinderType.DEFAULT,
-                        textToFind,
-//                        fileJTreePanel.getSelectedFilePaths(),
-                        Arrays.asList(rootDir),
-                        Arrays.asList(fileFilterField.getText()));
-                Finder.t1 = System.currentTimeMillis();
-                finder.start();
+//                String textToFind = keywordsJComboBox.getSelectedItem().toString();
+//                Finder finder = Finder.build(FinderType.DEFAULT,
+//                        textToFind,
+////                        fileJTreePanel.getSelectedFilePaths(),
+//                        Arrays.asList(rootDir),
+//                        Arrays.asList(fileFilterField.getText()));
+//                Finder.t1 = System.currentTimeMillis();
+//                finder.start();
             }
         });
         leftPanel.add(runJButton);

@@ -1,10 +1,6 @@
 package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.utils.*;
-import com.gnatiuk.searcher.ui.utils.FileSearchStatus;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by sgnatiuk on 6/2/15.
@@ -15,37 +11,42 @@ public abstract class SearchRunnable implements Runnable {
     private static int ID_SOURCE = 0;
 
     private final int id;
+
     private ITaskStartedListener taskStartedListener;
     private ITaskCompleteListener taskCompleteListener;
     protected IFileFoundListener fileFoundListener;
 
-    protected List<String> textsToFind;
-
-
-    public SearchRunnable(List<String> textsToFind) {
-        this.textsToFind = textsToFind;
+    public SearchRunnable() {
         id = ID_SOURCE++;
     }
 
     @Override
     public void run() {
-        if (taskStartedListener != null) {
-            taskStartedListener.actionPerformed(createTaskStartedEvent());
-        }
+        alertTaskStarted();
         try {
-            performSearch();
+            doWork();
         } finally {
-            if (taskCompleteListener != null) {
-                taskCompleteListener.actionPerformed(new TaskCompleteEvent(getProcessedFiles(), FileSearchStatus.FILTERED_COLOR));
-            }
+            alertTaskCompleted();
         }
     }
 
-    protected abstract List<String> getProcessedFiles();
+    private void alertTaskStarted(){
+        if (taskStartedListener != null) {
+            taskStartedListener.actionPerformed(createTaskStartedEvent());
+        }
+    }
 
-    protected abstract void performSearch();
+    private void alertTaskCompleted(){
+        if (taskCompleteListener != null) {
+            taskCompleteListener.actionPerformed(createTaskCompleteEvent());
+        }
+    }
+
+    protected abstract void doWork();
 
     protected abstract TaskStartedEvent createTaskStartedEvent();
+
+    protected abstract TaskCompleteEvent createTaskCompleteEvent();
 
     protected void alertFileFound(String filePath, String fileRow){
         if(fileFoundListener != null){

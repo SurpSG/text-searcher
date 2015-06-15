@@ -1,6 +1,8 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
+import com.gnatiuk.searcher.core.utils.FileSearchStatus;
+
 import java.io.File;
 
 /**
@@ -8,18 +10,18 @@ import java.io.File;
  */
 public class TreeFile extends File {
 
-    private FileSearchStatus fileSearchStatus;
+    private FileSearchStatusColored fileSearchStatus;
 
     public TreeFile(String pathname) {
         super(pathname);
-        fileSearchStatus = FileSearchStatus.DEFAULT_COLOR;
+        fileSearchStatus = FileSearchStatusColored.DEFAULT_COLOR;
     }
 
-    public FileSearchStatus getBackgroundColorStatus() {
+    public FileSearchStatusColored getBackgroundColorStatus() {
         return fileSearchStatus;
     }
 
-    public void setSearchStatus(FileSearchStatus fileSearchStatus) {
+    public void setSearchStatus(FileSearchStatusColored fileSearchStatus) {
         this.fileSearchStatus = fileSearchStatus;
     }
 

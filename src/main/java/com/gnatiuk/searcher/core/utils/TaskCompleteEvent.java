@@ -1,7 +1,5 @@
 package com.gnatiuk.searcher.core.utils;
 
-import com.gnatiuk.searcher.ui.utils.FileSearchStatus;
-
 import java.util.List;
 
 /**
@@ -22,7 +20,7 @@ public class TaskCompleteEvent {
         return processedFiles;
     }
 
-    public FileSearchStatus getStatusColor() {
+    public FileSearchStatus getSearchStatus() {
         return statusColor;
     }
 }

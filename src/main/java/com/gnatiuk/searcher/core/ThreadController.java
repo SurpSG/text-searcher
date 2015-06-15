@@ -35,13 +35,16 @@ public class ThreadController {
     }
 
     private ITaskCompleteListener createTaskCompleteListener(){
+        System.out.println("dich");
         ITaskCompleteListener taskCompleteListener = new ITaskCompleteListener() {
             @Override
             public void actionPerformed(TaskCompleteEvent event) {
                 if(externalTaskCompleteListener != null){
                     externalTaskCompleteListener.actionPerformed(event);
                 }
-                if(workCompleteListener != null && executorService.getQueue().isEmpty()){
+
+                System.out.println(executorService.getQueue().size());
+                if(executorService.getQueue().isEmpty()){
                     alertTasksFinished();
                 }
             }
@@ -54,8 +57,10 @@ public class ThreadController {
             @Override
             public void run() {
                 if(executorService.getQueue().isEmpty() && executorService.getActiveCount() == 0){
-                    System.out.println("time: "+(System.currentTimeMillis() - Finder.t1));
-                    workCompleteListener.actionPerformed(new WorkCompleteEvent());
+                    System.out.println("time: " + (System.currentTimeMillis() - Finder.t1));
+                    if(workCompleteListener != null){
+                        workCompleteListener.actionPerformed(new WorkCompleteEvent());
+                    }
                     executorService.shutdown();
                 }
             }

@@ -1,12 +1,12 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
+import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -93,11 +93,11 @@ public class JFXFilesTreePanel extends JFXPanel {
 
     }
 
-    public void setNodeStatusByPath(String filePath, FileSearchStatus searchStatus){
+    public void setNodeStatusByPath(String filePath, FileSearchStatusColored searchStatus){
         setNodeStatusByPath(rootNode, Paths.get(filePath), searchStatus);
     }
 
-    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath, FileSearchStatus searchStatus){
+    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath, FileSearchStatusColored searchStatus){
 
         TreeFile currentRootNodeFile = currentRootNode.getValue();
         Path currentRootNodePath = currentRootNodeFile.toPath();
