@@ -7,9 +7,8 @@ package com.gnatiuk.searcher.core; /**
  */
 
 import com.gnatiuk.searcher.core.filters.*;
-import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileKeywordIgnoreCase;
-import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileKeywordRegexIgnoreCase;
-import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileReader;
+import com.gnatiuk.searcher.core.filters.internal_file_filter.*;
+import com.gnatiuk.searcher.core.filters.external_file_filter.*;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
@@ -43,8 +42,9 @@ public class Finder {
                 "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
 
-//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local/bist/boot/",
 //                "/cryptfs/builds/sh10/build_directv_sh10/",
+//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local/bist/boot/",
+//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local/",
                 "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local",
 //                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/",
 //                "/cryptfs/builds/sh10/build_directv_sh10/",
@@ -52,23 +52,34 @@ public class Finder {
 //                "/home/sgnatiuk/Downloads/logs",
         };
 
-        List<String> fileFiltersKeywords = Arrays.asList("");
+        List<String> fileFiltersKeywords = Arrays.asList(".");
         List<String> fileFiltersRegex = Arrays.asList("\\.c$"/*".*java$","\\.c$","\\.cpp$","\\.txt$","\\.prop"*/);
+        List<String> fileFiltersRegexExclude = Arrays.asList("\\.o$","\\.txt$","\\.h$","\\.a$","\\.so$");
 
-        List<String> filterKeywords = Arrays.asList("bist_main:");
-        List<String> filterKeywordsRegex = Arrays.asList("Failed.*to.*mount.*flash.*retrying");
+        List<String> filterKeywords = Arrays.asList("List of commands");
+        List<String> filterKeywordsRegex = Arrays.asList("cmd.*data.*table");
 
 
         FilterFileName filterFileName = new FilterFileName(fileFiltersKeywords);
         FilterFileNameRegex filterFileNameRegex = new FilterFileNameRegex(fileFiltersRegex);
-        FilterFileReader filterKeyword = new FilterFileKeywordIgnoreCase(filterKeywords);
+        FilterFileNameRegexExclude filterFileNameRegexExclude = new FilterFileNameRegexExclude(fileFiltersRegexExclude);
+
+
+        FilterFileReader filterFileKeywordIgnoreCase = new FilterFileKeywordIgnoreCase(filterKeywords);
+        FilterFileReader filterFileKeywordCaseSensitive = new FilterFileKeywordCaseSensitive(filterKeywords);
         FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegexIgnoreCase(filterKeywordsRegex);
+        FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegexCaseSensitive(filterKeywordsRegex);
 
         FiltersContainer searchFilter = new FiltersContainer();
-//        searchFilter.addFilter(filterFileNameRegex);
 //        searchFilter.addFilter(filterFileName);
-//        searchFilter.addFilter(filterKeyword);
-        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileNameRegex);
+//        searchFilter.addFilter(filterFileNameRegexExclude);
+
+        searchFilter.addFilter(filterFileKeywordIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordCaseSensitive);
+
+//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
         Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 
