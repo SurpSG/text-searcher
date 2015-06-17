@@ -35,7 +35,6 @@ public class ThreadController {
     }
 
     private ITaskCompleteListener createTaskCompleteListener(){
-        System.out.println("dich");
         ITaskCompleteListener taskCompleteListener = new ITaskCompleteListener() {
             @Override
             public void actionPerformed(TaskCompleteEvent event) {
@@ -43,7 +42,6 @@ public class ThreadController {
                     externalTaskCompleteListener.actionPerformed(event);
                 }
 
-                System.out.println(executorService.getQueue().size());
                 if(executorService.getQueue().isEmpty()){
                     alertTasksFinished();
                 }

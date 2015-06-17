@@ -25,7 +25,7 @@ public class FilterExecutor extends SearchRunnable {
     @Override
     protected void doWork() {
         if(filter.doFilter(file)){
-            System.out.println("Found! "+file.getName());
+            System.out.println("gedit "+file.getAbsolutePath());
             alertFileFound(file.getAbsolutePath(), "");
             fileSearchStatus = FileSearchStatus.PROCESSED_FOUND;
         }

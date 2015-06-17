@@ -1,6 +1,8 @@
 package com.gnatiuk.searcher.ui;
 
+import com.gnatiuk.searcher.core.Finder;
 import com.gnatiuk.searcher.core.ThreadController;
+import com.gnatiuk.searcher.core.filters.*;
 import com.gnatiuk.searcher.core.utils.*;
 import com.gnatiuk.searcher.ui.utils.FileSearchStatusColored;
 import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;
@@ -9,6 +11,7 @@ import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 /**
  * Created by sgnatiuk on 5/28/15.
@@ -138,14 +141,16 @@ public class MainFrame extends JFrame{
             public void actionPerformed(ActionEvent actionEvent) {
 
                 foundListViewPanel.clear();
-//                String textToFind = keywordsJComboBox.getSelectedItem().toString();
-//                Finder finder = Finder.build(FinderType.DEFAULT,
-//                        textToFind,
-////                        fileJTreePanel.getSelectedFilePaths(),
-//                        Arrays.asList(rootDir),
-//                        Arrays.asList(fileFilterField.getText()));
-//                Finder.t1 = System.currentTimeMillis();
-//                finder.start();
+                String textToFind = keywordsJComboBox.getSelectedItem().toString();
+
+                FiltersContainer filters = new FiltersContainer();
+//                filters.addFilter(new FilterFileName(Arrays.asList("")));
+                filters.addFilter(new FilterFileNameRegex(Arrays.asList(fileFilterField.getText())));
+                filters.addFilter(new FilterFileKeywordIgnoreCase(Arrays.asList(textToFind)));
+
+                Finder finder = new Finder(Arrays.asList(rootDir),filters);
+                Finder.t1 = System.currentTimeMillis();
+                finder.start();
             }
         });
         leftPanel.add(runJButton);

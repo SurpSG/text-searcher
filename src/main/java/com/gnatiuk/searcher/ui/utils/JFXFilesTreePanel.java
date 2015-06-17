@@ -104,7 +104,6 @@ public class JFXFilesTreePanel extends JFXPanel {
         if(currentRootNodePath.equals(filePath)){
             currentRootNodeFile.setSearchStatus(searchStatus);
             if(!currentRootNode.isLeaf() && currentRootNode.getValue().isDirectory() && !currentRootNode.isExpanded()){
-                System.out.println(currentRootNodeFile);
                 currentRootNode.setExpanded(true);
             }
             currentRootNode.setValue(null);

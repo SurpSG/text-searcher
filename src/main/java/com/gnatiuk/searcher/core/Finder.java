@@ -6,10 +6,7 @@ package com.gnatiuk.searcher.core; /**
  * To change this template use File | Settings | File Templates.
  */
 
-import com.gnatiuk.searcher.core.filters.FilterFileName;
-import com.gnatiuk.searcher.core.filters.FilterKeyword;
-import com.gnatiuk.searcher.core.filters.IFilter;
-import com.gnatiuk.searcher.core.filters.FiltersContainer;
+import com.gnatiuk.searcher.core.filters.*;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
@@ -37,27 +34,38 @@ public class Finder {
     public static void main(String[] args) {
 
         String[] filePaths = {
-//                    "E:\\downloads",
-//                "/cryptfs/builds/shr26-700/root_pac/build_mips/druid",
-//                "/cryptfs/builds/shr26-700/root_pac/build_mips",
-//                "/home/sgnatiuk/Documents/temp",
-//                "/cryptfs/builds/sh20/scripts/",
 //                "/cryptfs/builds/sh20/root_pac/build_mips",
+//                "/cryptfs/builds/sh20/scripts/",
+
                 "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
+
+//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local/bist/boot/",
+//                "/cryptfs/builds/sh10/build_directv_sh10/",
+                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local",
+//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/",
+//                "/cryptfs/builds/sh10/build_directv_sh10/",
+//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/hddvr_image/hdstb_hum_sh10"
+//                "/home/sgnatiuk/Downloads/logs",
         };
 
-        List<String> fileFilters = Arrays.asList(".*Test.*java$"/*,"\\.java$"/*,"\\.c$"*/);
+        List<String> fileFiltersKeywords = Arrays.asList("");
+        List<String> fileFiltersRegex = Arrays.asList("\\.c$"/*".*java$","\\.c$","\\.cpp$","\\.txt$","\\.prop"*/);
+
+        List<String> filterKeywords = Arrays.asList("bist_main:");
+        List<String> filterKeywordsRegex = Arrays.asList("bist_main");
 
 
-        String fileNameKeyword = "flash";
-
-        FilterFileName filterFileName = new FilterFileName(Arrays.asList(fileNameKeyword));
-        FilterKeyword filterKeyword = new FilterKeyword(Arrays.asList("flash1"));
+        FilterFileName filterFileName = new FilterFileName(fileFiltersKeywords);
+        FilterFileNameRegex filterFileNameRegex = new FilterFileNameRegex(fileFiltersRegex);
+        FilterFileReader filterKeyword = new FilterFileKeywordIgnoreCase(filterKeywords);
+        FilterFileReader filterKeywordRegex = new FilterFileKeywordRegexIgnoreCase(filterKeywordsRegex);
 
         FiltersContainer searchFilter = new FiltersContainer();
-        searchFilter.addFilter(filterFileName);
-        searchFilter.addFilter(filterKeyword);
+//        searchFilter.addFilter(filterFileNameRegex);
+//        searchFilter.addFilter(filterFileName);
+//        searchFilter.addFilter(filterKeyword);
+        searchFilter.addFilter(filterKeywordRegex);
 
         Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 

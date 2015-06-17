@@ -6,13 +6,7 @@ import java.util.List;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FilterKeyword implements IFilter {
-
-    private List<String> textsToFind;
-
-    public FilterKeyword(List<String> textsToFind) {
-        this.textsToFind = textsToFind;
-    }
+public abstract class FilterFileReader implements IFilter {
 
     @Override
     public boolean doFilter(File file) {
@@ -28,29 +22,22 @@ public class FilterKeyword implements IFilter {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
 
+            int n = 0;
             while ((line = reader.readLine()) != null) {
+                n++;
                 if (isLineContainsKeywords(line)) {
+                    System.out.println("\t\t[LINE]: "+n+") "+line);
                     return line;
                 }
+
             }
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+//            System.err.println(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+//            System.err.println(e.getMessage());
         }
         return null;
     }
 
-    protected boolean isLineContainsKeywords(String line) {
-        for (String textToFind : textsToFind) {
-            if (isLineContainsKeyword(line, textToFind)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    protected boolean isLineContainsKeyword(String line, String keyword) {
-        return line.contains(keyword);
-    }
+    protected abstract boolean isLineContainsKeywords(String line);
 }
