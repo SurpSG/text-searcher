@@ -3,6 +3,7 @@ package com.gnatiuk.searcher.ui;
 import com.gnatiuk.searcher.core.Finder;
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.*;
+import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileKeywordIgnoreCase;
 import com.gnatiuk.searcher.core.utils.*;
 import com.gnatiuk.searcher.ui.utils.FileSearchStatusColored;
 import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;

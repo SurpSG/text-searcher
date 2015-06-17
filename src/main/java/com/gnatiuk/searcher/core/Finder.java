@@ -7,6 +7,9 @@ package com.gnatiuk.searcher.core; /**
  */
 
 import com.gnatiuk.searcher.core.filters.*;
+import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileKeywordIgnoreCase;
+import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileKeywordRegexIgnoreCase;
+import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileReader;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
@@ -53,19 +56,19 @@ public class Finder {
         List<String> fileFiltersRegex = Arrays.asList("\\.c$"/*".*java$","\\.c$","\\.cpp$","\\.txt$","\\.prop"*/);
 
         List<String> filterKeywords = Arrays.asList("bist_main:");
-        List<String> filterKeywordsRegex = Arrays.asList("bist_main");
+        List<String> filterKeywordsRegex = Arrays.asList("Failed.*to.*mount.*flash.*retrying");
 
 
         FilterFileName filterFileName = new FilterFileName(fileFiltersKeywords);
         FilterFileNameRegex filterFileNameRegex = new FilterFileNameRegex(fileFiltersRegex);
         FilterFileReader filterKeyword = new FilterFileKeywordIgnoreCase(filterKeywords);
-        FilterFileReader filterKeywordRegex = new FilterFileKeywordRegexIgnoreCase(filterKeywordsRegex);
+        FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegexIgnoreCase(filterKeywordsRegex);
 
         FiltersContainer searchFilter = new FiltersContainer();
 //        searchFilter.addFilter(filterFileNameRegex);
 //        searchFilter.addFilter(filterFileName);
 //        searchFilter.addFilter(filterKeyword);
-        searchFilter.addFilter(filterKeywordRegex);
+        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 
         Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 

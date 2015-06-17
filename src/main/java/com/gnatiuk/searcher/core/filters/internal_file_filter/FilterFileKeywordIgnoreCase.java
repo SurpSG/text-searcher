@@ -1,4 +1,4 @@
-package com.gnatiuk.searcher.core.filters;
+package com.gnatiuk.searcher.core.filters.internal_file_filter;
 
 import java.util.List;
 
