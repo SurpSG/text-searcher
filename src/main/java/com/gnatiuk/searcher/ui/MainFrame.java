@@ -150,7 +150,7 @@ public class MainFrame extends JFrame{
                 filters.addFilter(new FilterFileNameRegex(Arrays.asList(fileFilterField.getText())));
                 filters.addFilter(new FilterFileKeywordIgnoreCase(Arrays.asList(textToFind)));
 
-                Finder finder = new Finder(Arrays.asList(rootDir),filters);
+                Finder finder = new Finder(jfxFilesTreePanel.getSelectedPaths(),filters);
                 Finder.t1 = System.currentTimeMillis();
                 finder.start();
             }

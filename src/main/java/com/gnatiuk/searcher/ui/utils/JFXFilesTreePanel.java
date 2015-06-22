@@ -5,8 +5,10 @@ import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -16,9 +18,16 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 
+import javax.swing.event.TreeExpansionEvent;
+import javax.swing.event.TreeExpansionListener;
+import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class JFXFilesTreePanel extends JFXPanel {
     private TreeItem<TreeFile> rootNode;
@@ -26,7 +35,25 @@ public class JFXFilesTreePanel extends JFXPanel {
 
     public JFXFilesTreePanel(String rootDir) {
 
-        initTree(new TreeFile(rootDir));
+        initTree();
+
+        rootNode.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
+            public void handle(TreeItem.TreeModificationEvent<Object> event) {
+                TreeItem expandedTreeItem = event.getTreeItem();
+                initChildren(expandedTreeItem);
+            }
+        });
+
+        rootNode.addEventHandler(TreeItem.branchCollapsedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
+            public void handle(TreeItem.TreeModificationEvent<Object> event) {
+                TreeItem collapsedTreeItem = event.getTreeItem();
+                if (collapsedTreeItem != rootNode) {
+                    collapsedTreeItem.getChildren().clear();
+                }
+            }
+        });
+
+
         rootNode.setExpanded(true);
 
         Platform.runLater(new Runnable() {
@@ -42,9 +69,9 @@ public class JFXFilesTreePanel extends JFXPanel {
 
     }
 
-    private void initTree(TreeFile root) {
-        rootNode = new TreeItem<>(root);
-        initChildren(rootNode);
+    private void initTree() {
+        rootNode = createRootItem();
+//        initChildren(rootNode);
         treeView = new TreeView<>(rootNode);
         treeView.setEditable(false);
         treeView.setCellFactory(new Callback<TreeView<TreeFile>, TreeCell<TreeFile>>() {
@@ -54,19 +81,22 @@ public class JFXFilesTreePanel extends JFXPanel {
                 return new TextFieldTreeCellImpl();
             }
         });
+        treeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private void initChildren(TreeItem<TreeFile> rootItem) {
         File rootFile = rootItem.getValue();
         if (rootFile.isDirectory()) {
             String[] children = rootFile.list();
+            if(children == null){
+                return;
+            }
             ObservableList<TreeItem<TreeFile>> rootChildren = rootItem.getChildren();
             for (String child : children) {
                 TreeFile childFile = createFile(child, rootFile.getAbsolutePath());
                 if(childFile.isDirectory()){
-                    TreeItem<TreeFile> treeItem = new TreeItem<>(childFile);
+                    TreeItem<TreeFile> treeItem = new FileTreeItem(childFile);
                     rootChildren.add(treeItem);
-                    initChildren(treeItem);
                 }
             }
         }
@@ -86,7 +116,7 @@ public class JFXFilesTreePanel extends JFXPanel {
             super.updateItem(item, empty);
 
             if(item != null){
-                setBackground(new Background(new BackgroundFill(item.getBackgroundColorStatus().getStatusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+//                setBackground(new Background(new BackgroundFill(item.getBackgroundColorStatus().getStatusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
                 setText(item.getName());
             }
         }
@@ -118,4 +148,31 @@ public class JFXFilesTreePanel extends JFXPanel {
         }
         return false;
     }
+
+    public List<String> getSelectedPaths(){
+        List<String> selectedPaths = new ArrayList<>();
+        for (TreeItem<TreeFile> treeFileTreeItem : treeView.getSelectionModel().getSelectedItems()) {
+            selectedPaths.add(treeFileTreeItem.getValue().getAbsolutePath());
+        }
+        return selectedPaths;
+    }
+
+    private static TreeItem<TreeFile> createRootItem(){
+
+
+        String computerName= null;
+        try {
+            computerName = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        TreeItem<TreeFile> root = new TreeItem<>(new TreeFile(computerName));
+        for (File file : FileSystemView.getFileSystemView().getRoots()) {
+            root.getChildren().add(new FileTreeItem(new TreeFile(file.getAbsolutePath())));
+        }
+
+        return root;
+    }
+
 }
