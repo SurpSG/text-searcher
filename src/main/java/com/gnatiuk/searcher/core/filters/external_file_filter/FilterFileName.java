@@ -1,6 +1,6 @@
 package com.gnatiuk.searcher.core.filters.external_file_filter;
 
-import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.filters.AFilter;
 
 import java.io.File;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FilterFileName implements IFilter {
+public class FilterFileName extends AFilter {
 
     private List<String> targetFileNames;
 

@@ -1,14 +1,13 @@
 package com.gnatiuk.searcher.core.filters.internal_file_filter;
 
-import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.filters.AFilter;
 
 import java.io.*;
-import java.util.List;
 
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public abstract class FilterFileReader implements IFilter {
+public abstract class FilterFileReader extends AFilter {
 
     @Override
     public boolean doFilter(File file) {

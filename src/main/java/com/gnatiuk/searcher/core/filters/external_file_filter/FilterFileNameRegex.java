@@ -1,6 +1,6 @@
 package com.gnatiuk.searcher.core.filters.external_file_filter;
 
-import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.filters.AFilter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FilterFileNameRegex implements IFilter {
+public class FilterFileNameRegex extends AFilter {
 
     private List<Pattern> filesPatterns;
 

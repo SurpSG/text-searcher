@@ -11,9 +11,12 @@ import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;
 import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by sgnatiuk on 5/28/15.
@@ -24,7 +27,17 @@ public class MainFrame extends JFrame{
     private JComboBox<String> keywordsJComboBox;
     private JFXFilesTreePanel jfxFilesTreePanel;
     private FoundListViewPanel foundListViewPanel;
-    private JTextField fileFilterField;
+    private JTextField fileNameFilterField;
+    private JTextField fileNameExcludeFilterField;
+
+    private JCheckBox keywordRegexCheck;
+    private JCheckBox keywordIgnoreCaseCheck;
+
+    private JCheckBox fileNameRegexCheck;
+    private JCheckBox fileNameIgnoreCaseCheck;
+
+    private JCheckBox fileExcludeRegexCheck;
+    private JCheckBox fileNameExcludeIgnoreCaseCheck;
 
     private JPanel leftPanel;
     private JPanel rightPanel;
@@ -44,10 +57,12 @@ public class MainFrame extends JFrame{
 
         initPanels();
 
-        addKeywordsJComboBox();
+        addKeywordUtils();
+        addFileNameUtils();
+        addFileNameExcludeUtils();
+
         addFoundListView();
         addFilesTreePanel();
-        addFileFilterField();
         addRunButton();
 
         addSplitPane();
@@ -105,7 +120,7 @@ public class MainFrame extends JFrame{
         splitPane = new JSplitPane();
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, new JScrollPane(rightPanel));
         splitPane.setOneTouchExpandable(true);
-        splitPane.setDividerLocation(150);
+        splitPane.setDividerLocation(400);
         add(splitPane);
     }
 
@@ -114,17 +129,40 @@ public class MainFrame extends JFrame{
         rightPanel.add(jfxFilesTreePanel);
     }
 
-    private void addFileFilterField(){
-        fileFilterField = new JTextField(".*");
-        fileFilterField.setPreferredSize(new Dimension(100,20));
-        leftPanel.add(fileFilterField);
+    private void addKeywordUtils(){
+        List<JComponent> components = new ArrayList<>();
+        components.add(createKeywordsJComboBox());
+        components.add(keywordRegexCheck = new JCheckBox("Regex"));
+        components.add(keywordIgnoreCaseCheck = new JCheckBox("Ignore case"));
+
+        leftPanel.add(layoutComponents(components, "Keywords", BoxLayout.X_AXIS));
     }
 
-    private void addKeywordsJComboBox(){
+    private void addFileNameUtils(){
+        List<JComponent> components = new ArrayList<>();
+        components.add(fileNameFilterField = new JTextField(".*"));
+        components.add(fileNameRegexCheck = new JCheckBox("Regex"));
+        components.add(fileNameIgnoreCaseCheck = new JCheckBox("Ignore case"));
+
+        fileNameFilterField.setPreferredSize(new Dimension(200, 20));
+        leftPanel.add(layoutComponents(components, "File name options", BoxLayout.X_AXIS));
+    }
+
+    private void addFileNameExcludeUtils(){
+        List<JComponent> components = new ArrayList<>();
+        components.add(fileNameExcludeFilterField = new JTextField());
+        components.add(fileExcludeRegexCheck = new JCheckBox("Regex"));
+        components.add(fileNameExcludeIgnoreCaseCheck = new JCheckBox("Ignore case"));
+
+        fileNameExcludeFilterField.setPreferredSize(new Dimension(200, 20));
+        leftPanel.add(layoutComponents(components, "File name exclude options", BoxLayout.X_AXIS));
+    }
+
+
+    private JComboBox createKeywordsJComboBox(){
         keywordsJComboBox = new JComboBox();
         keywordsJComboBox.addItem("private");
         keywordsJComboBox.setEditable(true);
-
         keywordsJComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -133,7 +171,7 @@ public class MainFrame extends JFrame{
                 }
             }
         });
-        leftPanel.add(keywordsJComboBox);
+        return keywordsJComboBox;
     }
 
     private void addRunButton(){
@@ -147,7 +185,7 @@ public class MainFrame extends JFrame{
 
                 FiltersContainer filters = new FiltersContainer();
 //                filters.addFilter(new FilterFileName(Arrays.asList("")));
-                filters.addFilter(new FilterFileNameRegex(Arrays.asList(fileFilterField.getText())));
+                filters.addFilter(new FilterFileNameRegex(Arrays.asList(fileNameFilterField.getText())));
                 filters.addFilter(new FilterFileKeywordIgnoreCase(Arrays.asList(textToFind)));
 
                 Finder finder = new Finder(jfxFilesTreePanel.getSelectedPaths(),filters);
@@ -156,6 +194,17 @@ public class MainFrame extends JFrame{
             }
         });
         leftPanel.add(runJButton);
+    }
+
+    private static Container layoutComponents(List<JComponent> component, String title, int axis) {
+        JPanel container = new JPanel();
+        container.setBorder(BorderFactory.createTitledBorder(title));
+        BoxLayout layout = new BoxLayout(container, axis);
+        container.setLayout(layout);
+        for (JComponent jComponent : component) {
+            container.add(jComponent);
+        }
+        return container;
     }
 
     public static void main(String[] args) {

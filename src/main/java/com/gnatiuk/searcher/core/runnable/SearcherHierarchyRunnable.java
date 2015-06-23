@@ -2,7 +2,7 @@ package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.FilterExecutor;
-import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.filters.AFilter;
 import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
@@ -10,7 +10,6 @@ import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -19,13 +18,13 @@ import java.util.List;
 public class SearcherHierarchyRunnable extends SearchRunnable {
 
     private List<String> filePaths;
-    private IFilter filter;
+    private AFilter filter;
 
-    public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter) {
+    public SearcherHierarchyRunnable(List<String> filePaths, AFilter filter) {
         this(filePaths, filter, SearchRunnable.NORMAL_PRIORITY);
     }
 
-    public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter, int priority) {
+    public SearcherHierarchyRunnable(List<String> filePaths, AFilter filter, int priority) {
         super(priority);
         this.filter = filter;
         this.filePaths = filePaths;

@@ -23,9 +23,9 @@ public class Finder {
 
     public static long t1;
 
-    private IFilter filter;
+    private AFilter filter;
 
-    public Finder(List<String> filePaths, IFilter filter){
+    public Finder(List<String> filePaths, AFilter filter){
         this.filter = filter;
         this.filePaths = filePaths;
     }
