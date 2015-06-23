@@ -7,6 +7,11 @@ import com.gnatiuk.searcher.core.utils.*;
  */
 public abstract class SearchRunnable implements Runnable {
 
+    public static final int LOW_PRIORITY = 0;
+    public static final int NORMAL_PRIORITY = 1;
+    public static final int HIGH_PRIORITY = 2;
+
+    private int priority;
 
     private static int ID_SOURCE = 0;
 
@@ -17,6 +22,11 @@ public abstract class SearchRunnable implements Runnable {
     protected IFileFoundListener fileFoundListener;
 
     public SearchRunnable() {
+        this(NORMAL_PRIORITY);
+    }
+
+    public SearchRunnable(int priority) {
+        this.priority = priority;
         id = ID_SOURCE++;
     }
 
@@ -68,5 +78,9 @@ public abstract class SearchRunnable implements Runnable {
 
     public int getId() {
         return id;
+    }
+
+    public int getPriority() {
+        return priority;
     }
 }

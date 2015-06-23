@@ -25,14 +25,18 @@ public abstract class FilterFileReader implements IFilter {
             String line;
 
             int n = 0;
+            String b = null;
             while ((line = reader.readLine()) != null) {
                 n++;
                 if (isLineContainsKeywords(line)) {
                     System.out.println("\t\t[LINE]: "+n+") "+line);
-                    return line;
+//                    return line;
+                    b = "";
                 }
 
             }
+
+            return b;
         } catch (FileNotFoundException e) {
 //            System.err.println(e.getMessage());
         } catch (IOException e) {

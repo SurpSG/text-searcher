@@ -17,7 +17,8 @@ public class FilterExecutor extends SearchRunnable {
     private File file;
     private FileSearchStatus fileSearchStatus;
 
-    public FilterExecutor(IFilter filter, File file) {
+    public FilterExecutor(IFilter filter, File file, int priority) {
+        super(priority);
         this.filter = filter;
         this.file = file;
     }

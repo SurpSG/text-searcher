@@ -22,6 +22,11 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
     private IFilter filter;
 
     public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter) {
+        this(filePaths, filter, SearchRunnable.NORMAL_PRIORITY);
+    }
+
+    public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter, int priority) {
+        super(priority);
         this.filter = filter;
         this.filePaths = filePaths;
     }
@@ -81,10 +86,11 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
     }
 
     protected void invokeNewHierarchyThread(List<String> filePaths){
-        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(filePaths, filter));
+        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(filePaths, filter,
+                SearchRunnable.LOW_PRIORITY));
     }
 
     protected void invokeNewFilterThread(File file) {
-        ThreadController.getInstance().registerThread(new FilterExecutor(filter, file));
+        ThreadController.getInstance().registerThread(new FilterExecutor(filter, file, SearchRunnable.HIGH_PRIORITY));
     }
 }

@@ -3,6 +3,7 @@ package com.gnatiuk.searcher.core;
 import com.gnatiuk.searcher.core.runnable.SearchRunnable;
 import com.gnatiuk.searcher.core.utils.*;
 
+import java.util.Comparator;
 import java.util.concurrent.*;
 
 /**
@@ -23,7 +24,7 @@ public class ThreadController {
 
     private ThreadController(){
         taskCompleteListener = createTaskCompleteListener();
-        executorService =(ThreadPoolExecutor) Executors.newFixedThreadPool(CPU_UNITS);
+        executorService = buildThreadPoolExecutor();
     }
 
     public static class ThreadControllerHolder {
@@ -87,5 +88,21 @@ public class ThreadController {
 
     public void registerFileFoundListener(IFileFoundListener fileFoundListener){
         this.fileFoundListener = fileFoundListener;
+    }
+
+    private ThreadPoolExecutor buildThreadPoolExecutor(){
+        return new ThreadPoolExecutor(CPU_UNITS, CPU_UNITS, 0L, TimeUnit.MILLISECONDS,
+                new PriorityBlockingQueue<>(CPU_UNITS, new Comparator<Runnable>() {
+            @Override
+            public int compare(Runnable o1, Runnable o2) {
+                if(o1 instanceof SearchRunnable
+                        && o2 instanceof SearchRunnable){
+                    SearchRunnable obj1 = (SearchRunnable) o1;
+                    SearchRunnable obj2 = (SearchRunnable) o2;
+                    return obj2.getPriority() - obj1.getPriority();
+                }
+                return 0;
+            }
+        }));
     }
 }
