@@ -3,20 +3,17 @@ package com.gnatiuk.searcher.ui;
 import com.gnatiuk.searcher.core.Finder;
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.*;
-import com.gnatiuk.searcher.core.filters.internal_file_filter.FilterFileKeywordIgnoreCase;
-import com.gnatiuk.searcher.core.filters.external_file_filter.*;
 import com.gnatiuk.searcher.core.utils.*;
 import com.gnatiuk.searcher.ui.utils.FileSearchStatusColored;
 import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;
 import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
+import com.gnatiuk.searcher.ui.utils.filters.components.FileNameExcludeFilterComponent;
+import com.gnatiuk.searcher.ui.utils.filters.components.FileNameFilterComponent;
+import com.gnatiuk.searcher.ui.utils.filters.components.KeywordFilterComponent;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by sgnatiuk on 5/28/15.
@@ -24,20 +21,12 @@ import java.util.List;
 public class MainFrame extends JFrame{
 
     private JButton runJButton;
-    private JComboBox<String> keywordsJComboBox;
     private JFXFilesTreePanel jfxFilesTreePanel;
     private FoundListViewPanel foundListViewPanel;
-    private JTextField fileNameFilterField;
-    private JTextField fileNameExcludeFilterField;
 
-    private JCheckBox keywordRegexCheck;
-    private JCheckBox keywordIgnoreCaseCheck;
-
-    private JCheckBox fileNameRegexCheck;
-    private JCheckBox fileNameIgnoreCaseCheck;
-
-    private JCheckBox fileExcludeRegexCheck;
-    private JCheckBox fileNameExcludeIgnoreCaseCheck;
+    private KeywordFilterComponent keywordFilterComponent;
+    private FileNameFilterComponent fileNameFilterComponent;
+    private FileNameExcludeFilterComponent fileNameExcludeFilterComponent;
 
     private JPanel leftPanel;
     private JPanel rightPanel;
@@ -56,10 +45,12 @@ public class MainFrame extends JFrame{
     private void initComponents(){
 
         initPanels();
-
-        addKeywordUtils();
-        addFileNameUtils();
-        addFileNameExcludeUtils();
+        keywordFilterComponent = new KeywordFilterComponent();
+        leftPanel.add(keywordFilterComponent.getSearchCriteriaComponentsPanel());
+        fileNameFilterComponent = new FileNameFilterComponent();
+        leftPanel.add(fileNameFilterComponent.getSearchCriteriaComponentsPanel());
+        fileNameExcludeFilterComponent = new FileNameExcludeFilterComponent();
+        leftPanel.add(fileNameExcludeFilterComponent.getSearchCriteriaComponentsPanel());
 
         addFoundListView();
         addFilesTreePanel();
@@ -129,50 +120,6 @@ public class MainFrame extends JFrame{
         rightPanel.add(jfxFilesTreePanel);
     }
 
-    private void addKeywordUtils(){
-        List<JComponent> components = new ArrayList<>();
-        components.add(createKeywordsJComboBox());
-        components.add(keywordRegexCheck = new JCheckBox("Regex"));
-        components.add(keywordIgnoreCaseCheck = new JCheckBox("Ignore case"));
-
-        leftPanel.add(layoutComponents(components, "Keywords", BoxLayout.X_AXIS));
-    }
-
-    private void addFileNameUtils(){
-        List<JComponent> components = new ArrayList<>();
-        components.add(fileNameFilterField = new JTextField(".*"));
-        components.add(fileNameRegexCheck = new JCheckBox("Regex"));
-        components.add(fileNameIgnoreCaseCheck = new JCheckBox("Ignore case"));
-
-        fileNameFilterField.setPreferredSize(new Dimension(200, 20));
-        leftPanel.add(layoutComponents(components, "File name options", BoxLayout.X_AXIS));
-    }
-
-    private void addFileNameExcludeUtils(){
-        List<JComponent> components = new ArrayList<>();
-        components.add(fileNameExcludeFilterField = new JTextField());
-        components.add(fileExcludeRegexCheck = new JCheckBox("Regex"));
-        components.add(fileNameExcludeIgnoreCaseCheck = new JCheckBox("Ignore case"));
-
-        fileNameExcludeFilterField.setPreferredSize(new Dimension(200, 20));
-        leftPanel.add(layoutComponents(components, "File name exclude options", BoxLayout.X_AXIS));
-    }
-
-
-    private JComboBox createKeywordsJComboBox(){
-        keywordsJComboBox = new JComboBox();
-        keywordsJComboBox.addItem("private");
-        keywordsJComboBox.setEditable(true);
-        keywordsJComboBox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand().equals("comboBoxEdited")) {
-                    keywordsJComboBox.addItem(keywordsJComboBox.getSelectedItem().toString());
-                }
-            }
-        });
-        return keywordsJComboBox;
-    }
 
     private void addRunButton(){
         runJButton = new JButton("start");
@@ -181,30 +128,16 @@ public class MainFrame extends JFrame{
             public void actionPerformed(ActionEvent actionEvent) {
 
                 foundListViewPanel.clear();
-                String textToFind = keywordsJComboBox.getSelectedItem().toString();
-
                 FiltersContainer filters = new FiltersContainer();
-//                filters.addFilter(new FilterFileName(Arrays.asList("")));
-                filters.addFilter(new FilterFileNameRegex(Arrays.asList(fileNameFilterField.getText())));
-                filters.addFilter(new FilterFileKeywordIgnoreCase(Arrays.asList(textToFind)));
-
+                filters.addFilter(fileNameFilterComponent.buildFilter());
+                filters.addFilter(fileNameExcludeFilterComponent.buildFilter());
+                filters.addFilter(keywordFilterComponent.buildFilter());
                 Finder finder = new Finder(jfxFilesTreePanel.getSelectedPaths(),filters);
                 Finder.t1 = System.currentTimeMillis();
                 finder.start();
             }
         });
         leftPanel.add(runJButton);
-    }
-
-    private static Container layoutComponents(List<JComponent> component, String title, int axis) {
-        JPanel container = new JPanel();
-        container.setBorder(BorderFactory.createTitledBorder(title));
-        BoxLayout layout = new BoxLayout(container, axis);
-        container.setLayout(layout);
-        for (JComponent jComponent : component) {
-            container.add(jComponent);
-        }
-        return container;
     }
 
     public static void main(String[] args) {
