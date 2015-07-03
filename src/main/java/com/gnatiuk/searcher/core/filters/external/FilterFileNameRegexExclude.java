@@ -1,4 +1,6 @@
-package com.gnatiuk.searcher.core.filters.external_file_filter;
+package com.gnatiuk.searcher.core.filters.external;
+
+import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
 
 import java.io.File;
 import java.util.List;
@@ -9,6 +11,10 @@ import java.util.List;
 public class FilterFileNameRegexExclude extends FilterFileNameRegex {
     public FilterFileNameRegexExclude(List<String> filesPatterns) {
         super(filesPatterns);
+    }
+
+    public FilterFileNameRegexExclude(List<String> keywords, ITextPreprocessor textPreprocessor) {
+        super(keywords, textPreprocessor);
     }
 
     @Override

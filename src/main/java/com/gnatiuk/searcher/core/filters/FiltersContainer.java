@@ -7,25 +7,25 @@ import java.util.List;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FiltersContainer extends AFilter {
+public class FiltersContainer implements IFilter {
 
-    private List<AFilter> filters;
+    private List<IFilter> filters;
 
     public FiltersContainer(){
-        this(new ArrayList<AFilter>());
+        this(new ArrayList<IFilter>());
     }
 
-    public FiltersContainer(List<AFilter> filters){
+    public FiltersContainer(List<IFilter> filters){
         this.filters = filters;
     }
 
-    public void addFilter(AFilter filter){
+    public void addFilter(IFilter filter){
         filters.add(filter);
     }
 
     @Override
     public boolean doFilter(File file) {
-        for (AFilter filter : filters) {
+        for (IFilter filter : filters) {
             if(!filter.doFilter(file)){
                 return false;
             }

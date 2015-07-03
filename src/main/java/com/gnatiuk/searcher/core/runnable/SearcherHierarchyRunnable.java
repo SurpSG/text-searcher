@@ -2,7 +2,7 @@ package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.FilterExecutor;
-import com.gnatiuk.searcher.core.filters.AFilter;
+import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
@@ -18,13 +18,13 @@ import java.util.List;
 public class SearcherHierarchyRunnable extends SearchRunnable {
 
     private List<String> filePaths;
-    private AFilter filter;
+    private IFilter filter;
 
-    public SearcherHierarchyRunnable(List<String> filePaths, AFilter filter) {
+    public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter) {
         this(filePaths, filter, SearchRunnable.NORMAL_PRIORITY);
     }
 
-    public SearcherHierarchyRunnable(List<String> filePaths, AFilter filter, int priority) {
+    public SearcherHierarchyRunnable(List<String> filePaths, IFilter filter, int priority) {
         super(priority);
         this.filter = filter;
         this.filePaths = filePaths;
@@ -42,7 +42,7 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
         for (String filePath : filePaths) {
             fileNames.add(new File(filePath).getAbsolutePath());
         }
-        return new TaskStartedEvent(getId(), fileNames);//TODO it seems that is should be a Path
+        return new TaskStartedEvent(getId(), fileNames);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
         for (int j = 0; j < children.length; j++) {
 
             stringBuilder.append(parentAbsolutePath)
-                    .append("/").append(children[j]);
+                    .append(File.separator).append(children[j]);
 
             fullPathChildren.add(stringBuilder.toString());
             stringBuilder.setLength(0);

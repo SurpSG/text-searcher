@@ -1,7 +1,8 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
-import com.gnatiuk.searcher.core.filters.AFilter;
-import com.gnatiuk.searcher.core.filters.internal_file_filter.*;
+import com.gnatiuk.searcher.core.filters.ATextFilter;
+import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.internal.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -38,22 +39,21 @@ public class KeywordFilterComponent extends ASearchFilterComponent {
      * @return
      */
     @Override
-    public AFilter buildFilter() {
+    public ATextFilter buildFilter() {
         String keyword = keywordsJComboBox.getSelectedItem().toString();
         List<String> keywords = Arrays.asList(keyword);
+
+        ATextFilter filter;
         if(keywordRegexCheck.isSelected()){
-            if(keywordIgnoreCaseCheck.isSelected()){
-                return new FilterFileKeywordRegexIgnoreCase(keywords);
-            }else{
-                return new FilterFileKeywordRegexCaseSensitive(keywords);
-            }
+            filter = new FilterFileKeywordRegex(keywords);
         }else{
-            if(keywordIgnoreCaseCheck.isSelected()){
-                return new FilterFileKeywordIgnoreCase(keywords);
-            }else{
-                return new FilterFileKeywordCaseSensitive(keywords);
-            }
+            filter = new FilterFileKeyword(keywords);
         }
+
+        if(keywordIgnoreCaseCheck.isSelected()){
+            filter.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
+        }
+        return filter;
     }
 
     private JComboBox createKeywordsJComboBox(){

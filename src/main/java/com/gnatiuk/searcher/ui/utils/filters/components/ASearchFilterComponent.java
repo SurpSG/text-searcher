@@ -1,7 +1,8 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
 
-import com.gnatiuk.searcher.core.filters.AFilter;
+import com.gnatiuk.searcher.core.filters.ATextFilter;
+import com.gnatiuk.searcher.core.filters.IFilter;
 
 import javax.swing.*;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public abstract class ASearchFilterComponent {
 
-    public abstract AFilter buildFilter();
+    public abstract IFilter buildFilter();
     public abstract JPanel getSearchCriteriaComponentsPanel();
 
     protected static JPanel layoutComponents(List<JComponent> component, String title, int axis) {

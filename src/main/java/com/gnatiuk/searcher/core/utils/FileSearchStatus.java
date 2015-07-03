@@ -1,7 +1,5 @@
 package com.gnatiuk.searcher.core.utils;
 
-import javafx.scene.paint.Color;
-
 /**
  * Created by Sergiy on 6/8/2015.
  */

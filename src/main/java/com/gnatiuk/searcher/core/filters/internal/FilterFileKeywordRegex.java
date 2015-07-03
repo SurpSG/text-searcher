@@ -1,4 +1,6 @@
-package com.gnatiuk.searcher.core.filters.internal_file_filter;
+package com.gnatiuk.searcher.core.filters.internal;
+
+import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,12 +9,17 @@ import java.util.regex.Pattern;
 /**
  * Created by sgnatiuk on 6/17/15.
  */
-public class FilterFileKeywordRegexCaseSensitive extends FilterFileReader {
+public class FilterFileKeywordRegex extends FilterFileReader {
 
     private List<Pattern> keywordsPatterns;
 
-    public FilterFileKeywordRegexCaseSensitive(List<String> keywordsRegex) {
-        keywordsPatterns = createPatterns(keywordsRegex);
+    public FilterFileKeywordRegex(List<String> keywords) {
+        this(keywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
+    }
+
+    public FilterFileKeywordRegex(List<String> keywords, ITextPreprocessor textPreprocessor) {
+        super(keywords, textPreprocessor);
+        keywordsPatterns = createPatterns(this.keywords);
     }
 
     private List<Pattern> createPatterns(List<String> keywordsRegex){

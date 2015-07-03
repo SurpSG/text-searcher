@@ -1,25 +1,18 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
-import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 
-import javax.swing.event.TreeExpansionEvent;
-import javax.swing.event.TreeExpansionListener;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.InetAddress;

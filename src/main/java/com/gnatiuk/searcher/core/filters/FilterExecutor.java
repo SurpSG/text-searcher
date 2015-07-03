@@ -13,11 +13,11 @@ import java.util.Arrays;
  */
 public class FilterExecutor extends SearchRunnable {
 
-    private AFilter filter;
+    private IFilter filter;
     private File file;
     private FileSearchStatus fileSearchStatus;
 
-    public FilterExecutor(AFilter filter, File file, int priority) {
+    public FilterExecutor(IFilter filter, File file, int priority) {
         super(priority);
         this.filter = filter;
         this.file = file;

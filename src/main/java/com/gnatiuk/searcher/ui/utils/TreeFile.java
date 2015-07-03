@@ -1,8 +1,6 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
-import com.gnatiuk.searcher.core.utils.FileSearchStatus;
-
 import java.io.File;
 
 /**

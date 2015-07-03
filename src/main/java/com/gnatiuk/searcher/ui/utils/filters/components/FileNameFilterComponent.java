@@ -1,8 +1,10 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
-import com.gnatiuk.searcher.core.filters.AFilter;
-import com.gnatiuk.searcher.core.filters.external_file_filter.FilterFileName;
-import com.gnatiuk.searcher.core.filters.external_file_filter.FilterFileNameRegex;
+import com.gnatiuk.searcher.core.filters.ATextFilter;
+import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.external.FilterFileName;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,14 +39,20 @@ public class FileNameFilterComponent extends ASearchFilterComponent {
     }
 
     @Override
-    public AFilter buildFilter() {
+    public IFilter buildFilter() {
         String fileName = fileNameFilterField.getText();
         List<String> fileNames = Arrays.asList(fileName);
+        ATextFilter textFilter;
         if(fileNameRegexCheck.isSelected()){
-            return new FilterFileNameRegex(fileNames);
+            textFilter = new FilterFileNameRegex(fileNames);
         }else{
-            return new FilterFileName(fileNames);
+            textFilter = new FilterFileName(fileNames);
         }
+
+        if(fileNameIgnoreCaseCheck.isSelected()){
+            textFilter.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
+        }
+        return textFilter;
     }
 
 }

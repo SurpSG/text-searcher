@@ -1,12 +1,11 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
-import com.gnatiuk.searcher.core.filters.AFilter;
-import com.gnatiuk.searcher.core.filters.external_file_filter.FilterFileName;
-import com.gnatiuk.searcher.core.filters.external_file_filter.FilterFileNameRegex;
-import com.gnatiuk.searcher.core.filters.external_file_filter.FilterFileNameRegexExclude;
+import com.gnatiuk.searcher.core.filters.ATextFilter;
+import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
 
-import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,14 +21,14 @@ public class FileNameExcludeFilterComponent extends FileNameFilterComponent {
     }
 
     @Override
-    public AFilter buildFilter() {
+    public IFilter buildFilter() {
         String fileName = fileNameFilterField.getText();
         List<String> fileNames = Arrays.asList(fileName);
-        if(fileNameRegexCheck.isSelected()){
-            return new FilterFileNameRegexExclude(fileNames);
-        }else{
-            return new FilterFileNameRegex(fileNames);
+        FilterFileNameRegexExclude fileNameRegexExclude = new FilterFileNameRegexExclude(fileNames);
+        if(fileNameIgnoreCaseCheck.isSelected()){
+            fileNameRegexExclude.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
         }
+        return fileNameRegexExclude;
     }
 
 }

@@ -1,13 +1,23 @@
-package com.gnatiuk.searcher.core.filters.internal_file_filter;
+package com.gnatiuk.searcher.core.filters.internal;
 
-import com.gnatiuk.searcher.core.filters.AFilter;
+import com.gnatiuk.searcher.core.filters.ATextFilter;
+import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public abstract class FilterFileReader extends AFilter {
+public abstract class FilterFileReader extends ATextFilter {
+
+    public FilterFileReader(List<String> keywords) {
+        super(keywords);
+    }
+
+    public FilterFileReader(List<String> keywords, ITextPreprocessor textPreprocessor) {
+        super(keywords, textPreprocessor);
+    }
 
     @Override
     public boolean doFilter(File file) {
@@ -27,7 +37,7 @@ public abstract class FilterFileReader extends AFilter {
             String b = null;
             while ((line = reader.readLine()) != null) {
                 n++;
-                if (isLineContainsKeywords(line)) {
+                if (isLineContainsKeywords(textPreprocessor.process(line))) {
                     System.out.println("\t\t[LINE]: "+n+") "+line);
 //                    return line;
                     b = "";
