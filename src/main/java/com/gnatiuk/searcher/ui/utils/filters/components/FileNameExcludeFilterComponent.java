@@ -3,6 +3,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameExclude;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
 
@@ -23,12 +24,18 @@ public class FileNameExcludeFilterComponent extends FileNameFilterComponent {
     @Override
     public IFilter buildFilter() {
         String fileName = fileNameFilterField.getText();
-        List<String> fileNames = Arrays.asList(fileName);
-        FilterFileNameRegexExclude fileNameRegexExclude = new FilterFileNameRegexExclude(fileNames);
+        ATextFilter fileNameRegexExclude = build(Arrays.asList(fileName));
         if(fileNameIgnoreCaseCheck.isSelected()){
             fileNameRegexExclude.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
         }
         return fileNameRegexExclude;
+    }
+
+    private ATextFilter build(List<String> fileNames){
+        if (fileNameRegexCheck.isSelected()){
+            return new FilterFileNameRegexExclude(fileNames);
+        }
+        return new FilterFileNameExclude(fileNames);
     }
 
 }

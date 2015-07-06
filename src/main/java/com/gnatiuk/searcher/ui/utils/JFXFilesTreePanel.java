@@ -26,7 +26,7 @@ public class JFXFilesTreePanel extends JFXPanel {
     private TreeItem<TreeFile> rootNode;
     private TreeView<TreeFile> treeView;
 
-    public JFXFilesTreePanel(String rootDir) {
+    public JFXFilesTreePanel() {
 
         initTree();
 
