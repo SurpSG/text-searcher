@@ -50,11 +50,15 @@ public class KeywordFilterComponent extends ASearchFilterComponent {
 
         List<String> keywords = Arrays.asList(keyword);
         ATextFilter filter = build(keywords);
-
-        if(keywordIgnoreCaseCheck.isSelected()){
-            filter.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
-        }
+        filter.setTextPreprocessor(getTextProcessor());
         return filter;
+    }
+
+    protected ITextPreprocessor getTextProcessor() {
+        if(keywordIgnoreCaseCheck.isSelected()){
+            return ITextPreprocessor.LOWERCASE_PROCESSOR;
+        }
+        return ITextPreprocessor.NONE_PROCESSOR;
     }
 
     private ATextFilter build(List<String> keywords){

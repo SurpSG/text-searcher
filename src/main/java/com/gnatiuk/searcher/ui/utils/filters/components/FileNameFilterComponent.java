@@ -39,18 +39,30 @@ public class FileNameFilterComponent extends ASearchFilterComponent {
         return layoutComponents(components, componentName, BoxLayout.X_AXIS);
     }
 
+    protected ITextPreprocessor getTextProcessor() {
+        if(fileNameIgnoreCaseCheck.isSelected()){
+            return ITextPreprocessor.LOWERCASE_PROCESSOR;
+        }
+        return ITextPreprocessor.NONE_PROCESSOR;
+    }
+
     @Override
     public IFilter buildFilter() {
         String fileName = fileNameFilterField.getText();
-        ATextFilter textFilter = build(Arrays.asList(fileName));
 
-        if(fileNameIgnoreCaseCheck.isSelected()){
-            textFilter.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
+        if(fileName.isEmpty()){
+            return IFilter.NONE_FILTER;
         }
+
+        ATextFilter textFilter = build(Arrays.asList(fileName));
+        textFilter.setTextPreprocessor(getTextProcessor());
         return textFilter;
     }
 
-    private ATextFilter build(List<String> fileNames){
+
+
+
+    protected ATextFilter build(List<String> fileNames){
         if(fileNameRegexCheck.isSelected()){
             return new FilterFileNameRegex(fileNames);
         }

@@ -23,16 +23,7 @@ public class FileNameExcludeFilterComponent extends FileNameFilterComponent {
     }
 
     @Override
-    public IFilter buildFilter() {
-        String fileName = fileNameFilterField.getText();
-        ATextFilter fileNameRegexExclude = build(Arrays.asList(fileName));
-        if(fileNameIgnoreCaseCheck.isSelected()){
-            fileNameRegexExclude.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
-        }
-        return fileNameRegexExclude;
-    }
-
-    private ATextFilter build(List<String> fileNames){
+    protected ATextFilter build(List<String> fileNames){
         if (fileNameRegexCheck.isSelected()){
             return new FilterFileNameRegexExclude(fileNames);
         }
