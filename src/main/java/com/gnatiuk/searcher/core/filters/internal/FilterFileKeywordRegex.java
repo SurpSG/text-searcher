@@ -43,4 +43,11 @@ public class FilterFileKeywordRegex extends FilterFileReader {
         }
         return false;
     }
+
+    @Override
+    public String toString() {
+        return "FilterFileKeywordRegex{" +
+                "keywordsPatterns=" + keywordsPatterns +
+                '}';
+    }
 }

@@ -24,9 +24,10 @@ public class FileNameFilterComponent extends ASearchFilterComponent {
     protected JCheckBox fileNameIgnoreCaseCheck;
 
     public FileNameFilterComponent(){
-        fileNameFilterField = new JTextField(".*");
+        fileNameFilterField = new JTextField(".log");
         fileNameFilterField.setPreferredSize(new Dimension(200, 20));
         fileNameRegexCheck = new JCheckBox("Regex");
+        fileNameRegexCheck.setSelected(true);
         fileNameIgnoreCaseCheck = new JCheckBox("Ignore case");
     }
 

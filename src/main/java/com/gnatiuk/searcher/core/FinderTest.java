@@ -23,22 +23,10 @@ public class FinderTest {
     public static void main(String[] args) {
 
         String[] filePaths = {
-//                "/cryptfs/builds/sh20/root_pac/build_mips",
-//                "/cryptfs/builds/sh20/scripts/",
 
 //                "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
 
-//                "/cryptfs/builds/sh10/build_directv_sh10/",
-//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local/bist/boot/",
-//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/local/",
-//                "/cryptfs/builds/sh20/root_pac/build_mips",
-                "E:\\study",
-//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/",
-//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/hddvr_image/tmp",
-//                "/cryptfs/builds/sh10/build_directv_sh10/",
-//                "/cryptfs/builds/sh10/build_directv_sh10/buildroot/hddvr_image/hdstb_hum_sh10"
-//                "/home/sgnatiuk/Downloads/logs",
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
@@ -172,7 +160,7 @@ public class FinderTest {
             public void actionPerformed(WorkCompleteEvent event) {
                 System.out.println("done!!!!!");
                 JOptionPane.showMessageDialog(null, "Done!");
-
+                ThreadController.getInstance().shutdown();
             }
         });
 

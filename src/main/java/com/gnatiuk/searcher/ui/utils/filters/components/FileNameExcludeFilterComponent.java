@@ -19,6 +19,7 @@ public class FileNameExcludeFilterComponent extends FileNameFilterComponent {
     public FileNameExcludeFilterComponent(){
         super();
         componentName = "File name exclude options";
+        fileNameFilterField.setText("");
     }
 
     @Override

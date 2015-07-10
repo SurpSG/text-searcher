@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
+import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
 import com.gnatiuk.searcher.core.filters.internal.*;
 
@@ -23,6 +24,7 @@ public class KeywordFilterComponent extends ASearchFilterComponent {
     public KeywordFilterComponent(){
         keywordsJComboBox = createKeywordsJComboBox();
         keywordRegexCheck = new JCheckBox("Regex");
+        keywordRegexCheck.setSelected(true);
         keywordIgnoreCaseCheck = new JCheckBox("Ignore case");
     }
 
@@ -39,16 +41,15 @@ public class KeywordFilterComponent extends ASearchFilterComponent {
      * @return
      */
     @Override
-    public ATextFilter buildFilter() {
+    public IFilter buildFilter() {
         String keyword = keywordsJComboBox.getSelectedItem().toString();
-        List<String> keywords = Arrays.asList(keyword);
 
-        ATextFilter filter;
-        if(keywordRegexCheck.isSelected()){
-            filter = new FilterFileKeywordRegex(keywords);
-        }else{
-            filter = new FilterFileKeyword(keywords);
+        if(keyword.isEmpty()){
+            return IFilter.NONE_FILTER;
         }
+
+        List<String> keywords = Arrays.asList(keyword);
+        ATextFilter filter = build(keywords);
 
         if(keywordIgnoreCaseCheck.isSelected()){
             filter.setTextPreprocessor(ITextPreprocessor.LOWERCASE_PROCESSOR);
@@ -56,9 +57,16 @@ public class KeywordFilterComponent extends ASearchFilterComponent {
         return filter;
     }
 
+    private ATextFilter build(List<String> keywords){
+        if(keywordRegexCheck.isSelected()){
+            return new FilterFileKeywordRegex(keywords);
+        }
+        return new FilterFileKeyword(keywords);
+    }
+
     private JComboBox createKeywordsJComboBox(){
         final JComboBox keywordsJComboBox = new JComboBox();
-        keywordsJComboBox.addItem("private");
+        keywordsJComboBox.addItem("starting");
         keywordsJComboBox.setEditable(true);
         keywordsJComboBox.addActionListener(new ActionListener() {
             @Override

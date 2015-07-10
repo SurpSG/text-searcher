@@ -16,7 +16,7 @@ public class FilterFileNameRegex extends ATextFilter {
     private List<Pattern> filesPatterns;
 
     public FilterFileNameRegex(List<String> keywords) {
-        super(keywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        this(keywords, ITextPreprocessor.NONE_PROCESSOR);
     }
 
     public FilterFileNameRegex(List<String> keywords, ITextPreprocessor textPreprocessor) {
@@ -39,5 +39,12 @@ public class FilterFileNameRegex extends ATextFilter {
             }
         }
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return "FilterFileNameRegex{" +
+                "filesPatterns=" + filesPatterns +
+                '}';
     }
 }

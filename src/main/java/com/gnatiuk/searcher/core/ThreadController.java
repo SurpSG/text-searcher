@@ -60,7 +60,6 @@ public class ThreadController {
                     if(workCompleteListener != null){
                         workCompleteListener.actionPerformed(new WorkCompleteEvent());
                     }
-                    executorService.shutdown();
                 }
             }
         }).start();
@@ -104,5 +103,9 @@ public class ThreadController {
                 return 0;
             }
         }));
+    }
+
+    public void shutdown(){
+        executorService.shutdown();
     }
 }

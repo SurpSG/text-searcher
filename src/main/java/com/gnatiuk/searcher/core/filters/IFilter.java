@@ -10,4 +10,6 @@ public interface IFilter {
 
     public boolean  doFilter(File file);
 
+    IFilter NONE_FILTER = file -> true;
+
 }

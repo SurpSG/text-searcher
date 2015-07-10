@@ -19,8 +19,11 @@ public class FiltersContainer implements IFilter {
         this.filters = filters;
     }
 
-    public void addFilter(IFilter filter){
-        filters.add(filter);
+    public FiltersContainer addFilter(IFilter filter){
+        if(filter != IFilter.NONE_FILTER){
+            filters.add(filter);
+        }
+        return this;
     }
 
     @Override
@@ -33,5 +36,10 @@ public class FiltersContainer implements IFilter {
         return true;
     }
 
-
+    @Override
+    public String toString() {
+        return "FiltersContainer{" +
+                "filters=" + filters +
+                '}';
+    }
 }

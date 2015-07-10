@@ -33,12 +33,10 @@ public class MainFrame extends JFrame{
 
     private JSplitPane splitPane;
 
-    private String rootDir;
 
     public MainFrame(){
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        rootDir = "/home/sgnatiuk/Downloads";
         initComponents();
     }
 
@@ -116,7 +114,7 @@ public class MainFrame extends JFrame{
     }
 
     private void addFilesTreePanel(){
-        jfxFilesTreePanel = new JFXFilesTreePanel(rootDir);
+        jfxFilesTreePanel = new JFXFilesTreePanel();
         rightPanel.add(jfxFilesTreePanel);
     }
 
@@ -129,9 +127,10 @@ public class MainFrame extends JFrame{
 
                 foundListViewPanel.clear();
                 FiltersContainer filters = new FiltersContainer();
-                filters.addFilter(fileNameFilterComponent.buildFilter());
-                filters.addFilter(fileNameExcludeFilterComponent.buildFilter());
-                filters.addFilter(keywordFilterComponent.buildFilter());
+                filters.addFilter(fileNameFilterComponent.buildFilter())
+                        .addFilter(fileNameExcludeFilterComponent.buildFilter())
+                        .addFilter(keywordFilterComponent.buildFilter());
+
                 Finder finder = new Finder(jfxFilesTreePanel.getSelectedPaths(),filters);
                 Finder.t1 = System.currentTimeMillis();
                 finder.start();
