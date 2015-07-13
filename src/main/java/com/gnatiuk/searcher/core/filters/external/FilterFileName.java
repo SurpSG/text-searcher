@@ -22,7 +22,7 @@ public class FilterFileName extends ATextFilter {
     @Override
     public boolean doFilter(File file) {
         for (String targetFileName : keywords) {
-            if(file.getName().contains(targetFileName)){
+            if(textPreprocessor.process(file.getName()).contains(targetFileName)){
                 return true;
             }
         }

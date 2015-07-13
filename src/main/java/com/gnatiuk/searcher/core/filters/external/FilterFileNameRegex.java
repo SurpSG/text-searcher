@@ -34,7 +34,7 @@ public class FilterFileNameRegex extends ATextFilter {
     @Override
     public boolean doFilter(File file) {
         for (Pattern filePattern : filesPatterns) {
-            if(filePattern.matcher(file.getName()).find()){
+            if(filePattern.matcher(textPreprocessor.process(file.getName())).find()){
                 return true;
             }
         }
