@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.core.filters.external;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
 
 import java.io.File;
 import java.util.List;
@@ -20,12 +21,12 @@ public class FilterFileName extends ATextFilter {
     }
 
     @Override
-    public boolean doFilter(File file) {
+    public FileFoundEvent doFilter(File file) {
         for (String targetFileName : keywords) {
             if(textPreprocessor.process(file.getName()).contains(targetFileName)){
-                return true;
+                return new FileFoundEvent(file);
             }
         }
-        return false;
+        return FileFoundEvent.NOT_FOUND;
     }
 }

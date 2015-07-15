@@ -1,5 +1,7 @@
 package com.gnatiuk.searcher.core.filters;
 
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,7 @@ public class FiltersContainer implements IFilter {
     private List<IFilter> filters;
 
     public FiltersContainer(){
-        this(new ArrayList<IFilter>());
+        this(new ArrayList<>());
     }
 
     public FiltersContainer(List<IFilter> filters){
@@ -27,13 +29,17 @@ public class FiltersContainer implements IFilter {
     }
 
     @Override
-    public boolean doFilter(File file) {
+    public FileFoundEvent doFilter(File file) {
+        FileFoundEvent foundEvent = new FileFoundEvent(file);
         for (IFilter filter : filters) {
-            if(!filter.doFilter(file)){
-                return false;
+            FileFoundEvent fileFoundEvent = filter.doFilter(file);
+            if(fileFoundEvent == FileFoundEvent.NOT_FOUND){
+                return FileFoundEvent.NOT_FOUND;
             }
+            foundEvent.mergeFoundOptions(fileFoundEvent);
         }
-        return true;
+        System.out.println(foundEvent);
+        return foundEvent;
     }
 
     @Override

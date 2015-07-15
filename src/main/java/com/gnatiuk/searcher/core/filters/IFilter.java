@@ -1,6 +1,8 @@
 package com.gnatiuk.searcher.core.filters;
 
 
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
+
 import java.io.File;
 
 /**
@@ -8,8 +10,8 @@ import java.io.File;
  */
 public interface IFilter {
 
-    public boolean  doFilter(File file);
+    FileFoundEvent doFilter(File file);
 
-    IFilter NONE_FILTER = file -> true;
+    IFilter NONE_FILTER = file -> new FileFoundEvent(file);
 
 }

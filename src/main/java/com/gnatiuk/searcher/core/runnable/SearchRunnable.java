@@ -58,9 +58,9 @@ public abstract class SearchRunnable implements Runnable {
 
     protected abstract TaskCompleteEvent createTaskCompleteEvent();
 
-    protected void alertFileFound(String filePath, String fileRow){
+    protected void alertFileFound(FileFoundEvent fileFoundEvent){
         if(fileFoundListener != null){
-            fileFoundListener.alertFileFound(new FileFoundEvent(filePath, fileRow));
+            fileFoundListener.alertFileFound(fileFoundEvent);
         }
     }
 

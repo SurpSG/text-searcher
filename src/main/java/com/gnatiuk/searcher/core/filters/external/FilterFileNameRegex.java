@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.core.filters.external;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,13 +33,13 @@ public class FilterFileNameRegex extends ATextFilter {
     }
 
     @Override
-    public boolean doFilter(File file) {
+    public FileFoundEvent doFilter(File file) {
         for (Pattern filePattern : filesPatterns) {
             if(filePattern.matcher(textPreprocessor.process(file.getName())).find()){
-                return true;
+                return new FileFoundEvent(file);
             }
         }
-        return false;
+        return FileFoundEvent.NOT_FOUND;
     }
 
     @Override

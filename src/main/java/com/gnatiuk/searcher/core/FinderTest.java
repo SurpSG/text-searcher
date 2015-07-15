@@ -8,6 +8,8 @@ import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileReader;
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
+import com.gnatiuk.searcher.core.utils.IFileFoundListener;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
@@ -26,24 +28,29 @@ public class FinderTest {
 
 //                "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
+//                "/cryptfs/builds/sh20/root_pac/build_mips",
+//                "/cryptfs/builds/sh10/sh10_back/build_directv_sh10/buildroot/build_mips",
+                "/cryptfs/builds/sh10/sh10_back/build_directv_sh10/buildroot/build_mips/middleware_core",
 
         };
 
-        String[] fileFiltersKeywordsArray = new String[]{
-                "."
+        String[] fileNameFilter = new String[]{
+                "UpdateListObject.cpp",
+//                "UpdateListO"
         };
 
-        String[] fileFiltersRegexArray = new String[]{
+        String[] fileNameFilterRegex = new String[]{
 //                "flash.*\\.c$"
-//                ".*java$",
-//                "\\.c$",
-//                "\\.cpp$",
+                "\\.c$",
+                "\\.cpp$",
+                "\\.cc$",
+//                "\\.log",
 //                "\\.o$"
-                "\\.txt$",
+//                "\\.txt$",
 //                "\\.prop"
         };
 
-        String[] fileFiltersRegexExcludeArray = new String[]{
+        String[] fileNameFilterRegexExclude = new String[]{
                 "\\.o$",
 //                "\\.txt$",
 //                "\\.h$",
@@ -83,11 +90,13 @@ public class FinderTest {
 //                "^[0-9]$"
         };
 
-        String[] filterKeywordsArray = new String[]{
+        String[] keywordsFilter = new String[]{
 //                "bcdi",
 //                "audioconnection",
 //                "de guia",
-                "LABEL",
+                "dst",
+//                " Off-air scan",
+//                "UpdateListObject",
 //                "S0710_3",
 //                "+=9",
 //                "+= 9",
@@ -97,61 +106,65 @@ public class FinderTest {
 //                "exception"
         };
 
-        String[] filterKeywordsRegexArray = new String[]{
+        String[] keywordsFilterRegex = new String[]{
 //                "(Invalid.*argument)*.*failed:.*(Invalid.*argument)*",
 //                "(\"Running[ ])[ ]*(%s){1,}.*(test)*",
 //                "\"Mounting[ ]*(%s)*(writable)*.*(flash)*"
-                "kernel.*panic"
+                "dst"
         };
 
 
 
 
 
-        List<String> fileFiltersKeywords = Arrays.asList(fileFiltersKeywordsArray);
-        List<String> fileFiltersRegex = Arrays.asList(fileFiltersRegexArray);
-        List<String> fileFiltersRegexExclude = Arrays.asList(fileFiltersRegexExcludeArray);
-        List<String> filterKeywords = Arrays.asList(filterKeywordsArray);
-        List<String> filterKeywordsRegex = Arrays.asList(filterKeywordsRegexArray);
+        List<String> fileFiltersKeywords = Arrays.asList(fileNameFilter);
+        List<String> fileFiltersRegex = Arrays.asList(fileNameFilterRegex);
+        List<String> fileFiltersRegexExclude = Arrays.asList(fileNameFilterRegexExclude);
+        List<String> filterKeywords = Arrays.asList(keywordsFilter);
+        List<String> filterKeywordsRegex = Arrays.asList(keywordsFilterRegex);
 
 
 
 
 
 
-        FilterFileName filterFileNameCaseSensitive = new FilterFileName(fileFiltersKeywords);
-        FilterFileName filterFileNameIgnoreCase = new FilterFileName(fileFiltersKeywords,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileName fileNameCS = new FilterFileName(fileFiltersKeywords);
+        FilterFileName fileNameIC = new FilterFileName(fileFiltersKeywords,ITextPreprocessor.LOWERCASE_PROCESSOR);
 
-        FilterFileNameRegex filterFileNameRegexIgnoreCase = new FilterFileNameRegex(fileFiltersRegex,ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileNameRegex filterFileNameRegexCaseSensitive = new FilterFileNameRegex(fileFiltersRegex);
+        FilterFileNameRegex fileNameRegexIC = new FilterFileNameRegex(fileFiltersRegex,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileNameRegex fileNameRegexCS = new FilterFileNameRegex(fileFiltersRegex);
 
-        FilterFileNameRegexExclude filterFileNameRegexExcludeIgnoreCase = new FilterFileNameRegexExclude(fileFiltersRegexExclude,ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileNameRegexExclude filterFileNameRegexExcludeCaseSensitive = new FilterFileNameRegexExclude(fileFiltersRegexExclude);
+        FilterFileNameRegexExclude fileNameRegexExcludeIC = new FilterFileNameRegexExclude(fileFiltersRegexExclude,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileNameRegexExclude fileNameRegexExcludeCS = new FilterFileNameRegexExclude(fileFiltersRegexExclude);
 
 
 
-        FilterFileReader filterFileKeywordIgnoreCase = new FilterFileKeyword(filterKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileReader filterFileKeywordCaseSensitive = new FilterFileKeyword(filterKeywords);
+        FilterFileReader keywordIC = new FilterFileKeyword(filterKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileReader keywordCS = new FilterFileKeyword(filterKeywords);
 
-        FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
+        FilterFileReader keywordRegexIC = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileReader keywordRegexCS = new FilterFileKeywordRegex(filterKeywordsRegex);
+
+
+
+
 
         FiltersContainer searchFilter = new FiltersContainer();
-//        searchFilter.addFilter(filterFileNameCaseSensitive);
-//        searchFilter.addFilter(filterFileNameIgnoreCase);
+//        searchFilter.addFilter(fileNameCS);
+//        searchFilter.addFilter(fileNameIC);
 
-//        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
-//        searchFilter.addFilter(filterFileNameRegexCaseSensitive);
+//        searchFilter.addFilter(fileNameRegexIC);
+        searchFilter.addFilter(fileNameRegexCS);
 
-//        searchFilter.addFilter(filterFileNameRegexExcludeIgnoreCase);
-//        searchFilter.addFilter(filterFileNameRegexExcludeCaseSensitive);
+//        searchFilter.addFilter(fileNameRegexExcludeIC);
+//        searchFilter.addFilter(fileNameRegexExcludeCS);
 
 
-        searchFilter.addFilter(filterFileKeywordIgnoreCase);
-//        searchFilter.addFilter(filterFileKeywordCaseSensitive);
+        searchFilter.addFilter(keywordIC);
+//        searchFilter.addFilter(keywordCS);
 
-//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
-//        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
+//        searchFilter.addFilter(keywordRegexIC);
+//        searchFilter.addFilter(keywordRegexCS);
 
         Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 
@@ -161,6 +174,15 @@ public class FinderTest {
                 System.out.println("done!!!!!");
                 JOptionPane.showMessageDialog(null, "Done!");
                 ThreadController.getInstance().shutdown();
+            }
+        });
+
+        ThreadController.getInstance().registerFileFoundListener(new IFileFoundListener() {
+            @Override
+            public void alertFileFound(FileFoundEvent fileFoundEvent) {
+                if (fileFoundEvent != FileFoundEvent.NOT_FOUND) {
+//                    System.out.println(fileFoundEvent);
+                }
             }
         });
 

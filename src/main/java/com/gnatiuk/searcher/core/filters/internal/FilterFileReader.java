@@ -2,6 +2,8 @@ package com.gnatiuk.searcher.core.filters.internal;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
+import com.gnatiuk.searcher.core.utils.FoundOption;
 
 import java.io.*;
 import java.util.List;
@@ -20,38 +22,33 @@ public abstract class FilterFileReader extends ATextFilter {
     }
 
     @Override
-    public boolean doFilter(File file) {
-        return fileContainsText(file);
+    public FileFoundEvent doFilter(File file) {
+        return scanFileForKeyword(file);
     }
 
-    private boolean fileContainsText(File file) {
-        return getFirstLineContainsKeyword(file) != null;
-    }
-
-    private String getFirstLineContainsKeyword(File file) {
+    private FileFoundEvent scanFileForKeyword(File file) {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
 
-            int n = 0;
-            String b = null;
+            FileFoundEvent fileFoundEvent = new FileFoundEvent(file);
+            String line;
+            int rowNumber = 0;
             while ((line = reader.readLine()) != null) {
-                n++;
+                rowNumber++;
                 if (isLineContainsKeywords(textPreprocessor.process(line))) {
-                    System.out.println("\t\t[LINE]: "+n+") "+line);
-//                    return line;
-                    b = "";
+                    System.out.println("\t\t[LINE]: " + rowNumber + ") " + line);
+                    fileFoundEvent.addFoundOption(FoundOption.FOUND_ROW, line);
                 }
 
             }
 
-            return b;
+            return fileFoundEvent;
         } catch (FileNotFoundException e) {
-//            System.err.println(e.getMessage());
+            System.err.println(e.getMessage());
         } catch (IOException e) {
-//            System.err.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
-        return null;
+        return FileFoundEvent.NOT_FOUND;
     }
 
     protected abstract boolean isLineContainsKeywords(String line);

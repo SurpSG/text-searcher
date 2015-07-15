@@ -1,5 +1,9 @@
 package com.gnatiuk.searcher.core.filters;
 
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
+import com.gnatiuk.searcher.core.utils.FoundOption;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 

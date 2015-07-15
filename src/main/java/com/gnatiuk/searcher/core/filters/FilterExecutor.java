@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core.filters;
 
 import com.gnatiuk.searcher.core.runnable.SearchRunnable;
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
 import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
@@ -25,12 +26,11 @@ public class FilterExecutor extends SearchRunnable {
 
     @Override
     protected void doWork() {
-        if(filter.doFilter(file)){
-            System.out.println("gedit "+file.getAbsolutePath());
-            alertFileFound(file.getAbsolutePath(), "");
-            fileSearchStatus = FileSearchStatus.PROCESSED_FOUND;
+        FileFoundEvent fileFoundEvent = filter.doFilter(file);
+        if(fileFoundEvent != FileFoundEvent.NOT_FOUND){
+            System.out.println("gedit " + file.getAbsolutePath());
+            alertFileFound(fileFoundEvent);
         }
-        fileSearchStatus = FileSearchStatus.PROCESSED_NOT_FOUND;
     }
 
     @Override

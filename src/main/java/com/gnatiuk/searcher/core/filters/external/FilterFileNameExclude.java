@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core.filters.external;
 
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.utils.FileFoundEvent;
 
 import java.io.File;
 import java.util.List;
@@ -19,7 +20,12 @@ public class FilterFileNameExclude extends FilterFileName {
     }
 
     @Override
-    public boolean doFilter(File file) {
-        return !super.doFilter(file);
+    public FileFoundEvent doFilter(File file) {
+        FileFoundEvent foundEvent = super.doFilter(file);
+        if(foundEvent == FileFoundEvent.NOT_FOUND){
+            return new FileFoundEvent(file);
+        }else {
+            return FileFoundEvent.NOT_FOUND;
+        }
     }
 }
