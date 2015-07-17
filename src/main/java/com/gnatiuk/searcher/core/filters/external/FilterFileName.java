@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.core.filters.external;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 
 import java.io.File;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
  * Created by sgnatiuk on 6/15/15.
  */
 public class FilterFileName extends ATextFilter {
+
+    private FileSearchEvent fileSearchEvent;
 
     public FilterFileName(List<String> keywords) {
         super(keywords);
@@ -20,12 +23,18 @@ public class FilterFileName extends ATextFilter {
     }
 
     @Override
-    public boolean doFilter(File file) {
+    public FileSearchEvent doFilter(File file) {
         for (String targetFileName : keywords) {
             if(textPreprocessor.process(file.getName()).contains(targetFileName)){
-                return true;
+                buildFileFoundEvent(file);
+                return new FileSearchEvent(file);
             }
         }
-        return false;
+        return FileSearchEvent.NOT_FOUND;
     }
+
+    private void buildFileFoundEvent(File file){
+        fileSearchEvent = new FileSearchEvent(file);
+    }
+
 }

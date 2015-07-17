@@ -5,7 +5,7 @@ import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.*;
 import com.gnatiuk.searcher.core.utils.*;
 import com.gnatiuk.searcher.ui.utils.FileSearchStatusColored;
-import com.gnatiuk.searcher.ui.utils.FoundListViewPanel;
+import com.gnatiuk.searcher.ui.utils.FoundTreePanel;
 import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
 import com.gnatiuk.searcher.ui.utils.filters.components.FileNameExcludeFilterComponent;
 import com.gnatiuk.searcher.ui.utils.filters.components.FileNameFilterComponent;
@@ -14,6 +14,8 @@ import com.gnatiuk.searcher.ui.utils.filters.components.KeywordFilterComponent;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by sgnatiuk on 5/28/15.
@@ -22,7 +24,7 @@ public class MainFrame extends JFrame{
 
     private JButton runJButton;
     private JFXFilesTreePanel jfxFilesTreePanel;
-    private FoundListViewPanel foundListViewPanel;
+    private FoundTreePanel foundListViewPanel;
 
     private KeywordFilterComponent keywordFilterComponent;
     private FileNameFilterComponent fileNameFilterComponent;
@@ -32,6 +34,8 @@ public class MainFrame extends JFrame{
     private JPanel rightPanel;
 
     private JSplitPane splitPane;
+
+
 
 
     public MainFrame(){
@@ -77,19 +81,19 @@ public class MainFrame extends JFrame{
         ThreadController.getInstance().registerTaskCompleteListener(new ITaskCompleteListener() {
             @Override
             public void actionPerformed(TaskCompleteEvent event) {
-                for (String file : event.getProcessedFiles()) {
-                    synchronized (jfxFilesTreePanel) {
-                        jfxFilesTreePanel.setNodeStatusByPath(file,
-                                FileSearchStatusColored.determineFileSearchStatusColored(event.getSearchStatus()));
-                    }
-                }
+//                for (String file : event.getProcessedFiles()) {
+//                    synchronized (jfxFilesTreePanel) {
+//                        jfxFilesTreePanel.setNodeStatusByPath(file,
+//                                FileSearchStatusColored.determineFileSearchStatusColored(event.getSearchStatus()));
+//                    }
+//                }
             }
         });
 
         ThreadController.getInstance().registerFileFoundListener(new IFileFoundListener() {
             @Override
-            public void alertFileFound(FileFoundEvent fileFoundEvent) {
-                foundListViewPanel.addItem(fileFoundEvent.getFilePath());
+            public void alertFileFound(FileSearchEvent fileSearchEvent) {
+                foundListViewPanel.addItem(fileSearchEvent);
             }
         });
     }
@@ -101,7 +105,7 @@ public class MainFrame extends JFrame{
     }
 
     private void addFoundListView(){
-        foundListViewPanel = new FoundListViewPanel();
+        foundListViewPanel = new FoundTreePanel();
         leftPanel.add(foundListViewPanel);
     }
 

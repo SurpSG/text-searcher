@@ -5,5 +5,5 @@ package com.gnatiuk.searcher.core.utils;
  */
 public interface IFileFoundListener {
 
-    void alertFileFound(FileFoundEvent fileFoundEvent);
+    void alertFileFound(FileSearchEvent fileSearchEvent);
 }
