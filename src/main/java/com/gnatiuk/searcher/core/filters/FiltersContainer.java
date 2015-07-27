@@ -30,9 +30,6 @@ public class FiltersContainer implements IFilter {
 
     @Override
     public FileSearchEvent doFilter(File file) {
-        if(file.getName().endsWith(".log")){
-            System.out.println();
-        }
         FileSearchEvent foundEvent = new FileSearchEvent(file);
         for (IFilter filter : filters) {
             FileSearchEvent fileSearchEvent = filter.doFilter(file);

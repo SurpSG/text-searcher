@@ -31,7 +31,7 @@ public abstract class SearchRunnable implements Runnable {
     }
 
     @Override
-    public void run() {
+    public final void run() {
         alertTaskStarted();
         try {
             doWork();

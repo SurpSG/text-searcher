@@ -42,7 +42,7 @@ public class FoundTreePanel extends JFXPanel {
 
                 StackPane root = new StackPane();
                 root.getChildren().add(treeView);
-                Scene scene = new Scene(root, 400, 300);
+                Scene scene = new Scene(root);//, 400, 300);
                 setScene(scene);
             }
         });

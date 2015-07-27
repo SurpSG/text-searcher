@@ -14,7 +14,7 @@ public class FilterFileKeywordRegex extends FilterFileReader {
     private List<Pattern> keywordsPatterns;
 
     public FilterFileKeywordRegex(List<String> keywords) {
-        this(keywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        this(keywords, ITextPreprocessor.NONE_PROCESSOR);
     }
 
     public FilterFileKeywordRegex(List<String> keywords, ITextPreprocessor textPreprocessor) {
