@@ -1,6 +1,5 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
-import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
@@ -32,10 +31,8 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
         return super.layoutComponents(components, title, axis);
     }
 
-    @Override
     public Control getControl() {
         if (keywords == null) {
-            Platform.runLater(() -> {
                 keywords = new ListView<>();
                 keywords.setEditable(true);
                 keywords.getItems().addListener(new ListChangeListener<String>() {
@@ -48,7 +45,6 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
                 keywords.getItems().addAll("1");
                 keywords.getItems().addAll("2");
                 keywords.getItems().addAll("3");
-            });
         }
         return keywords;
     }

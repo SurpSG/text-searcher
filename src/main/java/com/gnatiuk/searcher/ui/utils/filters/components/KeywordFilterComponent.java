@@ -22,15 +22,15 @@ public class KeywordFilterComponent extends ASearchTextFilterComponent {
 
     public static final String NAME = "File contains keyword";
 
-    private ComboBox<String> keywordsJComboBox;
+    private ComboBox<String> keywordsComboBox;
 
     public KeywordFilterComponent(){
-        keywordsJComboBox = new ComboBox<>();
+        keywordsComboBox = new ComboBox<>();
     }
 
     public Pane getSearchCriteriaComponentsPane() {
         List<javafx.scene.control.Control> components = new ArrayList<>();
-        components.add(keywordsJComboBox);
+        components.add(keywordsComboBox);
         return layoutComponents(components, "Keywords", BoxLayout.X_AXIS);
     }
 
@@ -45,7 +45,7 @@ public class KeywordFilterComponent extends ASearchTextFilterComponent {
      */
     @Override
     public IFilter buildFilter() {
-        String keyword = keywordsJComboBox.getSelectionModel().getSelectedItem().toString();
+        String keyword = keywordsComboBox.getSelectionModel().getSelectedItem().toString();
 
         if(keyword.isEmpty()){
             return IFilter.NONE_FILTER;

@@ -3,7 +3,11 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 import com.gnatiuk.searcher.core.filters.IFilter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.*;
+import javafx.geometry.Insets;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
@@ -64,6 +68,7 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
     private Pane createSearchCriteriaComponentsPane() {
 
         Pane box = new HBox(ITEMS_HORIZONTAL_PADDING);
+        box.setPadding(new Insets(COMPONENT_PADDING));
         box.getChildren().add(addFiltersButton);
         box.getChildren().add(FILTERS_COMBO_BOX);
 //        panel.setMinimumSize(new Dimension(panel.getWidth(), 100));
@@ -74,11 +79,6 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
     @Override
     public Pane getSearchCriteriaComponentsPane() {
         return searchCriteriaComponents;
-    }
-
-    @Override
-    public Control getControl() {
-        return null;
     }
 
     @Override

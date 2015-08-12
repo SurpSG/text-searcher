@@ -150,19 +150,13 @@ public class MainFrame extends JFrame{
 
                 foundListViewPanel.clear();
                 FiltersContainer filters = new FiltersContainer();
-//                filters.addFilter(fileNameFilterComponent.buildFilter())
-//                        .addFilter(fileNameExcludeFilterComponent.buildFilter())
-//                        .addFilter(keywordFilterComponent.buildFilter());
-
-//                filtersPanel.clearFilters();
-//                filtersPanel.addFilter(filters);
+                filters.addFilter(filtersContainer.getFilter());
 
                 java.util.List<String> paths = jfxFilesTreePanel.getSelectedPaths();
                 paths = Arrays.asList("/home/sgnatiuk/Desktop/logs");
                 Finder finder = new Finder(paths,filters);
                 Finder.t1 = System.currentTimeMillis();
                 finder.start();
-//                ThreadController.getInstance().start();
             }
         });
         leftPanel.add(runJButton, BorderLayout.SOUTH);

@@ -2,12 +2,9 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
 import com.gnatiuk.searcher.core.filters.IFilter;
-import javafx.scene.control.Control;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +21,23 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
     private CreatorSearchFilterComponent creatorSearchFilterComponent;
 
 
-    private VBox vbox;
+    private VBox rootBox;
+    private VBox newFiltersBox;
 
     public SearchFiltersContainerComponent() {
         super();
         filtersComponents = new ArrayList<>();
         createCreatorSearchFilterComponent();
 
-        vbox = new VBox(ITEMS_VERTICAL_PADDING);
-        Text title = new Text("Crete new filter");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        vbox.getChildren().add(title);
-        vbox.getChildren().add(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
+        rootBox = new VBox(ITEMS_VERTICAL_PADDING);
+        newFiltersBox = new VBox(ITEMS_VERTICAL_PADDING);
+
+        rootBox.getChildren().add(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
+
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setContent(newFiltersBox);
+
+        rootBox.getChildren().add(scrollPane);
     }
 
     private CreatorSearchFilterComponent createCreatorSearchFilterComponent() {
@@ -71,38 +73,20 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
             @Override
             public void notifyFilterRemoved() {
                 filtersComponents.remove(filterComponent);
-                vbox.getChildren().remove(pane);
+                newFiltersBox.getChildren().remove(pane);
             }
         });
         filtersComponents.add(filterComponent);
-        vbox.getChildren().add(pane);
-        update();
+        newFiltersBox.getChildren().add(pane);
     }
 
     public void removeFilterComponent(ASearchFilterComponent filterComponent) {
         filtersComponents.remove(filterComponent);
-        update();
     }
 
     @Override
     public Pane getSearchCriteriaComponentsPane() {
-        return vbox;
+        return rootBox;
     }
 
-    public void update() {
-//        panelsContainerBox.remove(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
-//        panelsContainerBox.remove
-//        for (ASearchFilterComponent filtersComponent : filtersComponents) {
-//            panelsContainerBox.add(filtersComponent.getSearchCriteriaComponentsPane());
-//        }
-//        panelsContainerBox.add(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
-//        panelsContainerBox.updateUI();
-//        panelsContainerBox.repaint();
-    }
-
-
-    @Override
-    public Control getControl() {
-        return null;
-    }
 }
