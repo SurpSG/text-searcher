@@ -1,7 +1,6 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.IFilter;
-import javafx.scene.control.Control;
 import javafx.scene.layout.Pane;
 
 /**
@@ -13,16 +12,11 @@ public class CreateSearchFilterComponent extends ASearchFilterComponent {
 
     @Override
     public IFilter buildFilter() {
-        return null;
+        return IFilter.NONE_FILTER;
     }
 
     @Override
     public Pane getSearchCriteriaComponentsPane() {
-        return null;
-    }
-
-    @Override
-    public Control getControl() {
         return null;
     }
 
