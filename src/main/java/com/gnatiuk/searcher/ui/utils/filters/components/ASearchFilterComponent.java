@@ -84,7 +84,7 @@ public abstract class ASearchFilterComponent {
         }
     }
 
-    protected Pane layoutComponents(List<Control> components, String title, int axis) {
+    protected Pane layoutComponents(List<Control> components) {
         if(concreteFilterComponents != null){
             return filterComponentRootBox;
         }

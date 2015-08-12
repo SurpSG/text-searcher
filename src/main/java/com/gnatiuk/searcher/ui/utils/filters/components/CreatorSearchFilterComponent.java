@@ -27,15 +27,13 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
             FILTERS_COMBO_BOX = createFiltersComboBox();
 
     private final Button addFiltersButton = createAddFilterButton();
+    private CreateButtonListener buttonListener;
 
     private final Pane searchCriteriaComponents;
-
-    private CreateButtonListener buttonListener;
 
     public CreatorSearchFilterComponent() {
         super();
         searchCriteriaComponents = createSearchCriteriaComponentsPane();
-
     }
 
     private Button createAddFilterButton() {
@@ -71,8 +69,6 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
         box.setPadding(new Insets(COMPONENT_PADDING));
         box.getChildren().add(addFiltersButton);
         box.getChildren().add(FILTERS_COMBO_BOX);
-//        panel.setMinimumSize(new Dimension(panel.getWidth(), 100));
-//        panel.setBorder(new TitledBorder(getName()));
         return box;
     }
 
@@ -137,7 +133,7 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
 
     }
 
-    public static interface CreateButtonListener {
+    public interface CreateButtonListener {
         void actionPerformed(CreateButtonEvent createButtonEvent);
     }
 

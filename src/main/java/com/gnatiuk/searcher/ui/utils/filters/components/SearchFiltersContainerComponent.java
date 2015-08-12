@@ -20,7 +20,6 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
 
     private CreatorSearchFilterComponent creatorSearchFilterComponent;
 
-
     private VBox rootBox;
     private VBox newFiltersBox;
 
@@ -78,10 +77,6 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
         });
         filtersComponents.add(filterComponent);
         newFiltersBox.getChildren().add(pane);
-    }
-
-    public void removeFilterComponent(ASearchFilterComponent filterComponent) {
-        filtersComponents.remove(filterComponent);
     }
 
     @Override

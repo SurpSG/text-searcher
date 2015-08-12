@@ -11,15 +11,7 @@ import java.util.List;
  */
 public class FileNameExcludeFilterComponent extends FileNameFilterComponent {
 
-
     public static final String NAME = "Exclude files with name";
-
-
-    public FileNameExcludeFilterComponent(){
-        super();
-        componentName = "File name exclude options";
-        fileNameFilterField.setText("");
-    }
 
     @Override
     protected ATextFilter build(List<String> fileNames){
