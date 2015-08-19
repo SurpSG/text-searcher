@@ -3,7 +3,6 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
-import javafx.collections.ListChangeListener;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListView;
@@ -18,7 +17,6 @@ import java.util.List;
  */
 public abstract class ASearchTextFilterComponent extends ASearchFilterComponent {
 
-    private static final int ROW_HEIGHT = 24;
     protected ListView<String> keywords;
     protected CheckBox ignoreCaseCheck;
     protected CheckBox regexCheck;
@@ -26,7 +24,7 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
     public ASearchTextFilterComponent() {
         ignoreCaseCheck = new CheckBox("Ignore case");
         regexCheck = new CheckBox("Regex");
-        keywords = getKeywordsListView();
+        keywords = new KeywordsListViewWrapper().getListView();
     }
 
     protected abstract ATextFilter build(List<String> keywords);
@@ -43,27 +41,6 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
     public Pane getSearchCriteriaComponentsPane() {
         List<Control> components = new ArrayList<>();
         return layoutComponents(components);
-    }
-
-    public ListView<String> getKeywordsListView() {
-        final int MAX_ROW_COUNT = 4;
-        final int MIN_ROW_COUNT = 1;
-        if (keywords == null) {
-                keywords = new ListView<>();
-                keywords.setEditable(true);
-                keywords.getItems().addListener(new ListChangeListener<String>() {
-                    @Override
-                    public void onChanged(Change<? extends String> c) {
-                        int size = keywords.getItems().size();
-                        int listRowCount = (size >= MIN_ROW_COUNT) ? size : MIN_ROW_COUNT;
-                        listRowCount = (listRowCount > MAX_ROW_COUNT) ? MAX_ROW_COUNT : listRowCount;
-
-                        keywords.setPrefHeight(listRowCount * ROW_HEIGHT + 2);
-                    }
-                });
-            keywords.getItems().addAll("2");
-        }
-        return keywords;
     }
 
     @Override

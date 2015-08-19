@@ -117,8 +117,9 @@ public class MainFrame extends JFrame{
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, new JScrollPane(rightPanel));
         splitPane.setOneTouchExpandable(true);
         splitPane.setDividerLocation(600);
-        splitPane.setBounds(0,0,getWidth(),getHeight());
-        layeredPane.add(splitPane, Integer.valueOf(1));
+        splitPane.setBounds(0, 0, getWidth(), getHeight());
+        layeredPane.setLayout(new BorderLayout());
+        layeredPane.add(splitPane, BorderLayout.CENTER, Integer.valueOf(1));
     }
 
     private void addFilesTreePanel(){
