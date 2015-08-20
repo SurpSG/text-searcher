@@ -23,6 +23,7 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
 
     public ASearchTextFilterComponent() {
         ignoreCaseCheck = new CheckBox("Ignore case");
+        ignoreCaseCheck.setSelected(true);
         regexCheck = new CheckBox("Regex");
         keywords = new KeywordsListViewWrapper().getListView();
     }
