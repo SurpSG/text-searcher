@@ -8,8 +8,6 @@ import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileReader;
-import com.gnatiuk.searcher.core.utils.FileFoundEvent;
-import com.gnatiuk.searcher.core.utils.IFileFoundListener;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
@@ -28,29 +26,27 @@ public class FinderTest {
 
 //                "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
-//                "/cryptfs/builds/sh20/root_pac/build_mips",
-//                "/cryptfs/builds/sh10/sh10_back/build_directv_sh10/buildroot/build_mips",
-                "/cryptfs/builds/sh10/sh10_back/build_directv_sh10/buildroot/build_mips/middleware_core",
+                "/cryptfs/builds/sh10/build_new/build/buildroot/build_mips",
+//                "/cryptfs/builds/sh10/build_new/build/buildroot/build_mips/druid",
 
         };
 
-        String[] fileNameFilter = new String[]{
-                "UpdateListObject.cpp",
-//                "UpdateListO"
+        String[] fileFiltersKeywordsArray = new String[]{
+                "Blender"
         };
 
-        String[] fileNameFilterRegex = new String[]{
+        String[] fileFiltersRegexArray = new String[]{
 //                "flash.*\\.c$"
+//                "\\.java$",
                 "\\.c$",
                 "\\.cpp$",
                 "\\.cc$",
-//                "\\.log",
 //                "\\.o$"
 //                "\\.txt$",
 //                "\\.prop"
         };
 
-        String[] fileNameFilterRegexExclude = new String[]{
+        String[] fileFiltersRegexExcludeArray = new String[]{
                 "\\.o$",
 //                "\\.txt$",
 //                "\\.h$",
@@ -90,13 +86,12 @@ public class FinderTest {
 //                "^[0-9]$"
         };
 
-        String[] keywordsFilter = new String[]{
+        String[] filterKeywordsArray = new String[]{
 //                "bcdi",
 //                "audioconnection",
 //                "de guia",
-                "dst",
-//                " Off-air scan",
-//                "UpdateListObject",
+//                "umpEventHandler_SetAvControls",
+                "EVENT_ON_PARAMETER_CHANGE",
 //                "S0710_3",
 //                "+=9",
 //                "+= 9",
@@ -106,83 +101,80 @@ public class FinderTest {
 //                "exception"
         };
 
-        String[] keywordsFilterRegex = new String[]{
+        String[] filterKeywordsArray1 = new String[]{
+                "OSD62"
+        };
+
+        String[] filterKeywordsRegexArray = new String[]{
 //                "(Invalid.*argument)*.*failed:.*(Invalid.*argument)*",
 //                "(\"Running[ ])[ ]*(%s){1,}.*(test)*",
 //                "\"Mounting[ ]*(%s)*(writable)*.*(flash)*"
-                "dst"
+                "hdmiDisplayAttached[ ]*=[ ]*[^=]",
+//                "reportToMW\\(.*,"
         };
 
 
 
 
 
-        List<String> fileFiltersKeywords = Arrays.asList(fileNameFilter);
-        List<String> fileFiltersRegex = Arrays.asList(fileNameFilterRegex);
-        List<String> fileFiltersRegexExclude = Arrays.asList(fileNameFilterRegexExclude);
-        List<String> filterKeywords = Arrays.asList(keywordsFilter);
-        List<String> filterKeywordsRegex = Arrays.asList(keywordsFilterRegex);
+        List<String> fileFiltersKeywords = Arrays.asList(fileFiltersKeywordsArray);
+        List<String> fileFiltersRegex = Arrays.asList(fileFiltersRegexArray);
+        List<String> fileFiltersRegexExclude = Arrays.asList(fileFiltersRegexExcludeArray);
+        List<String> filterKeywords = Arrays.asList(filterKeywordsArray);
+        List<String> filterKeywords1 = Arrays.asList(filterKeywordsArray1);
+        List<String> filterKeywordsRegex = Arrays.asList(filterKeywordsRegexArray);
 
 
 
 
 
 
-        FilterFileName fileNameCS = new FilterFileName(fileFiltersKeywords);
-        FilterFileName fileNameIC = new FilterFileName(fileFiltersKeywords,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileName filterFileNameCaseSensitive = new FilterFileName(fileFiltersKeywords);
+        FilterFileName filterFileNameIgnoreCase = new FilterFileName(fileFiltersKeywords,ITextPreprocessor.LOWERCASE_PROCESSOR);
 
-        FilterFileNameRegex fileNameRegexIC = new FilterFileNameRegex(fileFiltersRegex,ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileNameRegex fileNameRegexCS = new FilterFileNameRegex(fileFiltersRegex);
+        FilterFileNameRegex filterFileNameRegexIgnoreCase = new FilterFileNameRegex(fileFiltersRegex,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileNameRegex filterFileNameRegexCaseSensitive = new FilterFileNameRegex(fileFiltersRegex);
 
-        FilterFileNameRegexExclude fileNameRegexExcludeIC = new FilterFileNameRegexExclude(fileFiltersRegexExclude,ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileNameRegexExclude fileNameRegexExcludeCS = new FilterFileNameRegexExclude(fileFiltersRegexExclude);
-
-
-
-        FilterFileReader keywordIC = new FilterFileKeyword(filterKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileReader keywordCS = new FilterFileKeyword(filterKeywords);
-
-        FilterFileReader keywordRegexIC = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileReader keywordRegexCS = new FilterFileKeywordRegex(filterKeywordsRegex);
+        FilterFileNameRegexExclude filterFileNameRegexExcludeIgnoreCase = new FilterFileNameRegexExclude(fileFiltersRegexExclude,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileNameRegexExclude filterFileNameRegexExcludeCaseSensitive = new FilterFileNameRegexExclude(fileFiltersRegexExclude);
 
 
 
+        FilterFileReader filterFileKeywordIgnoreCase = new FilterFileKeyword(filterKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileReader filterFileKeywordIgnoreCase1 = new FilterFileKeyword(filterKeywords1, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileReader filterFileKeywordCaseSensitive = new FilterFileKeyword(filterKeywords);
+        FilterFileReader filterFileKeywordCaseSensitive1 = new FilterFileKeyword(filterKeywords1);
 
+        FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
 
         FiltersContainer searchFilter = new FiltersContainer();
-//        searchFilter.addFilter(fileNameCS);
-//        searchFilter.addFilter(fileNameIC);
+//        searchFilter.addFilter(filterFileNameCaseSensitive);
+//        searchFilter.addFilter(filterFileNameIgnoreCase);
 
-//        searchFilter.addFilter(fileNameRegexIC);
-        searchFilter.addFilter(fileNameRegexCS);
+        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileNameRegexCaseSensitive);
 
-//        searchFilter.addFilter(fileNameRegexExcludeIC);
-//        searchFilter.addFilter(fileNameRegexExcludeCS);
+//        searchFilter.addFilter(filterFileNameRegexExcludeIgnoreCase);
+//        searchFilter.addFilter(filterFileNameRegexExcludeCaseSensitive);
 
 
-        searchFilter.addFilter(keywordIC);
-//        searchFilter.addFilter(keywordCS);
+//        searchFilter.addFilter(filterFileKeywordIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordCaseSensitive);
+//        searchFilter.addFilter(filterFileKeywordIgnoreCase1);
 
-//        searchFilter.addFilter(keywordRegexIC);
-//        searchFilter.addFilter(keywordRegexCS);
+        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
+        System.out.println(searchFilter);
         Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 
         ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
-                System.out.println("done!!!!!");
                 JOptionPane.showMessageDialog(null, "Done!");
-                ThreadController.getInstance().shutdown();
-            }
-        });
 
-        ThreadController.getInstance().registerFileFoundListener(new IFileFoundListener() {
-            @Override
-            public void alertFileFound(FileFoundEvent fileFoundEvent) {
-                if (fileFoundEvent != FileFoundEvent.NOT_FOUND) {
-//                    System.out.println(fileFoundEvent);
-                }
+                ThreadController.getInstance().shutdown();
             }
         });
 
