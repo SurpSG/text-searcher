@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 
 import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.FilterRemovedListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;

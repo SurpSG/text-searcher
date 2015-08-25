@@ -3,6 +3,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.KeywordsListViewWrapper;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Control;
 import javafx.scene.control.ListView;
@@ -40,8 +41,7 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
 
     @Override
     public Pane getSearchCriteriaComponentsPane() {
-        List<Control> components = new ArrayList<>();
-        return layoutComponents(components);
+        return layoutComponents(new ArrayList<>());
     }
 
     @Override

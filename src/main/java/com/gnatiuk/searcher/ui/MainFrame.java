@@ -4,7 +4,6 @@ import com.gnatiuk.searcher.core.Finder;
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
 import com.gnatiuk.searcher.core.utils.*;
-import com.gnatiuk.searcher.ui.utils.FileSearchStatusColored;
 import com.gnatiuk.searcher.ui.utils.FloatPanelWrapper;
 import com.gnatiuk.searcher.ui.utils.FoundTreePanel;
 import com.gnatiuk.searcher.ui.utils.JFXFilesTreePanel;
@@ -63,29 +62,6 @@ public class MainFrame extends JFrame{
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
                 JOptionPane.showMessageDialog(null,"Done");
-            }
-        });
-
-        ThreadController.getInstance().registerTaskStartedListener(new ITaskStartedListener() {
-            @Override
-            public void actionPerformed(TaskStartedEvent event) {
-                for (String file : event.getFilesToProcess()) {
-                    synchronized (jfxFilesTreePanel) {
-                        jfxFilesTreePanel.setNodeStatusByPath(file, FileSearchStatusColored.IN_PROGRESS_COLOR);
-                    }
-                }
-            }
-        });
-
-        ThreadController.getInstance().registerTaskCompleteListener(new ITaskCompleteListener() {
-            @Override
-            public void actionPerformed(TaskCompleteEvent event) {
-//                for (String file : event.getProcessedFiles()) {
-//                    synchronized (jfxFilesTreePanel) {
-//                        jfxFilesTreePanel.setNodeStatusByPath(file,
-//                                FileSearchStatusColored.determineFileSearchStatusColored(event.getSearchStatus()));
-//                    }
-//                }
             }
         });
 

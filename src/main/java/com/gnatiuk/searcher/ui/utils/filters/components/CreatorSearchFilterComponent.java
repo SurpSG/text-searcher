@@ -45,7 +45,6 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
                         FILTERS_COMBO_BOX.getSelectionModel().getSelectedItem();
 
                 if (selectedItem == null) {
-                    FILTERS_COMBO_BOX.requestFocus();
                     return;
                 }
 

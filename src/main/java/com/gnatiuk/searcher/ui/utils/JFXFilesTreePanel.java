@@ -117,16 +117,11 @@ public class JFXFilesTreePanel extends JFXPanel {
 
     }
 
-    public void setNodeStatusByPath(String filePath, FileSearchStatusColored searchStatus){
-        setNodeStatusByPath(rootNode, Paths.get(filePath), searchStatus);
-    }
-
-    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath, FileSearchStatusColored searchStatus){
+    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath){
 
         TreeFile currentRootNodeFile = currentRootNode.getValue();
         Path currentRootNodePath = currentRootNodeFile.toPath();
         if(currentRootNodePath.equals(filePath)){
-            currentRootNodeFile.setSearchStatus(searchStatus);
             if(!currentRootNode.isLeaf() && currentRootNode.getValue().isDirectory() && !currentRootNode.isExpanded()){
                 currentRootNode.setExpanded(true);
             }
@@ -135,7 +130,7 @@ public class JFXFilesTreePanel extends JFXPanel {
             return true;
         }else if(filePath.startsWith(currentRootNodePath)){
             for (TreeItem<TreeFile> treeFileTreeItem : currentRootNode.getChildren()) {
-                if(setNodeStatusByPath(treeFileTreeItem, filePath, searchStatus)){
+                if(setNodeStatusByPath(treeFileTreeItem, filePath)){
                     return true;
                 }
             }
