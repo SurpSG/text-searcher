@@ -1,13 +1,14 @@
 package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
-import com.gnatiuk.searcher.ui.utils.filters.components.tools.IndexedData;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.geometry.Insets;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 import java.util.Comparator;
 
@@ -15,6 +16,9 @@ import java.util.Comparator;
  * Created by sgnatiuk on 8/12/15.
  */
 public class KeywordsListViewWrapper {
+
+    private static final Background ENABLED_CELL = new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY));
+    private static final Background DISABLED_CELL = new Background(new BackgroundFill(Color.LIGHTGREY, CornerRadii.EMPTY, Insets.EMPTY));
 
     private static final int ROW_HEIGHT = 24;
     private static final int MAX_ROW_COUNT = 4;
@@ -72,9 +76,13 @@ public class KeywordsListViewWrapper {
 
     private class MutableListCell extends ListCell<IndexedData<String>> {
 
+
+
         private TextField textField;
         private Button addNewButton;
 
+        private CheckBox enableKeyword;
+        
         private IndexedData<String> currentValue;
 
         private boolean editing;
@@ -84,6 +92,9 @@ public class KeywordsListViewWrapper {
             initAddKeywordButton();
             setOnMouseClicked(event -> startEdit());
 
+            enableKeyword = new CheckBox();
+            enableKeyword.setSelected(true);
+            enableKeyword.setOnAction(event -> updateItem(currentValue, false));
             editing = false;
         }
 
@@ -126,12 +137,12 @@ public class KeywordsListViewWrapper {
         @Override
         public void startEdit() {
             super.startEdit();
-            editing = true;
 
-            if (isEmpty()) {
+            if (isEmpty() || !enableKeyword.isSelected()) {
                 return;
             }
 
+            editing = true;
             setText(null);
             if(currentValue.getData().equals(ADD_KEYWORD_BUTTON_LABEL)){
                 textField.setText("");
@@ -149,11 +160,17 @@ public class KeywordsListViewWrapper {
             if (empty) return;
 
             currentValue = item;
-            if(item.getData().equals(ADD_KEYWORD_BUTTON_LABEL)){
+            if (item.getData().equals(ADD_KEYWORD_BUTTON_LABEL)){
                 setGraphic(addNewButton);
                 setText(null);
             }else{
-                setGraphic(null);
+                if(enableKeyword.isSelected()){
+                    setBackground(ENABLED_CELL);
+                }else{
+                    setBackground(DISABLED_CELL);
+                }
+                super.updateItem(item,false);
+                setGraphic(enableKeyword);
                 setText(currentValue.getData());
             }
 
@@ -180,6 +197,7 @@ public class KeywordsListViewWrapper {
 
             editing = false;
         }
+
     }
 
     private static class IndexedDataComparator implements Comparator<IndexedData<String>>{
