@@ -30,4 +30,12 @@ public abstract class ATextFilter implements IFilter {
     public void setTextPreprocessor(ITextPreprocessor textPreprocessor) {
         this.textPreprocessor = textPreprocessor;
     }
+
+    @Override
+    public String toString() {
+        return "ATextFilter{" +
+                "textPreprocessor=" + textPreprocessor +
+                ", keywords=" + keywords +
+                '}';
+    }
 }

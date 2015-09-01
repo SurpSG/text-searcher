@@ -26,20 +26,23 @@ public class FinderTest {
 
 //                "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
+                "/cryptfs/builds/sh10/build_new/build/buildroot/build_mips",
+//                "/cryptfs/builds/sh10/build_new/build/buildroot/build_mips/druid",
 
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
-                "."
+                "Blender"
         };
 
         String[] fileFiltersRegexArray = new String[]{
 //                "flash.*\\.c$"
-//                ".*java$",
-//                "\\.c$",
-//                "\\.cpp$",
+//                "\\.java$",
+                "\\.c$",
+                "\\.cpp$",
+                "\\.cc$",
 //                "\\.o$"
-                "\\.txt$",
+//                "\\.txt$",
 //                "\\.prop"
         };
 
@@ -87,7 +90,8 @@ public class FinderTest {
 //                "bcdi",
 //                "audioconnection",
 //                "de guia",
-                "LABEL",
+//                "umpEventHandler_SetAvControls",
+                "EVENT_ON_PARAMETER_CHANGE",
 //                "S0710_3",
 //                "+=9",
 //                "+= 9",
@@ -97,11 +101,16 @@ public class FinderTest {
 //                "exception"
         };
 
+        String[] filterKeywordsArray1 = new String[]{
+                "OSD62"
+        };
+
         String[] filterKeywordsRegexArray = new String[]{
 //                "(Invalid.*argument)*.*failed:.*(Invalid.*argument)*",
 //                "(\"Running[ ])[ ]*(%s){1,}.*(test)*",
 //                "\"Mounting[ ]*(%s)*(writable)*.*(flash)*"
-                "kernel.*panic"
+                "hdmiDisplayAttached[ ]*=[ ]*[^=]",
+//                "reportToMW\\(.*,"
         };
 
 
@@ -112,6 +121,7 @@ public class FinderTest {
         List<String> fileFiltersRegex = Arrays.asList(fileFiltersRegexArray);
         List<String> fileFiltersRegexExclude = Arrays.asList(fileFiltersRegexExcludeArray);
         List<String> filterKeywords = Arrays.asList(filterKeywordsArray);
+        List<String> filterKeywords1 = Arrays.asList(filterKeywordsArray1);
         List<String> filterKeywordsRegex = Arrays.asList(filterKeywordsRegexArray);
 
 
@@ -131,7 +141,9 @@ public class FinderTest {
 
 
         FilterFileReader filterFileKeywordIgnoreCase = new FilterFileKeyword(filterKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileReader filterFileKeywordIgnoreCase1 = new FilterFileKeyword(filterKeywords1, ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileReader filterFileKeywordCaseSensitive = new FilterFileKeyword(filterKeywords);
+        FilterFileReader filterFileKeywordCaseSensitive1 = new FilterFileKeyword(filterKeywords1);
 
         FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
@@ -140,26 +152,28 @@ public class FinderTest {
 //        searchFilter.addFilter(filterFileNameCaseSensitive);
 //        searchFilter.addFilter(filterFileNameIgnoreCase);
 
-//        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
+        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileNameRegexCaseSensitive);
 
 //        searchFilter.addFilter(filterFileNameRegexExcludeIgnoreCase);
 //        searchFilter.addFilter(filterFileNameRegexExcludeCaseSensitive);
 
 
-        searchFilter.addFilter(filterFileKeywordIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordCaseSensitive);
+//        searchFilter.addFilter(filterFileKeywordIgnoreCase1);
 
-//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
+        System.out.println(searchFilter);
         Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 
         ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
-                System.out.println("done!!!!!");
                 JOptionPane.showMessageDialog(null, "Done!");
+
                 ThreadController.getInstance().shutdown();
             }
         });

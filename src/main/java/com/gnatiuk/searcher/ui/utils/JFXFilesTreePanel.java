@@ -18,10 +18,8 @@ import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class JFXFilesTreePanel extends JFXPanel {
     private TreeItem<TreeFile> rootNode;
@@ -117,16 +115,11 @@ public class JFXFilesTreePanel extends JFXPanel {
 
     }
 
-    public void setNodeStatusByPath(String filePath, FileSearchStatusColored searchStatus){
-        setNodeStatusByPath(rootNode, Paths.get(filePath), searchStatus);
-    }
-
-    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath, FileSearchStatusColored searchStatus){
+    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath){
 
         TreeFile currentRootNodeFile = currentRootNode.getValue();
         Path currentRootNodePath = currentRootNodeFile.toPath();
         if(currentRootNodePath.equals(filePath)){
-            currentRootNodeFile.setSearchStatus(searchStatus);
             if(!currentRootNode.isLeaf() && currentRootNode.getValue().isDirectory() && !currentRootNode.isExpanded()){
                 currentRootNode.setExpanded(true);
             }
@@ -135,7 +128,7 @@ public class JFXFilesTreePanel extends JFXPanel {
             return true;
         }else if(filePath.startsWith(currentRootNodePath)){
             for (TreeItem<TreeFile> treeFileTreeItem : currentRootNode.getChildren()) {
-                if(setNodeStatusByPath(treeFileTreeItem, filePath, searchStatus)){
+                if(setNodeStatusByPath(treeFileTreeItem, filePath)){
                     return true;
                 }
             }

@@ -13,12 +13,20 @@ public interface ITextPreprocessor {
         public String process(String row) {
             return row;
         }
+
+        public String toString(){
+            return "LOWERCASE_PROCESSOR";
+        }
     };
 
     static final ITextPreprocessor LOWERCASE_PROCESSOR = new ITextPreprocessor() {
         @Override
         public String process(String row) {
             return row.toLowerCase();
+        }
+
+        public String toString(){
+            return "LOWERCASE_PROCESSOR";
         }
     };
 }
