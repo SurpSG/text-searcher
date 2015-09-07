@@ -1,5 +1,8 @@
 package com.gnatiuk.searcher.core.filters;
 
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,7 +10,10 @@ import java.util.List;
  * Created by Sergiy on 7/4/2015.
  */
 public abstract class ATextFilter implements IFilter {
+    @JsonProperty("textPreprocessor")
     protected ITextPreprocessor textPreprocessor;
+
+    @JsonProperty("keywords")
     protected List<String> keywords;
 
     public ATextFilter(List<String> keywords){
@@ -33,7 +39,7 @@ public abstract class ATextFilter implements IFilter {
 
     @Override
     public String toString() {
-        return "ATextFilter{" +
+        return getClass().getSimpleName()+"{" +
                 "textPreprocessor=" + textPreprocessor +
                 ", keywords=" + keywords +
                 '}';

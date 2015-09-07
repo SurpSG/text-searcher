@@ -1,10 +1,11 @@
 package com.gnatiuk.searcher.core.filters.external;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +15,9 @@ public class FilterFileName extends ATextFilter {
 
     private FileSearchEvent fileSearchEvent;
 
+    public FilterFileName() {
+        this(new ArrayList<>());
+    }
     public FilterFileName(List<String> keywords) {
         super(keywords);
     }

@@ -1,6 +1,6 @@
 package com.gnatiuk.searcher.core.filters.internal;
 
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 
 import java.util.ArrayList;
 import java.util.List;

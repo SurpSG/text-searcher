@@ -10,6 +10,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -98,7 +99,10 @@ public abstract class ASearchFilterComponent {
             HBox.setHgrow(node, Priority.ALWAYS);
             filterComponentRootBox.getChildren().add(node);
         }
-        return filterComponentRootBox;
+
+        TitledPane titledPane = new TitledPane(getName(), filterComponentRootBox);
+        titledPane.setGraphic(null);
+        return titledPane;
     }
 
 

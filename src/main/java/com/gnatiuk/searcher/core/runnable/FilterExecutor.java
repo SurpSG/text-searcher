@@ -1,6 +1,6 @@
-package com.gnatiuk.searcher.core.filters;
+package com.gnatiuk.searcher.core.runnable;
 
-import com.gnatiuk.searcher.core.runnable.SearchRunnable;
+import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;

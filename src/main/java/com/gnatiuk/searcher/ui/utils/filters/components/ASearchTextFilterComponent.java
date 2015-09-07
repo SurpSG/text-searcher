@@ -2,7 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
 import com.gnatiuk.searcher.core.filters.IFilter;
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.KeywordsContainer;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;

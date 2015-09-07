@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
 import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
@@ -37,7 +38,7 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
-        scrollPane.setContent(new TitledPane("Filters",newFiltersBox));
+        scrollPane.setContent(new TitledPane("Filter",newFiltersBox));
 
         rootBox.getChildren().add(scrollPane);
     }
@@ -69,9 +70,9 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
         return filter;
     }
 
-    public void addFilterComponent(ASearchFilterComponent filterComponent) {
-        Node pane = filterComponent.getSearchCriteriaComponentsPane();
-        filterComponent.setFilterRemovedListener(new com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener() {
+    public void addFilterComponent(final ASearchFilterComponent filterComponent) {
+        final Node pane = filterComponent.getSearchCriteriaComponentsPane();
+        filterComponent.setFilterRemovedListener(new FilterRemovedListener() {
             @Override
             public void notifyFilterRemoved() {
                 filtersComponents.remove(filterComponent);

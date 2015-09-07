@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core.filters;
 
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 public class FiltersContainer implements IFilter {
 
+    @JsonProperty("filters")
     private List<IFilter> filters;
 
     public FiltersContainer(){

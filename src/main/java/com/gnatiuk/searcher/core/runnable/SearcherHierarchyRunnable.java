@@ -1,7 +1,6 @@
 package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.ThreadController;
-import com.gnatiuk.searcher.core.filters.FilterExecutor;
 import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;

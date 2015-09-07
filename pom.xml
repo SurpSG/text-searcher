@@ -8,6 +8,22 @@
     <artifactId>TextSearcher</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.8.1</version>
+        </dependency>
+
+    </dependencies>
+
     <build>
         <plugins>
 
@@ -17,8 +33,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <!-- or whatever version you use -->
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
 
                 </configuration>
             </plugin>
@@ -41,7 +57,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.gnatiuk.searcher.core.Finder</mainClass>
+                            <mainClass>com.gnatiuk.searcher.ui.MainFrame</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

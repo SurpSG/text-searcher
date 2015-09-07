@@ -1,7 +1,7 @@
 package com.gnatiuk.searcher.core.filters.external;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 
 import java.io.File;

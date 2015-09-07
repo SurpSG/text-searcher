@@ -1,7 +1,7 @@
 package com.gnatiuk.searcher.core.filters.internal;
 
 import com.gnatiuk.searcher.core.filters.ATextFilter;
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 import com.gnatiuk.searcher.core.utils.FoundOption;
 

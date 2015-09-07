@@ -1,13 +1,19 @@
 package com.gnatiuk.searcher.core.filters.internal;
 
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by sgnatiuk on 6/17/15.
  */
 public class FilterFileKeyword extends FilterFileReader {
+
+
+    public FilterFileKeyword() {
+        this(new ArrayList<>());
+    }
 
     public FilterFileKeyword(List<String> keywords) {
         super(keywords);
