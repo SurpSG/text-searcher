@@ -5,11 +5,15 @@ import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordI
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ public abstract class AKeywordItem {
 
     protected TextField textField;
     protected HBox keywordItemBox;
+    protected Button removeItselfButton;
     protected List<IKeywordItemChangedListener> keywordItemChangedListeners;
     protected List<KeywordItemFocusListener> focusListeners;
     protected FocusChangeListener focusChangeListener;
@@ -33,6 +38,20 @@ public abstract class AKeywordItem {
         focusListeners = new ArrayList<>();
         focusChangeListener = new FocusChangeListener();
 
+        removeItselfButton = new Button("-");
+        removeItselfButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if(keywordItemBox.getParent() instanceof Pane){
+                    ((Pane)keywordItemBox.getParent()).getChildren().remove(keywordItemBox);
+                }else{
+                    throw new RuntimeException("Cannot remove keyword item. " +
+                            "Keyword item parent is not an instance of "+Pane.class);
+                }
+            }
+        });
+
         keywordItemBox = new HBox(10);//TODO remove magic
         keywordItemBox.setStyle(
                 "-fx-border-style: solid;"
@@ -40,7 +59,8 @@ public abstract class AKeywordItem {
                         + "-fx-border-color: gray;"
         );
         keywordItemBox.setAlignment(Pos.CENTER_LEFT);
-        keywordItemBox.setMinHeight(Double.valueOf(30));
+        keywordItemBox.setMinHeight(Double.valueOf(30));//TODO do something with magic
+        keywordItemBox.getChildren().add(removeItselfButton);
         textField = new TextField();
         textField.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(textField, Priority.ALWAYS);

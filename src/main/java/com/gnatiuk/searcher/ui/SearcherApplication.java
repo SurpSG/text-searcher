@@ -6,10 +6,12 @@ import com.gnatiuk.searcher.ui.utils.FoundTreePanel;
 import com.gnatiuk.searcher.ui.utils.filters.components.SearchFiltersContainerComponent;
 import javafx.application.Application;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -51,7 +53,9 @@ public class SearcherApplication extends Application{
         leftPanel.getChildren().addAll(searchCriteriaComponentsPane, runButton);
 
         rightPanel = new VBox();
-        rightPanel.getChildren().add(filesTreePanel.getTreeNode());
+        Node filesTree = filesTreePanel.getTreeNode();
+        VBox.setVgrow(filesTree, Priority.ALWAYS);
+        rightPanel.getChildren().add(filesTree);
 
         splitPane = new SplitPane();
         splitPane.getItems().addAll(leftPanel, rightPanel);
@@ -68,7 +72,7 @@ public class SearcherApplication extends Application{
         layeredPane.getChildren().add(floatPanel);
 
 
-        Scene scene = new Scene(layeredPane,300,300);
+        Scene scene = new Scene(layeredPane,800,600);
         scene.setFill(Color.GHOSTWHITE);
         primaryStage.setScene(scene);
         primaryStage.setTitle("");
