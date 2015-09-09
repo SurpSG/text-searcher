@@ -1,97 +1,110 @@
 package com.gnatiuk.searcher.ui.utils;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+
 
 /**
  * Created by sgnatiuk on 7/27/15.
  */
 public class FloatPanelWrapper {
 
-    private JComponent foundContainer;
+    private Node foundContainer;
 
-    private JPanel toolPanel;
-    private JPanel floatPanel;
-    private JButton hideButton;
+    private VBox floatPane;
+    private HBox toolPanel;
+    private Button hideButton;
 
-    public FloatPanelWrapper(JComponent foundComponent, Dimension floatPanelContainerDimension){
+    private Parent parent;
+
+    public FloatPanelWrapper(Node foundComponent){
 
         this.foundContainer = foundComponent;
+        VBox.setVgrow(foundComponent,Priority.ALWAYS);
 
-        initFloatPanel(floatPanelContainerDimension);
+        initFloatPanel();
         initToolPanel();
+        floatPane.getChildren().add(toolPanel);
+        floatPane.getChildren().add(foundComponent);
 
-        floatPanel.add(this.foundContainer, BorderLayout.CENTER);
-        foundContainer.addFocusListener(new FocusAdapter() {
+        foundComponent.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void focusLost(FocusEvent e) {
-                hide();
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (!newValue) {
+                    hide();
+                }
             }
         });
     }
 
-    private void initFloatPanel(Dimension containerSize){
-        floatPanel = new JPanel();
-        floatPanel.setLayout(new BorderLayout());
-        floatPanel.setBounds(0, 2 * containerSize.height / 3, containerSize.width, containerSize.height / 3);
+    private void initFloatPanel(){
+        floatPane = new VBox();
     }
 
     private void initToolPanel(){
-        toolPanel = new JPanel();
-        toolPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        toolPanel.setPreferredSize(new Dimension(floatPanel.getWidth(), 20));
-        toolPanel.setBackground(Color.blue);
+        toolPanel = new HBox();
+        toolPanel.setMaxHeight(20);
+        toolPanel.setBackground(new Background(new BackgroundFill(Color.BROWN, CornerRadii.EMPTY, Insets.EMPTY)));
 
         initHideButton();
 
-        toolPanel.addMouseMotionListener(new MouseMotionAdapter() {
-
-            private static final int START_Y = Integer.MIN_VALUE;
-            private int currentY = START_Y;
+        toolPanel.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            private double currentY = Double.MIN_VALUE;
 
             @Override
-            public void mouseDragged(MouseEvent e) {
-                if (currentY == START_Y) {
-                    currentY = e.getY();
+            public void handle(MouseEvent event) {
+                if (currentY == Double.MIN_VALUE) {
+                    currentY = event.getSceneY();
                 }
-                int diff = e.getY() - currentY;
-                floatPanel.setBounds(floatPanel.getX(), floatPanel.getY() + diff,
-                        floatPanel.getWidth(), floatPanel.getHeight() - diff);
-                floatPanel.updateUI();
+
+                double diff = event.getSceneY() - currentY;
+                currentY = event.getSceneY();
+                double currentHeight = floatPane.getMaxHeight() - diff;
+                floatPane.setMaxHeight((currentHeight >= 0) ? currentHeight : 0);
             }
         });
 
-        toolPanel.add(hideButton);
-
-        floatPanel.add(toolPanel, BorderLayout.NORTH);
+        toolPanel.getChildren().add(hideButton);
     }
 
     private void initHideButton(){
-        hideButton = new JButton("Hide");
-        hideButton.addActionListener(new ActionListener() {
+        hideButton = new Button("Hide");
+        hideButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void handle(ActionEvent event) {
                 hide();
             }
         });
     }
 
-    public JPanel getFloatPanel() {
-        return floatPanel;
+    public Pane getFloatPanel() {
+        return floatPane;
     }
 
-    public void addFocusListener(FocusListener focusListener){
-        floatPanel.addFocusListener(focusListener);
-    }
-
-    public boolean isVisible(){
-        return floatPanel.getParent() == null;
+    public void show(){
+        if(parent != null && parent instanceof Pane){
+            ((Pane)parent).getChildren().add(floatPane);
+        }else{
+            throw new RuntimeException("floatPane parent is null or parent.class is "+parent.getClass()+" that is not instance of Pane class.");
+        }
     }
 
     public void hide(){
-        Container container = floatPanel.getParent();
-        container.remove(floatPanel);
-        container.repaint();
+        parent = floatPane.getParent();
+        if(parent instanceof Pane){
+            ((Pane)parent).getChildren().remove(floatPane);
+        }else{
+            System.out.println(parent.getClass());
+            throw new RuntimeException("floatPane parent.class is "+parent.getClass()+" that is not instance of Pane class.");
+        }
     }
 }

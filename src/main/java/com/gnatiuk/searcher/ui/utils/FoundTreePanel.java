@@ -1,18 +1,11 @@
 package com.gnatiuk.searcher.ui.utils;
 
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
-import com.gnatiuk.searcher.core.utils.FoundOption;
 import com.gnatiuk.searcher.core.utils.SearchOption;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
 
 import java.awt.*;
 import java.io.File;
@@ -21,7 +14,7 @@ import java.io.IOException;
 /**
  * Created by sgnatiuk on 6/10/15.
  */
-public class FoundTreePanel extends JFXPanel {
+public class FoundTreePanel{
 
     private TreeItem<String> rootNode;
     private TreeView<String> treeView;
@@ -35,17 +28,10 @@ public class FoundTreePanel extends JFXPanel {
 
         fileOpener = new FileOpener();
         addDoubleClickListener();
+    }
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                StackPane root = new StackPane();
-                root.getChildren().add(treeView);
-                Scene scene = new Scene(root);//, 400, 300);
-                setScene(scene);
-            }
-        });
+    public TreeView<String> getTreeView() {
+        return treeView;
     }
 
     public synchronized void addItem(FileSearchEvent item){
@@ -69,12 +55,12 @@ public class FoundTreePanel extends JFXPanel {
 
                 if (click.getClickCount() == 2) {
                     TreeItem<String> treeItem = treeView.getSelectionModel().getSelectedItem();
-                    if(treeItem.getParent() != rootNode){
+                    if (treeItem.getParent() != rootNode) {
                         return;
                     }
                     File file = new File(treeItem.getValue());
 
-                    if(fileOpener.isSupported()){
+                    if (fileOpener.isSupported()) {
                         fileOpener.openFile(file);
                     }
                 }

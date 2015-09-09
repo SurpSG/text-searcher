@@ -1,31 +1,27 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.embed.swing.JFXPanel;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
+import javafx.scene.Node;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.StackPane;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JFXFilesTreePanel extends JFXPanel {
+public class FilesTreePanel{
     private TreeItem<TreeFile> rootNode;
     private TreeView<TreeFile> treeView;
 
-    public JFXFilesTreePanel() {
+    public FilesTreePanel() {
 
         initTree();
 
@@ -45,20 +41,11 @@ public class JFXFilesTreePanel extends JFXPanel {
             }
         });
 
-
         rootNode.setExpanded(true);
+    }
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-
-                StackPane root = new StackPane();
-                root.getChildren().add(treeView);
-                Scene scene = new Scene(root, 400, 400);
-                setScene(scene);
-            }
-        });
-
+    public Node getTreeNode() {
+        return treeView;
     }
 
     private void initTree() {
@@ -113,27 +100,6 @@ public class JFXFilesTreePanel extends JFXPanel {
             }
         }
 
-    }
-
-    public boolean setNodeStatusByPath(TreeItem<TreeFile> currentRootNode, Path filePath){
-
-        TreeFile currentRootNodeFile = currentRootNode.getValue();
-        Path currentRootNodePath = currentRootNodeFile.toPath();
-        if(currentRootNodePath.equals(filePath)){
-            if(!currentRootNode.isLeaf() && currentRootNode.getValue().isDirectory() && !currentRootNode.isExpanded()){
-                currentRootNode.setExpanded(true);
-            }
-            currentRootNode.setValue(null);
-            currentRootNode.setValue(currentRootNodeFile);
-            return true;
-        }else if(filePath.startsWith(currentRootNodePath)){
-            for (TreeItem<TreeFile> treeFileTreeItem : currentRootNode.getChildren()) {
-                if(setNodeStatusByPath(treeFileTreeItem, filePath)){
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     public List<String> getSelectedPaths(){

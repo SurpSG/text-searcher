@@ -1,13 +1,13 @@
 package com.gnatiuk.searcher.core;
 
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
-import com.gnatiuk.searcher.core.filters.ITextPreprocessor;
 import com.gnatiuk.searcher.core.filters.external.FilterFileName;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileReader;
+import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
@@ -26,13 +26,14 @@ public class FinderTest {
 
 //                "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
-                "/cryptfs/builds/sh10/build_new/build/buildroot/build_mips",
-//                "/cryptfs/builds/sh10/build_new/build/buildroot/build_mips/druid",
+//                "/cryptfs/builds/sh10/439/buildroot/build_mips/",
+                "/cryptfs/builds/sh10/build_cm/build/buildroot/build_mips/drivers_jethead_hum",
+//                "/cryptfs/builds/sh10/build_new/buildEmpty/buildroot/build_mips/druid",
 
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
-                "Blender"
+                "."
         };
 
         String[] fileFiltersRegexArray = new String[]{
@@ -41,6 +42,7 @@ public class FinderTest {
                 "\\.c$",
                 "\\.cpp$",
                 "\\.cc$",
+                "\\.h$",
 //                "\\.o$"
 //                "\\.txt$",
 //                "\\.prop"
@@ -63,6 +65,7 @@ public class FinderTest {
 //                "\\.cc$",
 //                "\\.cpp$",
                 "\\.so$",
+                "\\.ko$",
                 "\\.f$",
                 "\\.dat$",
                 "\\.d$",
@@ -72,6 +75,7 @@ public class FinderTest {
                 "\\.ada$",
                 "\\.gch$",
                 "\\.eps$",
+                "\\.a_shipped",
                 "\\.exp$",
                 "\\.s$",
                 "\\.m4a$",
@@ -91,7 +95,7 @@ public class FinderTest {
 //                "audioconnection",
 //                "de guia",
 //                "umpEventHandler_SetAvControls",
-                "EVENT_ON_PARAMETER_CHANGE",
+                "blt_finish_pending_ops",
 //                "S0710_3",
 //                "+=9",
 //                "+= 9",
@@ -149,7 +153,7 @@ public class FinderTest {
         FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
 
         FiltersContainer searchFilter = new FiltersContainer();
-//        searchFilter.addFilter(filterFileNameCaseSensitive);
+        searchFilter.addFilter(filterFileNameCaseSensitive);
 //        searchFilter.addFilter(filterFileNameIgnoreCase);
 
         searchFilter.addFilter(filterFileNameRegexIgnoreCase);
@@ -160,10 +164,10 @@ public class FinderTest {
 
 
 //        searchFilter.addFilter(filterFileKeywordIgnoreCase);
-//        searchFilter.addFilter(filterFileKeywordCaseSensitive);
+        searchFilter.addFilter(filterFileKeywordCaseSensitive);
 //        searchFilter.addFilter(filterFileKeywordIgnoreCase1);
 
-        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
         System.out.println(searchFilter);
