@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.IKeywordItemChangedListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemFocusListener;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemRemovedListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
@@ -12,6 +13,7 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by sgnatiuk on 8/12/15.
@@ -23,7 +25,7 @@ public class KeywordsContainer {
     private static final int MIN_ROW_COUNT = 1;
 
 
-    private List<String> keywords;
+    private List<AKeywordItem> aKeywordItems;
 
     private Button addKeywordButton;
     private VBox keywordsContainerBox;
@@ -37,7 +39,7 @@ public class KeywordsContainer {
                         + "-fx-border-color: black;"
         );
         titledPane = new TitledPane("Keywords",keywordsContainerBox);
-        keywords = new ArrayList<>();
+        aKeywordItems = new ArrayList<>();
 
         addKeywordButton = new Button("Add keyword");
         addKeywordButton.setMaxWidth(Double.MAX_VALUE);
@@ -45,6 +47,14 @@ public class KeywordsContainer {
                 event -> {
                     int buttonIndex = keywordsContainerBox.getChildren().indexOf(addKeywordButton);
                     CheckableKeywordItem keywordItem = new CheckableKeywordItem();
+                    keywordItem.addKeywordRemovedListener(new KeywordItemRemovedListener() {
+                        @Override
+                        public void keywordRemoved() {
+                            keywordsContainerBox.getChildren().remove(keywordItem.getKeywordItem());
+                            aKeywordItems.remove(keywordItem);
+                        }
+                    });
+                    aKeywordItems.add(keywordItem);
                     keywordItem.addFocusListener(new KeywordItemFocusListener() {
                         @Override
                         public void focusGained() {
@@ -93,7 +103,7 @@ public class KeywordsContainer {
     }
 
     public List<String> getKeywords(){
-        return keywords;
+        return aKeywordItems.stream().map(AKeywordItem::getData).collect(Collectors.toList());
     }
 
     private void minimizeListView(){
@@ -105,7 +115,6 @@ public class KeywordsContainer {
 
     private void maximizeListView(){
 //        setVisibleRowCount(keywordsContainerBox.getChildren().size());
-//        System.out.println();
 //        setVisibleRowCount(2);
     }
 

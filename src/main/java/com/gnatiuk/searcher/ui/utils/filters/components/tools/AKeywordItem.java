@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.IKeywordItemChangedListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemFocusListener;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemRemovedListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -13,7 +14,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ public abstract class AKeywordItem {
     protected List<IKeywordItemChangedListener> keywordItemChangedListeners;
     protected List<KeywordItemFocusListener> focusListeners;
     protected FocusChangeListener focusChangeListener;
+    protected List<KeywordItemRemovedListener> itemRemovedListeners;
 
     boolean editNow = false;
 
@@ -37,18 +38,13 @@ public abstract class AKeywordItem {
         keywordItemChangedListeners = new ArrayList<>();
         focusListeners = new ArrayList<>();
         focusChangeListener = new FocusChangeListener();
+        itemRemovedListeners = new ArrayList<>();
 
         removeItselfButton = new Button("-");
         removeItselfButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
-                if(keywordItemBox.getParent() instanceof Pane){
-                    ((Pane)keywordItemBox.getParent()).getChildren().remove(keywordItemBox);
-                }else{
-                    throw new RuntimeException("Cannot remove keyword item. " +
-                            "Keyword item parent is not an instance of "+Pane.class);
-                }
+                itemRemovedListeners.forEach(KeywordItemRemovedListener::keywordRemoved);
             }
         });
 
@@ -131,6 +127,10 @@ public abstract class AKeywordItem {
 
     public void addKeywordItemChangedListener(IKeywordItemChangedListener keywordItemChangedListener) {
         keywordItemChangedListeners.add(keywordItemChangedListener);
+    }
+
+    public void addKeywordRemovedListener(KeywordItemRemovedListener listener){
+        itemRemovedListeners.add(listener);
     }
 
     public void addFocusListener(KeywordItemFocusListener focusListener){

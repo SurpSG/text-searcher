@@ -3,9 +3,11 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
 import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
@@ -36,11 +38,27 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
 
         rootBox.getChildren().add(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
 
+        titledPane.setPaneContent(newFiltersBox);
+
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
-        scrollPane.setContent(new TitledPane("Filter",newFiltersBox));
+        scrollPane.setContent(titledPane);
 
         rootBox.getChildren().add(scrollPane);
+    }
+
+    protected void createMenuItems(){
+        super.createMenuItems();
+        MenuItem load = new MenuItem("Load");
+        MenuItem clearAll = new MenuItem("Clear All");
+        clearAll.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                filtersComponents.clear();
+                newFiltersBox.getChildren().clear();
+            }
+        });
+        titledPane.addMenuItems(load, clearAll);
     }
 
     private CreatorSearchFilterComponent createCreatorSearchFilterComponent() {

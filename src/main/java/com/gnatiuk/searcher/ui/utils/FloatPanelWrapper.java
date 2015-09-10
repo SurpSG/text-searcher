@@ -103,7 +103,6 @@ public class FloatPanelWrapper {
         if(parent instanceof Pane){
             ((Pane)parent).getChildren().remove(floatPane);
         }else{
-            System.out.println(parent.getClass());
             throw new RuntimeException("floatPane parent.class is "+parent.getClass()+" that is not instance of Pane class.");
         }
     }

@@ -39,8 +39,7 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
 
     @Override
     public Node getSearchCriteriaComponentsPane() {
-        List<Node> components = new ArrayList<>();
-        return layoutComponents(components);
+        return layoutComponents(new ArrayList<>());
     }
 
     @Override

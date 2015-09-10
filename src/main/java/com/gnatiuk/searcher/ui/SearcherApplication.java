@@ -48,8 +48,8 @@ public class SearcherApplication extends Application{
         runButton = new Button("Run");
 
         leftPanel = new VBox();
-        Pane searchCriteriaComponentsPane = filtersContainer.getSearchCriteriaComponentsPane();
-        searchCriteriaComponentsPane.setMaxWidth(Double.MAX_VALUE);
+        Node searchCriteriaComponentsPane = filtersContainer.getSearchCriteriaComponentsPane();
+//        searchCriteriaComponentsPane.setMaxWidth(Double.MAX_VALUE);
         leftPanel.getChildren().addAll(searchCriteriaComponentsPane, runButton);
 
         rightPanel = new VBox();

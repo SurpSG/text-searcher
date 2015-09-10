@@ -2,7 +2,9 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 
 import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.OptionedTitledPane;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
+import com.gnatiuk.searcher.utils.json.FilterJsonProcessor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -10,10 +12,11 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -35,8 +38,10 @@ public abstract class ASearchFilterComponent {
         DISABLE_BACKGROUND = new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, Insets.EMPTY));
     }
 
-    private com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener filterRemovedListener;
+    private FilterRemovedListener filterRemovedListener;
 
+
+    protected OptionedTitledPane titledPane;
     private HBox filterComponentRootBox;
     private CheckBox enableBox;
     private Button removeFilterComponent;
@@ -46,7 +51,8 @@ public abstract class ASearchFilterComponent {
     public ASearchFilterComponent() {
 
         initFilterComponentRootBox();
-
+        titledPane = new OptionedTitledPane(getName());
+        createMenuItems();
         enableBox = new CheckBox("enable");
         enableBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -86,6 +92,23 @@ public abstract class ASearchFilterComponent {
         }
     }
 
+    protected void createMenuItems(){
+        MenuItem save = new MenuItem("Save");
+        save.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    System.out.println(FilterJsonProcessor.serializeFilterToJson(buildFilter()));
+                    //TODO save to file
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        titledPane.addMenuItems(save);
+    }
+
     protected Node layoutComponents(List<Node> components) {
         if(concreteFilterComponents != null){
             return filterComponentRootBox;
@@ -100,8 +123,7 @@ public abstract class ASearchFilterComponent {
             filterComponentRootBox.getChildren().add(node);
         }
 
-        TitledPane titledPane = new TitledPane(getName(), filterComponentRootBox);
-        titledPane.setGraphic(null);
+        titledPane.setPaneContent(filterComponentRootBox);
         return titledPane;
     }
 
