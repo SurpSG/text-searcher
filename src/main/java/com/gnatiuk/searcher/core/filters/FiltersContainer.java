@@ -30,6 +30,10 @@ public class FiltersContainer implements IFilter {
         return this;
     }
 
+    public boolean isEmpty(){
+        return filters.isEmpty();
+    }
+
     @Override
     public FileSearchEvent doFilter(File file) {
         FileSearchEvent foundEvent = new FileSearchEvent(file);

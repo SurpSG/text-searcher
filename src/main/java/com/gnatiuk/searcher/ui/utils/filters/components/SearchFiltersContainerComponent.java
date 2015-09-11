@@ -85,6 +85,9 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
         for (ASearchFilterComponent filterComponent : filtersComponents) {
             filter.addFilter(filterComponent.buildFilter());
         }
+        if (filter.isEmpty()) {
+            return IFilter.NONE_FILTER;
+        }
         return filter;
     }
 
