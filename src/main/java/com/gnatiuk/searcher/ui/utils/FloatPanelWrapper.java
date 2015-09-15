@@ -72,9 +72,11 @@ public class FloatPanelWrapper {
                 }
 
                 double diff = event.getSceneY() - currentY;
-                currentY = event.getSceneY();
                 double currentHeight = floatPane.getMaxHeight() - diff;
-                floatPane.setMaxHeight((currentHeight >= 0) ? currentHeight : 0);
+                if(currentHeight > 0){
+                    floatPane.setMaxHeight(currentHeight);
+                    currentY = event.getSceneY();
+                }
             }
         });
 
