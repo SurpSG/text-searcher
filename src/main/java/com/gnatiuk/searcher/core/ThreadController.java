@@ -3,8 +3,13 @@ package com.gnatiuk.searcher.core;
 import com.gnatiuk.searcher.core.runnable.SearchRunnable;
 import com.gnatiuk.searcher.core.utils.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.*;
+import java.util.List;
+import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by sgnatiuk on 6/2/15.
@@ -19,10 +24,16 @@ public class ThreadController {
     private IWorkCompleteListener workCompleteListener;
     private IFileFoundListener fileFoundListener;
 
+    private List<Runnable> scheduledTasks;
+
     private final ThreadPoolExecutor executorService;
+
+    private ControllerState controllerState;
 
 
     private ThreadController(){
+        scheduledTasks = Collections.synchronizedList(new ArrayList<>());
+        controllerState = ControllerState.STOPPED;
         taskCompleteListener = createTaskCompleteListener();
         executorService = buildThreadPoolExecutor();
     }
@@ -55,7 +66,9 @@ public class ThreadController {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(executorService.getQueue().isEmpty() && executorService.getActiveCount() == 0){
+                if(executorService.getQueue().isEmpty()
+                        && scheduledTasks.isEmpty()
+                        && executorService.getActiveCount() == 0){
                     System.out.println("time: " + (System.currentTimeMillis() - Finder.t1));
                     if(workCompleteListener != null){
                         workCompleteListener.actionPerformed(new WorkCompleteEvent());
@@ -69,7 +82,12 @@ public class ThreadController {
         searchThread.addTaskStartedListener(taskStartedListener);
         searchThread.addTaskCompleteListener(taskCompleteListener);
         searchThread.addFileFoundListener(fileFoundListener);
-        executorService.execute(searchThread);
+
+        if(controllerState == ControllerState.STARTED){
+            executorService.execute(searchThread);
+        }else {
+            scheduledTasks.add(searchThread);
+        }
     }
 
     public void addWorkCompleteListener(IWorkCompleteListener workCompleteListener){
@@ -105,7 +123,47 @@ public class ThreadController {
         }));
     }
 
+    public void start(){
+        if(controllerState == ControllerState.STARTED){
+            throw new UnsupportedOperationException("Controller already started. Current state = "+controllerState);
+        }
+        synchronized (scheduledTasks) {
+            controllerState = ControllerState.STARTED;
+            scheduledTasks.forEach(executorService::execute);
+            scheduledTasks.clear();
+        }
+    }
+
+    public void stop(){
+        controllerState = ControllerState.STOPPED;
+        scheduledTasks.clear();
+        executorService.getQueue().clear();
+    }
+
+    public void pause(){
+        if(controllerState != ControllerState.STARTED){
+            throw new UnsupportedOperationException("Controller is not started. Current state = "+controllerState);
+        }
+        synchronized (scheduledTasks){
+            controllerState = ControllerState.PAUSED;
+            scheduledTasks.clear();
+            scheduledTasks.addAll(executorService.getQueue());
+            executorService.getQueue().clear();
+        }
+    }
+
+    public void resume(){
+        if(controllerState != ControllerState.PAUSED){
+            throw new UnsupportedOperationException("Controller is not paused. Current state = "+controllerState);
+        }
+        start();
+    }
+
     public void shutdown(){
         executorService.shutdown();
+    }
+
+    private enum ControllerState{
+        PAUSED, STARTED, STOPPED;
     }
 }

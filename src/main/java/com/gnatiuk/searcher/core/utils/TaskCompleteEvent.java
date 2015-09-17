@@ -9,18 +9,12 @@ public class TaskCompleteEvent {
 
     private List<String> processedFiles;
 
-    private FileSearchStatus statusColor;
-
-    public TaskCompleteEvent(List<String> processedFiles, FileSearchStatus statusColor) {
+    public TaskCompleteEvent(List<String> processedFiles) {
         this.processedFiles = processedFiles;
-        this.statusColor = statusColor;
     }
 
     public List<String> getProcessedFiles() {
         return processedFiles;
     }
 
-    public FileSearchStatus getSearchStatus() {
-        return statusColor;
-    }
 }

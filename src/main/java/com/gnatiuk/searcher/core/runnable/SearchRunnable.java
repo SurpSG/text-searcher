@@ -83,4 +83,11 @@ public abstract class SearchRunnable implements Runnable {
     public int getPriority() {
         return priority;
     }
+
+    @Override
+    public String toString() {
+        return "SearchRunnable{" +
+                "id=" + id +
+                '}';
+    }
 }

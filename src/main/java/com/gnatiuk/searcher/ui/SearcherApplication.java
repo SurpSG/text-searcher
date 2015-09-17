@@ -18,17 +18,14 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.ToolBar;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.util.List;
 
 
@@ -39,6 +36,9 @@ public class SearcherApplication extends Application{
 
 
     private Button runButton;
+    private Button pauseButton;
+    private Button stopButton;
+    private Button resumeButton;
     private FilesTreePanel filesTreePanel;
     private Pane leftPanel;
     private Pane rightPanel;
@@ -106,7 +106,21 @@ public class SearcherApplication extends Application{
         ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
-                JOptionPane.showMessageDialog(null, "Done!");
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText("Searching is finished");
+                        alert.setHeaderText(null);
+                        alert.show();
+
+                        runButton.setDisable(false);
+                        resumeButton.setDisable(true);
+                        stopButton.setDisable(true);
+                        pauseButton.setDisable(true);
+                    }
+                });
+
             }
         });
     }
@@ -141,9 +155,56 @@ public class SearcherApplication extends Application{
                 System.out.println(filter);
                 SearcherHierarchyRunnable searcherHierarchyRunnable = new SearcherHierarchyRunnable(pathsToSearch, filter);
                 ThreadController.getInstance().registerThread(searcherHierarchyRunnable);
+                ThreadController.getInstance().start();
+                pauseButton.setDisable(false);
+                stopButton.setDisable(false);
+                runButton.setDisable(true);
+                resumeButton.setDisable(true);
             }
         });
-        leftPanel.getChildren().addAll(runButton);
+
+        resumeButton = new Button("Resume");
+        resumeButton.setDisable(true);
+        resumeButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ThreadController.getInstance().resume();
+                runButton.setDisable(true);
+                resumeButton.setDisable(true);
+                pauseButton.setDisable(false);
+                stopButton.setDisable(false);
+            }
+        });
+
+        stopButton = new Button("Stop");
+        stopButton.setDisable(true);
+        stopButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ThreadController.getInstance().stop();
+                runButton.setDisable(false);
+                stopButton.setDisable(true);
+                pauseButton.setDisable(true);
+                resumeButton.setDisable(true);
+            }
+        });
+        pauseButton = new Button("Pause");
+        pauseButton.setDisable(true);
+        pauseButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                ThreadController.getInstance().pause();
+
+                runButton.setDisable(false);
+                stopButton.setDisable(false);
+                pauseButton.setDisable(true);
+                resumeButton.setDisable(false);
+            }
+        });
+
+        HBox handleButtonsPane = new HBox();
+        handleButtonsPane.getChildren().addAll(runButton, pauseButton, resumeButton, stopButton);
+        leftPanel.getChildren().add(handleButtonsPane);
     }
 
     private void createFoundPane(){
@@ -209,6 +270,7 @@ public class SearcherApplication extends Application{
     @Override
     public void stop(){
         ThreadController.getInstance().shutdown();
+        System.exit(0);
     }
 
     public static void main(String[] args) {

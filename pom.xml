@@ -33,6 +33,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
                 <configuration>
                     <!-- or whatever version you use -->
                     <source>1.8</source>
@@ -59,7 +60,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.gnatiuk.searcher.ui.MainFrame</mainClass>
+                            <mainClass>com.gnatiuk.searcher.ui.SearcherApplication</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

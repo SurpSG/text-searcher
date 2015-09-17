@@ -2,7 +2,6 @@ package com.gnatiuk.searcher.core.runnable;
 
 import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.filters.IFilter;
-import com.gnatiuk.searcher.core.utils.FileSearchStatus;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 
@@ -46,7 +45,7 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
 
     @Override
     protected TaskCompleteEvent createTaskCompleteEvent() {
-        return new TaskCompleteEvent(filePaths, FileSearchStatus.IN_PROGRESS);
+        return new TaskCompleteEvent(filePaths);
     }
 
     protected void processFile(File file){
@@ -90,5 +89,13 @@ public class SearcherHierarchyRunnable extends SearchRunnable {
 
     protected void invokeNewFilterThread(File file) {
         ThreadController.getInstance().registerThread(new FilterExecutor(filter, file, SearchRunnable.HIGH_PRIORITY));
+    }
+
+    @Override
+    public String toString() {
+        return "SearcherHierarchyRunnable{" +
+                "filePaths=" + filePaths +
+                ", filter=" + filter +
+                '}';
     }
 }
