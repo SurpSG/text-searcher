@@ -2,7 +2,6 @@ package com.gnatiuk.searcher.core.filters.internal;
 
 import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ public class FilterFileKeyword extends FilterFileReader {
 
 
     public FilterFileKeyword() {
-        this(new ArrayList<>());
+        super();
     }
 
     public FilterFileKeyword(List<String> keywords) {

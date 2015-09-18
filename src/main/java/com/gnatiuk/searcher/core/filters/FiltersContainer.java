@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core.filters;
 
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.File;
@@ -30,6 +31,7 @@ public class FiltersContainer implements IFilter {
         return this;
     }
 
+    @JsonIgnore
     public boolean isEmpty(){
         return filters.isEmpty();
     }

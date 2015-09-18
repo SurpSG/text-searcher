@@ -6,12 +6,17 @@ import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 import com.gnatiuk.searcher.core.utils.FoundOption;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by sgnatiuk on 6/15/15.
  */
 public abstract class FilterFileReader extends ATextFilter {
+
+    public FilterFileReader(){
+        this(new ArrayList<>());
+    }
 
     public FilterFileReader(List<String> keywords) {
         super(keywords);

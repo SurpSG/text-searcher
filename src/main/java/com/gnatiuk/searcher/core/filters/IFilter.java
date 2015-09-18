@@ -2,7 +2,11 @@ package com.gnatiuk.searcher.core.filters;
 
 
 import com.gnatiuk.searcher.core.filters.external.FilterFileName;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameExclude;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
+import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
+import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonSubTypes;
@@ -17,9 +21,15 @@ import java.io.File;
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = FilterFileKeyword.class, name = "FilterFileKeyword"),
+@JsonSubTypes(value = {
         @JsonSubTypes.Type(value = FilterFileName.class, name = "FilterFileName"),
+        @JsonSubTypes.Type(value = FilterFileNameExclude.class, name = "FilterFileNameExclude"),
+        @JsonSubTypes.Type(value = FilterFileNameRegex.class, name = "FilterFileNameRegex"),
+        @JsonSubTypes.Type(value = FilterFileNameRegexExclude.class, name = "FilterFileNameRegexExclude"),
+
+        @JsonSubTypes.Type(value = FilterFileKeyword.class, name = "FilterFileKeyword"),
+        @JsonSubTypes.Type(value = FilterFileKeywordRegex.class, name = "FilterFileKeywordRegex"),
+
         @JsonSubTypes.Type(value = FiltersContainer.class, name = "FiltersContainer"),
 })
 @JsonIgnoreProperties(ignoreUnknown = true)

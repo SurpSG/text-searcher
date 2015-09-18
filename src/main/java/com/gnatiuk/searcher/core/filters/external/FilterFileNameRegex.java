@@ -19,6 +19,10 @@ public class FilterFileNameRegex extends ATextFilter {
 
     private List<Pattern> filesPatterns;
 
+    public FilterFileNameRegex(){
+        super();
+    }
+
     public FilterFileNameRegex(List<String> keywords) {
         this(keywords, ITextPreprocessor.NONE_PROCESSOR);
     }

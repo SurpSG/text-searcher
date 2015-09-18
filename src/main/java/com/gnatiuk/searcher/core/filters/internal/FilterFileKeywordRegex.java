@@ -13,6 +13,10 @@ public class FilterFileKeywordRegex extends FilterFileReader {
 
     private List<Pattern> keywordsPatterns;
 
+    public FilterFileKeywordRegex(){
+        super();
+    }
+
     public FilterFileKeywordRegex(List<String> keywords) {
         this(keywords, ITextPreprocessor.NONE_PROCESSOR);
     }

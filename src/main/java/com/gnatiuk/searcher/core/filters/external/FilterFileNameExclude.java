@@ -11,6 +11,10 @@ import java.util.List;
  */
 public class FilterFileNameExclude extends FilterFileName {
 
+    public FilterFileNameExclude(){
+        super();
+    }
+
     public FilterFileNameExclude(List<String> keywords) {
         super(keywords);
     }

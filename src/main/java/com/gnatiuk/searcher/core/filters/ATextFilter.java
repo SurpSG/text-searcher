@@ -16,6 +16,10 @@ public abstract class ATextFilter implements IFilter {
     @JsonProperty("keywords")
     protected List<String> keywords;
 
+    public ATextFilter(){
+        this(new ArrayList<>());
+    }
+
     public ATextFilter(List<String> keywords){
         this(keywords, ITextPreprocessor.NONE_PROCESSOR);
     }

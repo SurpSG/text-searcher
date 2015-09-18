@@ -10,6 +10,12 @@ import java.util.List;
  * Created by sgnatiuk on 6/17/15.
  */
 public class FilterFileNameRegexExclude extends FilterFileNameRegex {
+
+
+    public FilterFileNameRegexExclude(){
+        super();
+    }
+
     public FilterFileNameRegexExclude(List<String> filesPatterns) {
         super(filesPatterns);
     }
