@@ -2,6 +2,9 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
 import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.dialog.FilterLoadDialog;
+import com.gnatiuk.searcher.ui.utils.dialog.FilterSaveDialog;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.OptionedTitledPane;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,7 +20,8 @@ import java.util.List;
 /**
  * Created by Sergiy on 8/9/2015.
  */
-public class SearchFiltersContainerComponent extends ASearchFilterComponent {
+//public class SearchFiltersContainerComponent extends ASearchFilterComponent {
+public class SearchFiltersContainerComponent {
 
     public static final String NAME = "Search filters";
 
@@ -27,14 +31,16 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
 
     private VBox rootBox;
     private VBox newFiltersBox;
+    protected OptionedTitledPane titledPane;
+
 
     public SearchFiltersContainerComponent() {
-        super();
+        titledPane = new OptionedTitledPane(getName());
         filtersComponents = new ArrayList<>();
         createCreatorSearchFilterComponent();
-
-        rootBox = new VBox(ITEMS_VERTICAL_PADDING);
-        newFiltersBox = new VBox(ITEMS_VERTICAL_PADDING);
+        createMenuItems();
+        rootBox = new VBox();
+        newFiltersBox = new VBox();
 
         rootBox.getChildren().add(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
 
@@ -48,8 +54,26 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
     }
 
     protected void createMenuItems(){
-        super.createMenuItems();
+
+        MenuItem saveAll = new MenuItem("Save All");
+        saveAll.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                new FilterSaveDialog(buildFilter()).show();
+            }
+        });
+
         MenuItem load = new MenuItem("Load");
+        load.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                titledPane.hideMenuItems();
+                FilterLoadDialog filterLoadDialog = new FilterLoadDialog();
+                filterLoadDialog.showAndWait();
+                addFilterComponents(ASearchFilterComponent.build(filterLoadDialog.getFilter()));
+            }
+        });
+
         MenuItem clearAll = new MenuItem("Clear All");
         clearAll.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -58,7 +82,15 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
                 newFiltersBox.getChildren().clear();
             }
         });
-        titledPane.addMenuItems(load, clearAll);
+        MenuItem loadAndReplace = new MenuItem("Load and replace");
+        loadAndReplace.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                clearAll.getOnAction().handle(event);
+                load.getOnAction().handle(event);
+            }
+        });
+        titledPane.addMenuItems(saveAll, load, loadAndReplace, clearAll);
     }
 
     private CreatorSearchFilterComponent createCreatorSearchFilterComponent() {
@@ -74,12 +106,10 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
         return creatorSearchFilterComponent;
     }
 
-    @Override
     public String getName() {
         return NAME;
     }
 
-    @Override
     public IFilter buildFilter() {
         FiltersContainer filter = new FiltersContainer();
         for (ASearchFilterComponent filterComponent : filtersComponents) {
@@ -104,8 +134,13 @@ public class SearchFiltersContainerComponent extends ASearchFilterComponent {
         newFiltersBox.getChildren().add(pane);
     }
 
-    @Override
-    public Pane getSearchCriteriaComponentsPane() {
+    public void addFilterComponents(List<ASearchFilterComponent> filterComponents) {
+        for (ASearchFilterComponent filterComponent : filterComponents) {
+            addFilterComponent(filterComponent);
+        }
+    }
+
+    public Pane getFiltersContainer() {
         return rootBox;
     }
 

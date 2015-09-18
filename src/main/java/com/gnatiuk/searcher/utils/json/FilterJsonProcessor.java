@@ -28,6 +28,10 @@ public class FilterJsonProcessor {
         return mapper.readValue(json, IFilter.class);
     }
 
+    public static IFilter deserializeFilterFromFile(String filePath) throws IOException {
+        return deserializeFilterFromFile(new File(filePath));
+    }
+
     public static IFilter deserializeFilterFromFile(File file) throws IOException {
         return mapper.readValue(new FileInputStream(file), IFilter.class);
     }

@@ -127,7 +127,7 @@ public class SearcherApplication extends Application{
 
     private void createFiltersPane(){
         filtersContainer = new SearchFiltersContainerComponent();
-        Node searchCriteriaComponentsPane = filtersContainer.getSearchCriteriaComponentsPane();
+        Node searchCriteriaComponentsPane = filtersContainer.getFiltersContainer();
         leftPanel.getChildren().addAll(searchCriteriaComponentsPane);
     }
 

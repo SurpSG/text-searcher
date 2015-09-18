@@ -2,9 +2,9 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 
 import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.dialog.FilterSaveDialog;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.OptionedTitledPane;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
-import com.gnatiuk.searcher.utils.json.FilterJsonProcessor;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,9 +16,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -97,16 +99,14 @@ public abstract class ASearchFilterComponent {
         save.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                try {
-                    System.out.println(FilterJsonProcessor.serializeFilterToJson(buildFilter()));
-                    //TODO save to file
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                new FilterSaveDialog(buildFilter()).show();
             }
         });
+        MenuItem loadOnAppStart = new MenuItem("Load on start");
+        loadOnAppStart.setGraphic(new CheckBox());
 
-        titledPane.addMenuItems(save);
+
+        titledPane.addMenuItems(loadOnAppStart, save);
     }
 
     protected Node layoutComponents(List<Node> components) {
@@ -144,6 +144,19 @@ public abstract class ASearchFilterComponent {
         }
         throw new IllegalArgumentException(String.format("Problems during creating an instance using" +
                 " '%s' Class object", classObj));
+    }
+
+    public static List<ASearchFilterComponent> build(IFilter filter) {
+        return Collections.EMPTY_LIST;//TODO create builder for ASearchFilterComponent from IFilter object
+    }
+
+    public static List<ASearchFilterComponent> build(Collection<IFilter> filters) {
+        List<ASearchFilterComponent> searchFilterComponents = new ArrayList<>();
+        for (IFilter filter : filters) {
+            System.out.println(filter);
+            searchFilterComponents.addAll(build(filter));
+        }
+        return searchFilterComponents;
     }
 
     public void setFilterRemovedListener(FilterRemovedListener filterRemovedListener) {

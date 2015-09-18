@@ -87,4 +87,8 @@ public class OptionedTitledPane extends TitledPane {
             throw new RuntimeException("Image does not exists. Please, check path: "+imageFile.getAbsolutePath());
         }
     }
+
+    public void hideMenuItems(){
+        optionMenuButton.hide();
+    }
 }
