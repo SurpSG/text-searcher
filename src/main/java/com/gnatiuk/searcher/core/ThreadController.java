@@ -72,6 +72,7 @@ public class ThreadController {
                     System.out.println("time: " + (System.currentTimeMillis() - Finder.t1));
                     if(workCompleteListener != null){
                         workCompleteListener.actionPerformed(new WorkCompleteEvent());
+                        controllerState = ControllerState.STOPPED;
                     }
                 }
             }
