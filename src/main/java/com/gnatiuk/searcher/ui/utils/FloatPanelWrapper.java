@@ -1,6 +1,5 @@
 package com.gnatiuk.searcher.ui.utils;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -28,7 +27,7 @@ public class FloatPanelWrapper {
     private Button hideButton;
 
     private Parent parent;
-    private boolean visible;
+    private Boolean visible;
 
     public FloatPanelWrapper(Node foundComponent){
 
@@ -98,20 +97,19 @@ public class FloatPanelWrapper {
     }
 
     public void show(){
+        if(isVisible()){//Avoid raise condition
+            return;
+        }
+        setVisible(true);
         if(parent != null && parent instanceof Pane){
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    ((Pane) parent).getChildren().add(floatPane);
-                }
-            });
+            ((Pane) parent).getChildren().add(floatPane);
         }else{
             throw new RuntimeException("floatPane parent is null or parent.class is "+parent.getClass()+" that is not instance of Pane class.");
         }
-        visible = true;
     }
 
     public void hide(){
+        setVisible(false);
         if(parent == null){
             parent = floatPane.getParent();
         }
@@ -121,14 +119,17 @@ public class FloatPanelWrapper {
         }else{
             throw new RuntimeException("floatPane parent.class is "+parent.getClass()+" that is not instance of Pane class.");
         }
-        visible = false;
     }
 
     public boolean isVisible() {
-        return visible;
+        synchronized (visible){
+            return visible;
+        }
     }
 
     public void setVisible(boolean visible) {
-        this.visible = visible;
+        synchronized (this.visible) {
+            this.visible = visible;
+        }
     }
 }
