@@ -69,7 +69,6 @@ public class ThreadController {
                 if(executorService.getQueue().isEmpty()
                         && scheduledTasks.isEmpty()
                         && executorService.getActiveCount() == 0){
-                    System.out.println("time: " + (System.currentTimeMillis() - Finder.t1));
                     if(workCompleteListener != null){
                         workCompleteListener.actionPerformed(new WorkCompleteEvent());
                         controllerState = ControllerState.STOPPED;

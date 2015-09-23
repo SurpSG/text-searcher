@@ -8,6 +8,7 @@ import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileReader;
 import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
+import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 
@@ -27,7 +28,8 @@ public class FinderTest {
 //                "/home/sgnatiuk/Downloads",
 //                "/home/sgnatiuk/Documents",
 //                "/cryptfs/builds/sh10/439/buildroot/build_mips/",
-                "/cryptfs/builds/sh10/build_cm/build/buildroot/build_mips/drivers_jethead_hum",
+//                "/cryptfs/builds/sh10/build_cm/build/buildroot/build_mips/drivers_jethead_hum",
+                "/home/sgnatiuk/Downloads/20150914_SH10-200_Autostress",
 //                "/cryptfs/builds/sh10/build_new/buildEmpty/buildroot/build_mips/druid",
 
         };
@@ -95,7 +97,10 @@ public class FinderTest {
 //                "audioconnection",
 //                "de guia",
 //                "umpEventHandler_SetAvControls",
-                "blt_finish_pending_ops",
+//                "kernel",
+                "panic",
+                "oops",
+//                "Stopping",
 //                "S0710_3",
 //                "+=9",
 //                "+= 9",
@@ -113,7 +118,8 @@ public class FinderTest {
 //                "(Invalid.*argument)*.*failed:.*(Invalid.*argument)*",
 //                "(\"Running[ ])[ ]*(%s){1,}.*(test)*",
 //                "\"Mounting[ ]*(%s)*(writable)*.*(flash)*"
-                "hdmiDisplayAttached[ ]*=[ ]*[^=]",
+                "[^A-Za-z]panic[^A-Za-z]",
+                "[^A-Za-z]oops[^A-Za-z]",
 //                "reportToMW\\(.*,"
         };
 
@@ -153,10 +159,10 @@ public class FinderTest {
         FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
 
         FiltersContainer searchFilter = new FiltersContainer();
-        searchFilter.addFilter(filterFileNameCaseSensitive);
+//        searchFilter.addFilter(filterFileNameCaseSensitive);
 //        searchFilter.addFilter(filterFileNameIgnoreCase);
 
-        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileNameRegexCaseSensitive);
 
 //        searchFilter.addFilter(filterFileNameRegexExcludeIgnoreCase);
@@ -164,14 +170,14 @@ public class FinderTest {
 
 
 //        searchFilter.addFilter(filterFileKeywordIgnoreCase);
-        searchFilter.addFilter(filterFileKeywordCaseSensitive);
+//        searchFilter.addFilter(filterFileKeywordCaseSensitive);
 //        searchFilter.addFilter(filterFileKeywordIgnoreCase1);
 
-//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
+        System.out.println(Arrays.asList(filePaths));
         System.out.println(searchFilter);
-        Finder finder = new Finder(Arrays.asList(filePaths), searchFilter);
 
         ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
             @Override
@@ -182,7 +188,7 @@ public class FinderTest {
             }
         });
 
-        Finder.t1 = System.currentTimeMillis();
-        finder.start();
+        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
+        ThreadController.getInstance().start();
     }
 }
