@@ -55,4 +55,8 @@ public class FiltersContainer implements IFilter {
                 "filters=" + filters +
                 '}';
     }
+
+    public List<IFilter> getFilters() {
+        return filters;
+    }
 }

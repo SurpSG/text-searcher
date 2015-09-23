@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core.filters;
 
 import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.util.ArrayList;
@@ -47,5 +48,14 @@ public abstract class ATextFilter implements IFilter {
                 "textPreprocessor=" + textPreprocessor +
                 ", keywords=" + keywords +
                 '}';
+    }
+
+    public List<String> getKeywords() {
+        return keywords;
+    }
+
+    @JsonIgnore
+    public ITextPreprocessor getTextPreprocessor() {
+        return textPreprocessor;
     }
 }

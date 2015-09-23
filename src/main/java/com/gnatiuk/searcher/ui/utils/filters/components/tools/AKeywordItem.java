@@ -65,7 +65,7 @@ public abstract class AKeywordItem {
     }
 
 
-    public Node getKeywordItem() {
+    public Node getKeywordNode() {
         return keywordItemBox;
     }
 

@@ -60,4 +60,23 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
         }
         return ITextPreprocessor.NONE_PROCESSOR;
     }
+
+    public void addKeyword(String keyword) {
+        this.keywordsContainer.addKeyword(keyword);
+    }
+
+    public void addKeywords(List<String> keywords) {
+        for (String keyword : keywords) {
+            addKeyword(keyword);
+        }
+    }
+
+    public void setIgnoreCase(boolean ignoreCase) {
+        this.ignoreCaseCheck.setSelected(ignoreCase);
+    }
+
+    public void setRegexCheck(boolean regex) {
+        this.regexCheck.setSelected(regex);
+    }
+
 }

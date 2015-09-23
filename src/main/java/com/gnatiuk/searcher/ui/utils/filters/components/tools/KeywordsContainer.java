@@ -42,40 +42,11 @@ public class KeywordsContainer {
         aKeywordItems = new ArrayList<>();
 
         addKeywordButton = new Button("Add keyword");
-        addKeywordButton.setMaxWidth(Double.MAX_VALUE);
+        addKeywordButton.setMaxWidth(Double.valueOf(300));
         addKeywordButton.setOnAction(
                 event -> {
-                    int buttonIndex = keywordsContainerBox.getChildren().indexOf(addKeywordButton);
-                    CheckableKeywordItem keywordItem = new CheckableKeywordItem();
-                    keywordItem.addKeywordRemovedListener(new KeywordItemRemovedListener() {
-                        @Override
-                        public void keywordRemoved() {
-                            keywordsContainerBox.getChildren().remove(keywordItem.getKeywordItem());
-                            aKeywordItems.remove(keywordItem);
-                        }
-                    });
-                    aKeywordItems.add(keywordItem);
-                    keywordItem.addFocusListener(new KeywordItemFocusListener() {
-                        @Override
-                        public void focusGained() {
-                            maximizeListView();
-                        }
-
-                        @Override
-                        public void focusLost() {
-                            minimizeListView();
-                            keywordItem.cancelEdit();
-                        }
-                    });
-                    keywordItem.addKeywordItemChangedListener(new IKeywordItemChangedListener() {
-                        @Override
-                        public void valueChanged() {
-                            if (keywordItem.getData().isEmpty()) {
-                                keywordsContainerBox.getChildren().remove(keywordItem.getKeywordItem());
-                            }
-                        }
-                    });
-                    keywordsContainerBox.getChildren().add(buttonIndex, keywordItem.getKeywordItem());
+                    AKeywordItem keywordItem = buildKeywordItem("");
+                    addKeywordItem(keywordItem);
                     keywordItem.startEdit();
                 }
         );
@@ -106,6 +77,10 @@ public class KeywordsContainer {
         return aKeywordItems.stream().map(AKeywordItem::getData).collect(Collectors.toList());
     }
 
+    public void addKeyword(String keyword){
+        addKeywordItem(buildKeywordItem(keyword));
+    }
+
     private void minimizeListView(){
         int size = keywordsContainerBox.getChildren().size();
         int listRowCount = (size >= MIN_ROW_COUNT) ? size : MIN_ROW_COUNT;
@@ -120,6 +95,45 @@ public class KeywordsContainer {
 
     private void setVisibleRowCount(int count){
 //        titledPane.setPrefHeight(ROW_HEIGHT * count);
+    }
+
+    private AKeywordItem buildKeywordItem(String keyword){
+        CheckableKeywordItem keywordItem = new CheckableKeywordItem();
+        keywordItem.setData(keyword);
+        keywordItem.addKeywordRemovedListener(new KeywordItemRemovedListener() {
+            @Override
+            public void keywordRemoved() {
+                keywordsContainerBox.getChildren().remove(keywordItem.getKeywordNode());
+                aKeywordItems.remove(keywordItem);
+            }
+        });
+        keywordItem.addFocusListener(new KeywordItemFocusListener() {
+            @Override
+            public void focusGained() {
+                maximizeListView();
+            }
+
+            @Override
+            public void focusLost() {
+                minimizeListView();
+                keywordItem.cancelEdit();
+            }
+        });
+        keywordItem.addKeywordItemChangedListener(new IKeywordItemChangedListener() {
+            @Override
+            public void valueChanged() {
+                if (keywordItem.getData().isEmpty()) {
+                    keywordsContainerBox.getChildren().remove(keywordItem.getKeywordNode());
+                }
+            }
+        });
+        return keywordItem;
+    }
+
+    private void addKeywordItem(AKeywordItem keywordItem){
+        int buttonIndex = keywordsContainerBox.getChildren().indexOf(addKeywordButton);
+        aKeywordItems.add(keywordItem);
+        keywordsContainerBox.getChildren().add(buttonIndex, keywordItem.getKeywordNode());
     }
 
 }

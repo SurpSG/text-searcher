@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.filters.components.builders.ASearchComponentBuilder;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -50,7 +51,7 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
 
                 Class<? extends ASearchFilterComponent> classObj = selectedItem.getKey();
                 if (buttonListener != null) {
-                    buttonListener.actionPerformed(new CreateButtonEvent(ASearchFilterComponent.build(classObj)));
+                    buttonListener.actionPerformed(new CreateButtonEvent(ASearchComponentBuilder.build(classObj)));
                 }
             }
         });

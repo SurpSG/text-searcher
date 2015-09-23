@@ -3,6 +3,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.ui.utils.dialog.FilterSaveDialog;
+import com.gnatiuk.searcher.ui.utils.filters.components.builders.FilterToComponentMap;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.OptionedTitledPane;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
 import javafx.event.ActionEvent;
@@ -13,14 +14,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -115,11 +116,9 @@ public abstract class ASearchFilterComponent {
         }
 
         concreteFilterComponents = components;
-        filterComponentRootBox.getChildren().add(removeFilterComponent);
-        filterComponentRootBox.getChildren().add(enableBox);
+        filterComponentRootBox.getChildren().addAll(removeFilterComponent, enableBox);
 
         for (Node node : components) {
-            HBox.setHgrow(node, Priority.ALWAYS);
             filterComponentRootBox.getChildren().add(node);
         }
 
@@ -127,27 +126,8 @@ public abstract class ASearchFilterComponent {
         return titledPane;
     }
 
-
-    public static ASearchFilterComponent build(Class<? extends ASearchFilterComponent> classObj) {
-        try {
-            //get default constructor
-            Constructor<? extends ASearchFilterComponent> constructor = classObj.getConstructor();
-            return constructor.newInstance();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        throw new IllegalArgumentException(String.format("Problems during creating an instance using" +
-                " '%s' Class object", classObj));
-    }
-
     public static List<ASearchFilterComponent> build(IFilter filter) {
-        return Collections.EMPTY_LIST;//TODO create builder for ASearchFilterComponent from IFilter object
+        return FilterToComponentMap.buildFilterComponent(filter);
     }
 
     public static List<ASearchFilterComponent> build(Collection<IFilter> filters) {
