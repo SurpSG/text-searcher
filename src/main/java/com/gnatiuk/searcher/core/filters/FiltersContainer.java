@@ -56,6 +56,15 @@ public class FiltersContainer implements IFilter {
                 '}';
     }
 
+    @Override
+    public String filterHash() {
+        StringBuilder result = new StringBuilder();
+        for (IFilter filter : filters) {
+            result.append(filter.filterHash());
+        }
+        return result.toString();
+    }
+
     public List<IFilter> getFilters() {
         return filters;
     }

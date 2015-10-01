@@ -1,12 +1,11 @@
 package com.gnatiuk.searcher.ui.utils.dialog;
 
 import com.gnatiuk.searcher.core.filters.IFilter;
-import com.gnatiuk.searcher.utils.json.FilterJsonProcessor;
+import com.gnatiuk.searcher.utils.FilterFileUtils;
 import javafx.scene.control.SelectionMode;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,16 +30,11 @@ public class FilterLoadDialog extends FilterFileControlDialog{
     protected void onControlButtonAction() {
         filters = new ArrayList<>();
         for (String selectedItem : filesListView.getSelectionModel().getSelectedItems()) {
-            String filePath = getFilesSaveDir() + File.separator + selectedItem;
-            try {
-                filters.add(FilterJsonProcessor.deserializeFilterFromFile(filePath));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            filters.add(FilterFileUtils.loadFilterByName(selectedItem));
         }
     }
 
-    public List<IFilter> getFilter() {
-        return filters;
+    public List<IFilter> getFilters() {
+        return filters != null ? filters : Collections.emptyList();
     }
 }

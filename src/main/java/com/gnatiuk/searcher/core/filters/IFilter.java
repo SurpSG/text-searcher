@@ -36,7 +36,18 @@ import java.io.File;
 public interface IFilter {
 
     FileSearchEvent doFilter(File file);
+    String filterHash();
 
-    IFilter NONE_FILTER = (file) -> new FileSearchEvent(file);
 
+    IFilter NONE_FILTER = new IFilter() {
+        @Override
+        public FileSearchEvent doFilter(File file) {
+            return new FileSearchEvent(file);
+        }
+
+        @Override
+        public String filterHash() {
+            return "0";
+        }
+    };
 }

@@ -11,8 +11,10 @@ public class AppOptions {
     public static final String APP_ON_DUTY_DIR_PATH = createOnDutyDirIfNotExists();
 
     public static final String FILTERS_SAVE_DIR_NAME = "filters";
-    public static final String FILTERS_SAVE_DIR_PATH = createFiltersSaveDirIfNotExists();
+    public static final String FILTERS_SAVE_DIR_PATH = createNestedDirIfNotExists(FILTERS_SAVE_DIR_NAME);
 
+    public static final String ON_BOOT_DIR_NAME = "on-boot";
+    public static final String ON_BOOT_DIR_PATH = createNestedDirIfNotExists(ON_BOOT_DIR_NAME);
 
     public static final String FILTER_FILE_EXTENSION = ".json";
     /**
@@ -29,8 +31,8 @@ public class AppOptions {
      *
      * @return path to filters save directory
      */
-    private static String createFiltersSaveDirIfNotExists(){
-        String filtersSaveDir = APP_ON_DUTY_DIR_PATH + File.separator + FILTERS_SAVE_DIR_NAME;
+    private static String createNestedDirIfNotExists(String dirName){
+        String filtersSaveDir = APP_ON_DUTY_DIR_PATH + File.separator + dirName;
         createDirIfNotExists(new File(filtersSaveDir));
         return filtersSaveDir;
     }

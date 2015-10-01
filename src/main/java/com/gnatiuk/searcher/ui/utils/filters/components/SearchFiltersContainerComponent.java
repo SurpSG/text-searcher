@@ -70,7 +70,7 @@ public class SearchFiltersContainerComponent {
                 titledPane.hideMenuItems();
                 FilterLoadDialog filterLoadDialog = new FilterLoadDialog();
                 filterLoadDialog.showAndWait();
-                addFilterComponents(ASearchFilterComponent.build(filterLoadDialog.getFilter()));
+                addFilterComponents(ASearchFilterComponent.build(filterLoadDialog.getFilters()));
             }
         });
 

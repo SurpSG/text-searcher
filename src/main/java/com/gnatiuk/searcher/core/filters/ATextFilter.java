@@ -58,4 +58,16 @@ public abstract class ATextFilter implements IFilter {
     public ITextPreprocessor getTextPreprocessor() {
         return textPreprocessor;
     }
+
+    @Override
+    public String filterHash(){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(textPreprocessor != null ? textPreprocessor.getClass().getSimpleName() : "");
+        for (String keyword : keywords) {
+            for (char character : keyword.toCharArray()) {
+                stringBuilder.append((int)character);
+            }
+        }
+        return stringBuilder.toString();
+    }
 }

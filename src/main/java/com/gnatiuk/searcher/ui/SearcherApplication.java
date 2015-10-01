@@ -11,6 +11,7 @@ import com.gnatiuk.searcher.ui.utils.FilesTreePanel;
 import com.gnatiuk.searcher.ui.utils.FloatPanelWrapper;
 import com.gnatiuk.searcher.ui.utils.FoundTreePanel;
 import com.gnatiuk.searcher.ui.utils.filters.components.SearchFiltersContainerComponent;
+import com.gnatiuk.searcher.utils.OnBootManager;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -127,6 +128,7 @@ public class SearcherApplication extends Application{
 
     private void createFiltersPane(){
         filtersContainer = new SearchFiltersContainerComponent();
+        filtersContainer.addFilterComponents(OnBootManager.getOnLoadSearchComponents());
         Node searchCriteriaComponentsPane = filtersContainer.getFiltersContainer();
         leftPanel.getChildren().addAll(searchCriteriaComponentsPane);
     }

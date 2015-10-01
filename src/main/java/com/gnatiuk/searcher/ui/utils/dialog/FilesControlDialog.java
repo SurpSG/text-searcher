@@ -56,14 +56,19 @@ public abstract class FilesControlDialog {
     }
 
     protected void loadSavedFiles(){
-        List<String> allowedFileExtensions = getAllowedFileExtensions();
-        for (String file :new File(getFilesSaveDir()).list() ) {
-            for (String allowedFileExtension : allowedFileExtensions) {
+        for (String file: new File(getFilesSaveDir()).list() ) {
+            for (String allowedFileExtension : getAllowedFileExtensions()) {
                 if(file.endsWith(allowedFileExtension)){
-                    filesListView.getItems().add(file);
+                    filesListView.getItems().add(processFileName(file));
                 }
             }
         }
+    }
+
+    protected String processFileName(String fileName){
+        int indexOfDot = fileName.lastIndexOf(".");
+        indexOfDot = indexOfDot > 0 ? indexOfDot : fileName.length();
+        return fileName.substring(0, indexOfDot);
     }
 
     protected abstract List<String> getAllowedFileExtensions();

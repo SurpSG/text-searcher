@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.ui.utils.dialog;
 
 import com.gnatiuk.searcher.utils.AppOptions;
+import com.gnatiuk.searcher.utils.FilterFileUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
@@ -40,6 +41,12 @@ public abstract class FilterFileControlDialog extends FilesControlDialog {
                 dialog.close();
             }
         });
+    }
+
+    @Override
+    protected String processFileName(String fileName) {
+        String processedFileName = FilterFileUtils.extractFilterName(fileName);
+        return processedFileName != null ? processedFileName : fileName;
     }
 
     @Override

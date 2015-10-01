@@ -29,7 +29,7 @@ public class FinderTest {
 //                "/home/sgnatiuk/Documents",
 //                "/cryptfs/builds/sh10/439/buildroot/build_mips/",
 //                "/cryptfs/builds/sh10/build_cm/build/buildroot/build_mips/drivers_jethead_hum",
-                "/home/sgnatiuk/Downloads/20150914_SH10-200_Autostress",
+                "/cryptfs/builds/sh10/439/buildroot/build_mips",
 //                "/cryptfs/builds/sh10/build_new/buildEmpty/buildroot/build_mips/druid",
 
         };
@@ -40,11 +40,11 @@ public class FinderTest {
 
         String[] fileFiltersRegexArray = new String[]{
 //                "flash.*\\.c$"
-//                "\\.java$",
-                "\\.c$",
-                "\\.cpp$",
-                "\\.cc$",
-                "\\.h$",
+                "\\.java$",
+//                "\\.c$",
+//                "\\.cpp$",
+//                "\\.cc$",
+//                "\\.h$",
 //                "\\.o$"
 //                "\\.txt$",
 //                "\\.prop"
@@ -93,21 +93,7 @@ public class FinderTest {
         };
 
         String[] filterKeywordsArray = new String[]{
-//                "bcdi",
-//                "audioconnection",
-//                "de guia",
-//                "umpEventHandler_SetAvControls",
-//                "kernel",
-                "panic",
-                "oops",
-//                "Stopping",
-//                "S0710_3",
-//                "+=9",
-//                "+= 9",
-//                "Nas N Did Wevay",
-//                "Nas N Did",
-//                "kernel",
-//                "exception"
+                "temperature",
         };
 
         String[] filterKeywordsArray1 = new String[]{
@@ -115,12 +101,7 @@ public class FinderTest {
         };
 
         String[] filterKeywordsRegexArray = new String[]{
-//                "(Invalid.*argument)*.*failed:.*(Invalid.*argument)*",
-//                "(\"Running[ ])[ ]*(%s){1,}.*(test)*",
-//                "\"Mounting[ ]*(%s)*(writable)*.*(flash)*"
-                "[^A-Za-z]panic[^A-Za-z]",
-                "[^A-Za-z]oops[^A-Za-z]",
-//                "reportToMW\\(.*,"
+                "does not exist\"",
         };
 
 
@@ -162,18 +143,18 @@ public class FinderTest {
 //        searchFilter.addFilter(filterFileNameCaseSensitive);
 //        searchFilter.addFilter(filterFileNameIgnoreCase);
 
-//        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
+        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileNameRegexCaseSensitive);
 
 //        searchFilter.addFilter(filterFileNameRegexExcludeIgnoreCase);
 //        searchFilter.addFilter(filterFileNameRegexExcludeCaseSensitive);
 
 
-//        searchFilter.addFilter(filterFileKeywordIgnoreCase);
+        searchFilter.addFilter(filterFileKeywordIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordCaseSensitive);
 //        searchFilter.addFilter(filterFileKeywordIgnoreCase1);
 
-        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
         System.out.println(Arrays.asList(filePaths));
@@ -189,6 +170,6 @@ public class FinderTest {
         });
 
         ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
-        ThreadController.getInstance().start();
+//        ThreadController.getInstance().start();
     }
 }

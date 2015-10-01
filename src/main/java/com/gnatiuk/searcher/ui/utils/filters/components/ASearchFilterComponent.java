@@ -6,6 +6,7 @@ import com.gnatiuk.searcher.ui.utils.dialog.FilterSaveDialog;
 import com.gnatiuk.searcher.ui.utils.filters.components.builders.FilterToComponentMap;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.OptionedTitledPane;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.FilterRemovedListener;
+import com.gnatiuk.searcher.utils.OnBootManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -51,26 +52,26 @@ public abstract class ASearchFilterComponent {
 
     private List<Node> concreteFilterComponents;
 
-    public ASearchFilterComponent() {
+    private CheckBox autoLoad;
 
-        initFilterComponentRootBox();
+    public ASearchFilterComponent() {
+        autoLoad = new CheckBox();
         titledPane = new OptionedTitledPane(getName());
-        createMenuItems();
+
         enableBox = new CheckBox("enable");
+        enableBox.setSelected(true);
         enableBox.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(enableBox.isSelected()){
+                if (enableBox.isSelected()) {
                     enableFilterComponent();
-                }else{
+                } else {
                     disableFilterComponent();
                 }
             }
         });
-        enableBox.setSelected(true);
 
         removeFilterComponent = new Button("-");
-
         removeFilterComponent.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -81,11 +82,24 @@ public abstract class ASearchFilterComponent {
                 }
             }
         });
+
+
+        initFilterComponentRootBox();
+        createMenuItems();
+
     }
 
     public abstract String getName();
     protected abstract IFilter buildFilter();
     public abstract Node getSearchCriteriaComponentsPane();
+
+    public boolean isAutoLoad() {
+        return autoLoad.isSelected();
+    }
+
+    public void setAutoLoad(boolean autoLoad) {
+        this.autoLoad .setSelected(autoLoad);
+    }
 
     public IFilter getFilter(){
         if(enableBox.isSelected()){
@@ -104,8 +118,17 @@ public abstract class ASearchFilterComponent {
             }
         });
         MenuItem loadOnAppStart = new MenuItem("Load on start");
-        loadOnAppStart.setGraphic(new CheckBox());
-
+        loadOnAppStart.setGraphic(autoLoad);
+        autoLoad.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(autoLoad.isSelected()){
+                    OnBootManager.registerOnBootFilter(buildFilter());
+                }else{
+                    OnBootManager.unregisterOnBootFilter(buildFilter());
+                }
+            }
+        });
 
         titledPane.addMenuItems(loadOnAppStart, save);
     }
@@ -133,7 +156,6 @@ public abstract class ASearchFilterComponent {
     public static List<ASearchFilterComponent> build(Collection<IFilter> filters) {
         List<ASearchFilterComponent> searchFilterComponents = new ArrayList<>();
         for (IFilter filter : filters) {
-            System.out.println(filter);
             searchFilterComponents.addAll(build(filter));
         }
         return searchFilterComponents;
@@ -162,7 +184,7 @@ public abstract class ASearchFilterComponent {
         setDisableAll(false, ENABLE_BACKGROUND);
     }
 
-    private void setDisableAll(boolean disable, Background background){
+    private void setDisableAll(boolean disable, Background background) {
         filterComponentRootBox.setBackground(background);
         for (Node concreteFilterComponent : concreteFilterComponents) {
             concreteFilterComponent.setDisable(disable);

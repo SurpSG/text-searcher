@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.utils;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -21,13 +22,17 @@ public class FileUtils {
         return fileRows;
     }
 
-    public static void writeToFile(File file, List<String> rows) throws IOException {
+    public static void writeToFile(File file, Collection<String> rows, boolean override) throws IOException {
 
-        try(BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)))){
+        try(BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, !override)))){
             for (String row : rows) {
                 bw.write(row);
                 bw.newLine();
             }
         }
+    }
+
+    public static void writeToFile(File file, Collection<String> rows) throws IOException {
+        writeToFile(file, rows, true);
     }
 }
