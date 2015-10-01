@@ -24,14 +24,7 @@ public class FinderTest {
     public static void main(String[] args) {
 
         String[] filePaths = {
-
-//                "/home/sgnatiuk/Downloads",
-//                "/home/sgnatiuk/Documents",
-//                "/cryptfs/builds/sh10/439/buildroot/build_mips/",
-//                "/cryptfs/builds/sh10/build_cm/build/buildroot/build_mips/drivers_jethead_hum",
-                "/cryptfs/builds/sh10/439/buildroot/build_mips",
-//                "/cryptfs/builds/sh10/build_new/buildEmpty/buildroot/build_mips/druid",
-
+                "/home/sgnatiuk/Downloads",
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
@@ -39,7 +32,6 @@ public class FinderTest {
         };
 
         String[] fileFiltersRegexArray = new String[]{
-//                "flash.*\\.c$"
                 "\\.java$",
 //                "\\.c$",
 //                "\\.cpp$",
@@ -170,6 +162,6 @@ public class FinderTest {
         });
 
         ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
-//        ThreadController.getInstance().start();
+        ThreadController.getInstance().start();
     }
 }
