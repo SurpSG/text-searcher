@@ -11,6 +11,13 @@ import java.util.List;
 public class FileUtils {
 
     public static List<String> readFile(File file) throws IOException {
+        return readFile(file, false);
+    }
+
+    public static List<String> readFile(File file, boolean createIfNotExists) throws IOException {
+        if(createIfNotExists && !file.exists()){
+            file.createNewFile();
+        }
         List<String> fileRows = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;

@@ -1,5 +1,6 @@
 package com.gnatiuk.searcher.ui.utils.dialog;
 
+import com.gnatiuk.searcher.ui.utils.AutoCompleteTextField;
 import com.gnatiuk.searcher.utils.AppOptions;
 import com.gnatiuk.searcher.utils.FilterFileUtils;
 import javafx.event.ActionEvent;
@@ -20,7 +21,7 @@ public abstract class FilterFileControlDialog extends FilesControlDialog {
 
     public FilterFileControlDialog(){
         initControlButton();
-        textField = new TextField();
+        textField = new AutoCompleteTextField(filesListView.getItems());
 //        filesListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
     }
 

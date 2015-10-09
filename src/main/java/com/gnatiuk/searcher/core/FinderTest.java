@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.core;
 
 import com.gnatiuk.searcher.core.filters.FiltersContainer;
+import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.filters.external.FilterFileName;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
@@ -11,6 +12,7 @@ import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
+import com.gnatiuk.searcher.utils.WordsLibManager;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -24,19 +26,19 @@ public class FinderTest {
     public static void main(String[] args) {
 
         String[] filePaths = {
-                "/home/sgnatiuk/Downloads",
+                "/cryptfs/builds/sh10/487/buildroot/build_mips",
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
-                "."
+                ".java"
         };
 
         String[] fileFiltersRegexArray = new String[]{
-                "\\.java$",
-//                "\\.c$",
-//                "\\.cpp$",
-//                "\\.cc$",
-//                "\\.h$",
+//                "\\.java$",
+                "\\.c$",
+                "\\.cpp$",
+                "\\.cc$",
+                "\\.h$",
 //                "\\.o$"
 //                "\\.txt$",
 //                "\\.prop"
@@ -85,7 +87,7 @@ public class FinderTest {
         };
 
         String[] filterKeywordsArray = new String[]{
-                "temperature",
+                "keyreaderthread",
         };
 
         String[] filterKeywordsArray1 = new String[]{
@@ -93,7 +95,7 @@ public class FinderTest {
         };
 
         String[] filterKeywordsRegexArray = new String[]{
-                "does not exist\"",
+                "PLUGIN*.*MIN.*SW.*VERSION",
         };
 
 
@@ -150,7 +152,9 @@ public class FinderTest {
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
 
         System.out.println(Arrays.asList(filePaths));
-        System.out.println(searchFilter);
+        for (IFilter filter : searchFilter.getFilters()) {
+            System.out.println(filter);
+        }
 
         ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
             @Override
@@ -162,6 +166,8 @@ public class FinderTest {
         });
 
         ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
-        ThreadController.getInstance().start();
+//        ThreadController.getInstance().start();
+
+        WordsLibManager.getInstance().getKeywords();
     }
 }

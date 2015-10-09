@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public abstract class FilterFileReader extends ATextFilter {
+public abstract class FilterFileReader extends ATextFilter implements InternalFilterMarker{
 
     public FilterFileReader(){
         this(new ArrayList<>());

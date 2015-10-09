@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FilterFileName extends ATextFilter {
+public class FilterFileName extends ATextFilter implements ExternalFilterMarker {
 
     private FileSearchEvent fileSearchEvent;
 

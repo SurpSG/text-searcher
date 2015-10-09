@@ -1,27 +1,29 @@
 package com.gnatiuk.searcher.core.filters;
 
+import com.gnatiuk.searcher.core.filters.external.ExternalFilterMarker;
+import com.gnatiuk.searcher.core.filters.internal.InternalFilterMarker;
 import com.gnatiuk.searcher.core.utils.FileSearchEvent;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FiltersContainer implements IFilter {
+public class FiltersContainer implements IFilter, ExternalFilterMarker {
 
     @JsonProperty("filters")
-    private List<IFilter> filters;
+    private Set<IFilter> filters;
 
     public FiltersContainer(){
         this(new ArrayList<IFilter>());
     }
 
-    public FiltersContainer(List<IFilter> filters){
-        this.filters = filters;
+    public FiltersContainer(Collection<IFilter> filters){
+        this.filters = new TreeSet<>(new FilterScopeComparator());
+        this.filters.addAll(filters);
     }
 
     public FiltersContainer addFilter(IFilter filter){
@@ -65,7 +67,28 @@ public class FiltersContainer implements IFilter {
         return result.toString();
     }
 
-    public List<IFilter> getFilters() {
+    public Collection<IFilter> getFilters() {
         return filters;
+    }
+
+    private static class FilterScopeComparator implements Comparator<IFilter>{
+
+        @Override
+        public int compare(IFilter filter1, IFilter filter2) {
+            if(getWeight(filter1) - getWeight(filter2) >= 0){
+                return 1;
+            }
+            return -1;
+        }
+
+        private int getWeight(IFilter filter){
+            if (filter instanceof InternalFilterMarker){
+                return InternalFilterMarker.WEIGHT;
+            }else if(filter instanceof ExternalFilterMarker){
+                return ExternalFilterMarker.WEIGHT;
+            }else {
+                return Integer.MAX_VALUE;
+            }
+        }
     }
 }

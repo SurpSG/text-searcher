@@ -1,8 +1,10 @@
 package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
+import com.gnatiuk.searcher.ui.utils.AutoCompleteTextField;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.IKeywordItemChangedListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemFocusListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemRemovedListener;
+import com.gnatiuk.searcher.utils.WordsLibManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -56,8 +58,7 @@ public abstract class AKeywordItem {
         );
         keywordItemBox.setAlignment(Pos.CENTER_LEFT);
         keywordItemBox.setMinHeight(Double.valueOf(30));//TODO do something with magic
-        keywordItemBox.getChildren().add(removeItselfButton);
-        textField = new TextField();
+        textField = new AutoCompleteTextField(WordsLibManager.getInstance().getKeywords());
         textField.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(textField, Priority.ALWAYS);
         keywordItemBox.focusedProperty().addListener(focusChangeListener);
@@ -100,8 +101,8 @@ public abstract class AKeywordItem {
         editNow = true;
         ObservableList<Node> nodes = keywordItemBox.getChildren();
         nodes.remove(getKeywordItemNode());
-        textField.setText(getData());
         nodes.add(textField);
+        textField.setText(getData());
         textField.requestFocus();
         textField.selectAll();
     }

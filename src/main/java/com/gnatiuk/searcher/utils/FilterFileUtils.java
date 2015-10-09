@@ -48,10 +48,6 @@ public class FilterFileUtils {
         return isExists(filter.filterHash());
     }
 
-    public static String getFilterFileByFilter(IFilter filter){
-        return getFilterFileByName(filter.hashCode()+"");
-    }
-
     public static String getFilterFileByName(String filterName){
         String[] filtersFilesNames = new File(AppOptions.FILTERS_SAVE_DIR_PATH).list();
 

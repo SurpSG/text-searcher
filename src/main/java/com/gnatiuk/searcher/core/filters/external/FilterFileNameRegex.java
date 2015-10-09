@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 /**
  * Created by sgnatiuk on 6/15/15.
  */
-public class FilterFileNameRegex extends ATextFilter {
+public class FilterFileNameRegex extends ATextFilter implements ExternalFilterMarker {
 
 
     private FileSearchEvent fileSearchEvent;
