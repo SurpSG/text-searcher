@@ -44,7 +44,7 @@ public class FoundTreePanel{
     }
 
     /**
-     *
+     * Method for adding a new node to tree.
      * @param path new file to add
      * @param node node that is currently checked to find most correspond node
      * @return a new node item
@@ -87,7 +87,7 @@ public class FoundTreePanel{
     }
 
     private FilesTreeItem addNewItem(Path path){
-        return addNewItem(path.toString(), rootNode);
+        return extractFileNameToLeaf(addNewItem(path.toString(), rootNode));
     }
 
     private String buildPathForNode(TreeItem<String> node){
@@ -110,7 +110,6 @@ public class FoundTreePanel{
             @Override
             public void handle(MouseEvent click) {
 
-                System.out.println(click.getClickCount());
                 if (click.getClickCount() == 2) {
                     TreeItem<String> treeItem = treeView.getSelectionModel().getSelectedItem();
                     if (treeItem == rootNode) {
@@ -124,6 +123,27 @@ public class FoundTreePanel{
                 }
             }
         });
+    }
+
+    /**
+     * Method extracts treeItem to separate node as a leaf if treeItem value is a file.
+     * If file is extracted nothing to do.
+     * @param treeItem item to divide.
+     * @return new extracted item or item from argument
+     */
+    private FilesTreeItem extractFileNameToLeaf(FilesTreeItem treeItem){
+        String currentItemValue = treeItem.getValue();
+        File itemFile = new File(buildPathForNode(treeItem));
+        if(itemFile.getName().equals(currentItemValue) || itemFile.isDirectory()){
+           return treeItem;
+        }
+
+        String newItemValue = currentItemValue.substring(0, currentItemValue.indexOf(itemFile.getName()));
+        treeItem.setValue(newItemValue);
+
+        FilesTreeItem fileNameTreeItem = new FilesTreeItem(itemFile.getName());
+        treeItem.getChildren().add(fileNameTreeItem);
+        return fileNameTreeItem;
     }
 
 
@@ -164,46 +184,10 @@ public class FoundTreePanel{
         }
     }
 
-    public void printTree(TreeItem<String> rootItem, String shift){
-        System.out.println(shift+rootItem.getValue() + " "+rootItem.isLeaf());
-        for (TreeItem<String> treeItem : rootItem.getChildren()) {
-            printTree(treeItem, shift+"    ");
-        }
-    }
-
-    public static void main(String[] args) {
-        testTree("/home/sgnatiuk/workspace/itravel");
-        foundTreePanel.printTree(foundTreePanel.rootNode, "");
-    }
-
-    private static FoundTreePanel foundTreePanel = new FoundTreePanel();
-
-    public static void testTree(String fileRootPath){
-
-
-        File file = new File(fileRootPath);
-        if(file.isDirectory()){
-            String[] files = file.list();
-            for (String s : files) {
-                testTree(fileRootPath + File.separator + s);
-            }
-        }else{
-            if(file.getName().endsWith("java")){
-
-            foundTreePanel.addItem(new FileSearchEvent(new File(fileRootPath)));
-            }
-        }
-    }
-
-
     private class FilesTreeItem extends TreeItem<String>{
 
         public FilesTreeItem(String value){
             super(value);
-        }
-
-        public FilesTreeItem(){
-            super();
         }
 
         @Override
