@@ -36,7 +36,9 @@ public final class WordsLibManager {
 
     public void saveWords(Collection<String> words){
         synchronized (keywordsSynchronizer){
-            keywordsLib.addAll(words);
+            for (String word : words) {
+                keywordsLib.addAll(Arrays.asList(word.split(" ")));
+            }
             saveWordsLib();
         }
     }
