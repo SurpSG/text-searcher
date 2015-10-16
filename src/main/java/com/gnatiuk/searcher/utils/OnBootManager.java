@@ -14,6 +14,7 @@ import java.util.*;
 public class OnBootManager {
 
     public static String ON_BOOT_FILTERS_FILE_NAME = "on_boot_filters";
+    public static String ON_BOOT_PATHS_FILE_NAME = "on_boot_paths";
 
     public static List<ASearchFilterComponent> getOnLoadSearchComponents(){
         File onBootFiltersFile = new File(buildOnBootFilePath(ON_BOOT_FILTERS_FILE_NAME));
@@ -107,5 +108,22 @@ public class OnBootManager {
 
     private static String buildOnBootFilePath(String fileName){
         return AppOptions.ON_BOOT_DIR_PATH + File.separator + fileName;
+    }
+
+    public static Collection<String> getRecentPaths(){
+        try {
+            return FileUtils.readFile(new File(buildOnBootFilePath(ON_BOOT_PATHS_FILE_NAME)), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+           return Collections.emptyList();
+        }
+    }
+
+    public static void addRecentPaths(Collection<String> paths){
+        try {
+            FileUtils.writeToFile(new File(buildOnBootFilePath(ON_BOOT_PATHS_FILE_NAME)), paths, true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

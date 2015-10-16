@@ -1,65 +1,87 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
+import com.gnatiuk.searcher.utils.OnBootManager;
+import com.sun.javafx.collections.ObservableListWrapper;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class FilesTreePanel{
     private TreeItem<TreeFile> rootNode;
-    private TreeView<TreeFile> treeView;
+    private SelectedTreeView treeView;
+
+    private SelectedListView recentChosenPaths;
+
+    private SplitPane contentRootNode;
+    private TabPane tabPaneNode;
+    private SelectedListView chosenPaths;
+
 
     public FilesTreePanel() {
-
-        initTree();
-
-        rootNode.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
-            public void handle(TreeItem.TreeModificationEvent<Object> event) {
-                TreeItem expandedTreeItem = event.getTreeItem();
-                initChildren(expandedTreeItem);
-            }
-        });
-
-        rootNode.addEventHandler(TreeItem.branchCollapsedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
-            public void handle(TreeItem.TreeModificationEvent<Object> event) {
-                TreeItem collapsedTreeItem = event.getTreeItem();
-                if (collapsedTreeItem != rootNode) {
-                    collapsedTreeItem.getChildren().clear();
-                }
-            }
-        });
-
-        rootNode.setExpanded(true);
+        initContentRootNode();
     }
 
     public Node getTreeNode() {
-        return treeView;
+        return contentRootNode;
     }
 
-    private void initTree() {
-        rootNode = createRootItem();
-//        initChildren(rootNode);
-        treeView = new TreeView<>(rootNode);
+    private void initContentRootNode() {
+        contentRootNode = new SplitPane();
+        contentRootNode.setOrientation(Orientation.VERTICAL);
+        initTabbedNode();
+        initChosenPathsNode();
+        contentRootNode.getItems().addAll(
+                tabPaneNode,
+                chosenPaths
+        );
+    }
+
+    private void initTabbedNode() {
+        initFilesTreeNode();
+        initRecentChosenNode();
+        tabPaneNode = new TabPane();
+        Tab filesTreeTab = new Tab("Files tree");
+        filesTreeTab.setContent(treeView);
+        Tab recentChosenTab = new Tab("Recent");
+        recentChosenTab.setContent(recentChosenPaths);
+        tabPaneNode.getTabs().addAll(filesTreeTab, recentChosenTab);
+    }
+
+    private void initChosenPathsNode() {
+        chosenPaths = new SelectedListView();
+    }
+
+    private void initRecentChosenNode() {
+        recentChosenPaths = new SelectedListView();
+        recentChosenPaths.getItems().addAll(OnBootManager.getRecentPaths());
+        recentChosenPaths.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        recentChosenPaths.setOnKeyPressed(new AddPathKeyEventHandler(recentChosenPaths));
+    }
+
+    private void initFilesTreeNode() {
+        initRootItem();
+        treeView = new SelectedTreeView(rootNode);
         treeView.setEditable(false);
         treeView.setCellFactory(new Callback<TreeView<TreeFile>, TreeCell<TreeFile>>() {
-
             @Override
             public TreeCell<TreeFile> call(TreeView<TreeFile> param) {
                 return new TextFieldTreeCellImpl();
             }
         });
+        treeView.setOnKeyPressed(new AddPathKeyEventHandler(treeView));
         treeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
@@ -103,29 +125,98 @@ public class FilesTreePanel{
     }
 
     public List<String> getSelectedPaths(){
-        List<String> selectedPaths = new ArrayList<>();
-        for (TreeItem<TreeFile> treeFileTreeItem : treeView.getSelectionModel().getSelectedItems()) {
-            selectedPaths.add(treeFileTreeItem.getValue().getAbsolutePath());
-        }
-        return selectedPaths;
+        return chosenPaths.getItems();
     }
 
-    private static TreeItem<TreeFile> createRootItem(){
+    private TreeItem<TreeFile> initRootItem(){
 
+        rootNode = new TreeItem<>(new TreeFile(getRootItemName()));
+        for (File file : FileSystemView.getFileSystemView().getRoots()) {
+            rootNode.getChildren().add(new FileTreeItem(new TreeFile(file.getAbsolutePath())));
+        }
 
-        String computerName= null;
+        rootNode.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
+            public void handle(TreeItem.TreeModificationEvent<Object> event) {
+                TreeItem expandedTreeItem = event.getTreeItem();
+                initChildren(expandedTreeItem);
+            }
+        });
+
+        rootNode.addEventHandler(TreeItem.branchCollapsedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
+            public void handle(TreeItem.TreeModificationEvent<Object> event) {
+                TreeItem collapsedTreeItem = event.getTreeItem();
+                if (collapsedTreeItem != rootNode) {
+                    collapsedTreeItem.getChildren().clear();
+                }
+            }
+        });
+
+        rootNode.setExpanded(true);
+        return rootNode;
+    }
+
+    private static String getRootItemName(){
         try {
-            computerName = InetAddress.getLocalHost().getHostName();
+            return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }
-
-        TreeItem<TreeFile> root = new TreeItem<>(new TreeFile(computerName));
-        for (File file : FileSystemView.getFileSystemView().getRoots()) {
-            root.getChildren().add(new FileTreeItem(new TreeFile(file.getAbsolutePath())));
-        }
-
-        return root;
+        throw new RuntimeException("Cannot choose name for root item");
     }
 
+    private class AddPathKeyEventHandler implements EventHandler<KeyEvent>{
+
+        ItemsView itemsView;
+
+        public AddPathKeyEventHandler(ItemsView itemsView) {
+            this.itemsView = itemsView;
+        }
+
+        @Override
+        public void handle(KeyEvent event) {
+            if(event.getCode() == KeyCode.ADD){
+                ObservableList<String> items = FilesTreePanel.this.chosenPaths.getItems();
+                for (String selectedItem : itemsView.getSelectedItems()) {
+                    if(!items.contains(selectedItem)){
+                        items.add(selectedItem);
+                    }
+                }
+                items.sort(new Comparator<String>() {
+                    @Override
+                    public int compare(String o1, String o2) {
+                        return o1.compareTo(o2);
+                    }
+                });
+            }
+        }
+    }
+
+    private interface ItemsView {
+        List<String> getSelectedItems();
+    }
+
+    private class SelectedListView extends ListView<String> implements ItemsView {
+
+        @Override
+        public List<String> getSelectedItems() {
+            return getSelectionModel().getSelectedItems();
+        }
+
+
+    }
+
+    private class SelectedTreeView extends TreeView<TreeFile> implements ItemsView {
+
+        public SelectedTreeView(TreeItem<TreeFile> root){
+            super(root);
+        }
+
+        @Override
+        public List<String> getSelectedItems() {
+            return getSelectionModel().getSelectedItems()
+                    .stream()
+                    .map(treeFileTreeItem -> treeFileTreeItem.getValue().getAbsolutePath())
+                    .collect(Collectors.toList());
+        }
+    }
 }

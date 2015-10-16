@@ -154,6 +154,9 @@ public class SearcherApplication extends Application{
                     System.err.println("there is no path is selected");
                     return;
                 }
+
+                OnBootManager.addRecentPaths(pathsToSearch);
+
                 SearcherHierarchyRunnable searcherHierarchyRunnable = new SearcherHierarchyRunnable(pathsToSearch, filter);
                 ThreadController.getInstance().registerThread(searcherHierarchyRunnable);
                 ThreadController.getInstance().start();
