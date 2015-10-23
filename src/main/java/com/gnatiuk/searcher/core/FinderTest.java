@@ -28,7 +28,7 @@ public class FinderTest {
     public static void main(String[] args) {
 
         String[] filePaths = {
-                "/cryptfs/builds/sh10/487/buildroot/build_mips",
+                "/home",
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
@@ -41,63 +41,22 @@ public class FinderTest {
                 "\\.cpp$",
                 "\\.cc$",
                 "\\.h$",
-//                "\\.o$"
-//                "\\.txt$",
-//                "\\.prop"
         };
 
         String[] fileFiltersRegexExcludeArray = new String[]{
-                "\\.o$",
 //                "\\.txt$",
-//                "\\.h$",
 //                "\\.java$",
-                "\\.patch$",
-                "\\.xml$",
-                "\\.class$",
-                "\\.bz2$",
-                "\\.lzma$",
-                "\\.gz$",
-                "\\.tgz$",
-                "\\.a$",
+//                "\\.h$",
 //                "\\.c$",
 //                "\\.cc$",
 //                "\\.cpp$",
-                "\\.so$",
-                "\\.ko$",
-                "\\.f$",
-                "\\.dat$",
-                "\\.d$",
-                "\\.1$",
-                "\\.tcc$",
-                "\\.pl$",
-                "\\.ada$",
-                "\\.gch$",
-                "\\.eps$",
-                "\\.a_shipped",
-                "\\.exp$",
-                "\\.s$",
-                "\\.m4a$",
-                "\\.test$",
-                "\\.dia$",
-                "\\.squashfs$",
-                "\\.a$",
-                "\\.so$",
-                "\\.status$",
-                "\\.log$",
-//                "\\.doc$",
-//                "^[0-9]$"
         };
 
         String[] filterKeywordsArray = new String[]{
-                "keyreaderthread",
-        };
-
-        String[] filterKeywordsArray1 = new String[]{
-                "OSD62"
         };
 
         String[] filterKeywordsRegexArray = new String[]{
-                "PLUGIN*.*MIN.*SW.*VERSION",
+                "regex",
         };
 
 
@@ -108,7 +67,6 @@ public class FinderTest {
         List<String> fileFiltersRegex = Arrays.asList(fileFiltersRegexArray);
         List<String> fileFiltersRegexExclude = Arrays.asList(fileFiltersRegexExcludeArray);
         List<String> filterKeywords = Arrays.asList(filterKeywordsArray);
-        List<String> filterKeywords1 = Arrays.asList(filterKeywordsArray1);
         List<String> filterKeywordsRegex = Arrays.asList(filterKeywordsRegexArray);
 
 
@@ -128,9 +86,7 @@ public class FinderTest {
 
 
         FilterFileReader filterFileKeywordIgnoreCase = new FilterFileKeyword(filterKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
-        FilterFileReader filterFileKeywordIgnoreCase1 = new FilterFileKeyword(filterKeywords1, ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileReader filterFileKeywordCaseSensitive = new FilterFileKeyword(filterKeywords);
-        FilterFileReader filterFileKeywordCaseSensitive1 = new FilterFileKeyword(filterKeywords1);
 
         FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
@@ -149,7 +105,6 @@ public class FinderTest {
 
         searchFilter.addFilter(filterFileKeywordIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordCaseSensitive);
-//        searchFilter.addFilter(filterFileKeywordIgnoreCase1);
 
 //        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
