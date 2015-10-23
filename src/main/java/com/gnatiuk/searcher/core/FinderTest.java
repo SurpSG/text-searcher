@@ -5,6 +5,7 @@ import com.gnatiuk.searcher.core.filters.IFilter;
 import com.gnatiuk.searcher.core.filters.external.FilterFileName;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
 import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
+import com.gnatiuk.searcher.core.filters.external.FilterFileSize;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.core.filters.internal.FilterFileReader;
@@ -12,6 +13,7 @@ import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
+import com.gnatiuk.searcher.utils.SizeMeasure;
 import com.gnatiuk.searcher.utils.WordsLibManager;
 
 import javax.swing.*;
@@ -132,6 +134,7 @@ public class FinderTest {
 
         FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
+        FilterFileSize filterFileSize = new FilterFileSize(0, 1, SizeMeasure.MB);
 
         FiltersContainer searchFilter = new FiltersContainer();
 //        searchFilter.addFilter(filterFileNameCaseSensitive);
@@ -150,6 +153,7 @@ public class FinderTest {
 
 //        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
+        searchFilter.addFilter(filterFileSize);
 
         System.out.println(Arrays.asList(filePaths));
         for (IFilter filter : searchFilter.getFilters()) {
@@ -166,7 +170,7 @@ public class FinderTest {
         });
 
         ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
-//        ThreadController.getInstance().start();
+        ThreadController.getInstance().start();
 
         WordsLibManager.getInstance().getKeywords();
     }
