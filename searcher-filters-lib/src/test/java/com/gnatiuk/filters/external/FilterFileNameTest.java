@@ -30,7 +30,6 @@ public class FilterFileNameTest extends AFilterTest {
             int lastIndex = random.nextInt(TEST_FILE_NAME.length() - 1) + 1;
             int firstIndex = random.nextInt(lastIndex);
             String partitionTestFileName = TEST_FILE_NAME.substring(firstIndex, lastIndex);
-            System.out.println("partitionTestFileName="+partitionTestFileName);
             FilterFileName filterFileName = new FilterFileName(Arrays.asList(partitionTestFileName));
             Assert.assertEquals(filterFileName.doFilter(testFile).getFilePath(), testFile.toPath());
         }
