@@ -1,23 +1,19 @@
 package com.gnatiuk.searcher.core;
 
-import com.gnatiuk.searcher.core.filters.FiltersContainer;
-import com.gnatiuk.searcher.core.filters.IFilter;
-import com.gnatiuk.searcher.core.filters.external.FilterFileName;
-import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegex;
-import com.gnatiuk.searcher.core.filters.external.FilterFileNameRegexExclude;
-import com.gnatiuk.searcher.core.filters.external.FilterFileSize;
-import com.gnatiuk.searcher.core.filters.internal.FilterFileKeyword;
-import com.gnatiuk.searcher.core.filters.internal.FilterFileKeywordRegex;
-import com.gnatiuk.searcher.core.filters.internal.FilterFileReader;
-import com.gnatiuk.searcher.core.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
-import com.gnatiuk.searcher.utils.SizeMeasure;
-import com.gnatiuk.searcher.utils.WordsLibManager;
+import com.gnatiuk.searcher.filters.FiltersContainer;
+import com.gnatiuk.searcher.filters.external.*;
+import com.gnatiuk.searcher.filters.internal.FilterFileKeyword;
+import com.gnatiuk.searcher.filters.internal.FilterFileKeywordRegex;
+import com.gnatiuk.searcher.filters.internal.FilterFileReader;
+import com.gnatiuk.searcher.filters.text_processors.ITextPreprocessor;
+import utils.SizeMeasure;
 
 import javax.swing.*;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -75,7 +71,7 @@ public class FinderTest {
 
 
         FilterFileName filterFileNameCaseSensitive = new FilterFileName(fileFiltersKeywords);
-        FilterFileName filterFileNameIgnoreCase = new FilterFileName(fileFiltersKeywords,ITextPreprocessor.LOWERCASE_PROCESSOR);
+        FilterFileName filterFileNameIgnoreCase = new FilterFileName(fileFiltersKeywords, ITextPreprocessor.LOWERCASE_PROCESSOR);
 
         FilterFileNameRegex filterFileNameRegexIgnoreCase = new FilterFileNameRegex(fileFiltersRegex,ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileNameRegex filterFileNameRegexCaseSensitive = new FilterFileNameRegex(fileFiltersRegex);
@@ -91,6 +87,7 @@ public class FinderTest {
         FilterFileReader filterFileKeywordRegexIgnoreCase = new FilterFileKeywordRegex(filterKeywordsRegex, ITextPreprocessor.LOWERCASE_PROCESSOR);
         FilterFileReader filterFileKeywordRegexCaseSensitive = new FilterFileKeywordRegex(filterKeywordsRegex);
         FilterFileSize filterFileSize = new FilterFileSize(0, 1, SizeMeasure.MB);
+        FilterFileDate filterFileDate = new FilterFileDate(new Date(99,1,1), new Date(System.currentTimeMillis()));
 
         FiltersContainer searchFilter = new FiltersContainer();
 //        searchFilter.addFilter(filterFileNameCaseSensitive);
@@ -110,11 +107,6 @@ public class FinderTest {
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
         searchFilter.addFilter(filterFileSize);
 
-        System.out.println(Arrays.asList(filePaths));
-        for (IFilter filter : searchFilter.getFilters()) {
-            System.out.println(filter);
-        }
-
         ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
@@ -126,7 +118,5 @@ public class FinderTest {
 
         ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
         ThreadController.getInstance().start();
-
-        WordsLibManager.getInstance().getKeywords();
     }
 }
