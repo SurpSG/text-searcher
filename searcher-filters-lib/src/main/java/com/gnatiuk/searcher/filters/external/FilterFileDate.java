@@ -21,7 +21,7 @@ public class FilterFileDate implements ExternalFilterMarker, IFilter {
 
     @Override
     public FileSearchEvent doFilter(File file) {
-        if(fromDate.getTime() >= file.lastModified() && toDate.getTime() <= file.lastModified()){
+        if (file.lastModified() >= fromDate.getTime() && file.lastModified() <= toDate.getTime()) {
             return new FileSearchEvent(file);
         }
         return FileSearchEvent.NOT_FOUND;
