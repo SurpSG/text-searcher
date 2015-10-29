@@ -5,7 +5,7 @@ import java.util.Comparator;
 /**
  * Created by sgnatiuk on 10/28/15.
  */
-public class PriorityItem<T extends Comparable<T>> implements Comparable<T>{
+public class PriorityItem<T>{
     private int priority;
     private T data;
 
@@ -31,23 +31,39 @@ public class PriorityItem<T extends Comparable<T>> implements Comparable<T>{
     }
 
     @Override
-    public int compareTo(T o) {
-        return data.compareTo(o);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PriorityItem<?> that = (PriorityItem<?>) o;
+
+        return !(data != null ? !data.equals(that.data) : that.data != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return data != null ? data.hashCode() : 0;
+    }
+
+    @Override
+    public String toString() {
+        return "PriorityItem{" +
+                "priority=" + priority +
+                ", data=" + data +
+                '}';
     }
 
     /**
      *
      * @param <T>
      */
-    public static class PriorityItemComparator<T extends Comparable<T>> implements Comparator<PriorityItem<T>> {
+    public static class PriorityItemComparator<T> implements Comparator<PriorityItem<T>> {
 
         @Override
         public int compare(PriorityItem<T> o1, PriorityItem<T> o2) {
-            if(o1.data.compareTo(o2.data) == 0){
-                o2.setPriority(o2.getPriority()+1);
-                o1.setPriority(o1.getPriority()+1);
-            }
             return o2.getPriority() - o1.getPriority();
         }
     }
+
 }

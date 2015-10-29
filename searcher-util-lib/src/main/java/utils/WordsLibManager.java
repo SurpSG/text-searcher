@@ -15,7 +15,7 @@ public final class WordsLibManager {
 
     private static final Object keywordsSynchronizer = new Object();
 
-    private Set<PriorityItem<String>> keywordsLib;
+    private List<PriorityDateItem<String>> keywordsLib;
     private File wordsLibFile;
 
     private WordsLibManager(){
@@ -29,7 +29,7 @@ public final class WordsLibManager {
     public Collection<String> getKeywords(){
         synchronized (keywordsSynchronizer){
             if(keywordsLib == null){//Lib did not loaded
-                keywordsLib = new TreeSet<PriorityItem<String>>(new PriorityItem.PriorityItemComparator<>());
+                keywordsLib = new ArrayList<>();
                 keywordsLib.addAll(loadWords());
             }
             return Collections.unmodifiableCollection(
@@ -43,11 +43,23 @@ public final class WordsLibManager {
     public void saveWords(Collection<String> words){
         synchronized (keywordsSynchronizer){
             for (String word : words) {
-                keywordsLib.addAll(
-                        Arrays.asList(word.split(DATA_SEPARATOR))
-                                .stream()
-                                .map(s -> new PriorityItem<>(1, s))
-                                .collect(Collectors.toList()));
+        System.out.println("word="+word);
+//                keywordsLib.addAll(
+//                        Arrays.asList(word.split(DATA_SEPARATOR))
+//                                .stream()
+//                                .map(s -> new PriorityItem<>(1, s))
+//                                .collect(Collectors.toList()));
+                for (String s : word.split(DATA_SEPARATOR)) {
+                    PriorityDateItem<String> newPriorityItem = new PriorityDateItem<>(1, System.currentTimeMillis(), s);
+                    int index = keywordsLib.indexOf(newPriorityItem);
+                    if (index >= 0){
+                        PriorityDateItem<String> priorityItemInLib = keywordsLib.get(index);
+                        priorityItemInLib.setPriority(priorityItemInLib.getPriority() + 1);
+                        priorityItemInLib.setDate(System.currentTimeMillis());
+                    }else {
+                        keywordsLib.add(newPriorityItem);
+                    }
+                }
             }
             saveWordsLib();
         }
@@ -78,11 +90,19 @@ public final class WordsLibManager {
     private void saveWordsLib(){
         synchronized (wordsLibFile){
             try {
+                keywordsLib.sort(new PriorityDateItem.PriorityDateItemComparator<>());
                 FileUtils.writeToFile(wordsLibFile,
                         keywordsLib.stream()
                                 .limit(MAX_WORDS_TO_SAVE)
                                 .map(
-                                        priorityItem -> new String(priorityItem.getData() + DATA_SEPARATOR + priorityItem.getPriority())
+                                        priorityItem ->
+                                                new String(
+                                                        priorityItem.getData() +
+                                                                DATA_SEPARATOR +
+                                                                priorityItem.getPriority() +
+                                                                DATA_SEPARATOR +
+                                                                priorityItem.getDate()
+                                                )
                                 ).collect(Collectors.toList()),
                         true
                 );
@@ -92,7 +112,7 @@ public final class WordsLibManager {
         }
     }
 
-    private List<PriorityItem<String>> loadWords(){
+    private List<PriorityDateItem<String>> loadWords(){
         synchronized (wordsLibFile){
             try {
 
@@ -106,15 +126,16 @@ public final class WordsLibManager {
         return Collections.emptyList();
     }
 
-    private PriorityItem<String> parseRowToPriorityItem(String row){
+    private PriorityDateItem<String> parseRowToPriorityItem(String row){
         StringTokenizer stringTokenizer = new StringTokenizer(row, DATA_SEPARATOR);
         try{
             String data = stringTokenizer.nextToken();
             String priority = stringTokenizer.nextToken();
-            return new PriorityItem<>(Integer.parseInt(priority), data);
+            String date = stringTokenizer.nextToken();
+            return new PriorityDateItem<>(Integer.parseInt(priority), Long.parseLong(date), data);
         }catch (Exception e){
             e.printStackTrace();
         }
-        return new PriorityItem<>(Integer.MIN_VALUE, "");
+        return new PriorityDateItem<>(Integer.MIN_VALUE, 0, "");
     }
 }
