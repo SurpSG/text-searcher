@@ -1,9 +1,12 @@
 package utils;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by sgnatiuk on 9/18/15.
@@ -18,15 +21,7 @@ public class FileUtils {
         if(createIfNotExists && !file.exists()){
             file.createNewFile();
         }
-        List<String> fileRows = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                fileRows.add(line);
-            }
-        }
-
-        return fileRows;
+        return Files.lines(Paths.get(file.getAbsolutePath()), StandardCharsets.UTF_8).collect(Collectors.toList());
     }
 
     public static void writeToFile(File file, Collection<String> rows, boolean override) throws IOException {
