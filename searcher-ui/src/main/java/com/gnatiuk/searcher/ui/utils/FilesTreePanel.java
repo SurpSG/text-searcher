@@ -99,6 +99,12 @@ public class FilesTreePanel{
                     rootChildren.add(treeItem);
                 }
             }
+            rootChildren.sort(new Comparator<TreeItem<TreeFile>>() {
+                @Override
+                public int compare(TreeItem<TreeFile> o1, TreeItem<TreeFile> o2) {
+                    return o1.getValue().getAbsolutePath().compareTo(o2.getValue().getAbsolutePath());
+                }
+            });
         }
     }
 

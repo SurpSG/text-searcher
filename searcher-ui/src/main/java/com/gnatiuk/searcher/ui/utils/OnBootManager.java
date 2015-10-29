@@ -124,7 +124,7 @@ public class OnBootManager {
 
     public static void addRecentPaths(Collection<String> paths){
         try {
-            FileUtils.writeToFile(new File(buildOnBootFilePath(ON_BOOT_PATHS_FILE_NAME)), paths, true);
+            FileUtils.writeToFile(new File(buildOnBootFilePath(ON_BOOT_PATHS_FILE_NAME)), paths, false);
         } catch (IOException e) {
             e.printStackTrace();
         }
