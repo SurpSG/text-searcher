@@ -1,0 +1,7 @@
+com\gnatiuk\filters\external\FilterFileDateTest.class
+com\gnatiuk\filters\external\FilterFileSizeTest.class
+com\gnatiuk\filters\ATextFilterTest.class
+com\gnatiuk\filters\internal\FilterFileKeywordTest.class
+com\gnatiuk\filters\external\FilterFileNameTest.class
+com\gnatiuk\filters\AFilterTest.class
+com\gnatiuk\filters\internal\AFilterFileReaderTest.class

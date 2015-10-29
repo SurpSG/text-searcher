@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class FileSearchEvent {
 
-    public static final FileSearchEvent NOT_FOUND = null;//TODO attention! NullPointerException
+    public static final FileSearchEvent NOT_FOUND = new FileSearchEvent(new File("null"));
 
     private List<SearchOption> searchOptions;
     private Path filePath;
