@@ -62,20 +62,32 @@ public class ThreadController {
         return taskCompleteListener;
     }
 
-    private synchronized void alertTasksFinished(){
+    private void alertTasksFinished() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(executorService.getQueue().isEmpty()
-                        && scheduledTasks.isEmpty()
-                        && executorService.getActiveCount() == 0){
-                    if(workCompleteListener != null){
-                        workCompleteListener.actionPerformed(new WorkCompleteEvent());
-                        controllerState = ControllerState.STOPPED;
+                synchronized (controllerState) {
+                    if (controllerState != ControllerState.STOPPED) {
+                        if (isWorkFinished()) {
+                            notifyWorkFinished();
+                            controllerState = ControllerState.STOPPED;
+                        }
                     }
                 }
             }
         }).start();
+    }
+
+    private void notifyWorkFinished() {
+        if (workCompleteListener != null) {
+            workCompleteListener.actionPerformed(new WorkCompleteEvent());
+        }
+    }
+
+    private boolean isWorkFinished() {
+        return executorService.getQueue().isEmpty()
+                && scheduledTasks.isEmpty()
+                && executorService.getActiveCount() == 0;
     }
 
     public void registerThread(SearchRunnable searchThread){
