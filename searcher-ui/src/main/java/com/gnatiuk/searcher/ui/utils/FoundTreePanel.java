@@ -23,7 +23,7 @@ public class FoundTreePanel{
     private FileOpener fileOpener;
 
     public FoundTreePanel(){
-        rootNode = new FilesTreeItem("Results", null);
+        rootNode = new FilesTreeItem("Results");
         rootNode.setExpanded(true);
         treeView = new TreeView<>(rootNode);
 
@@ -36,10 +36,9 @@ public class FoundTreePanel{
     }
 
     public synchronized void addItem(FileSearchEvent item){
-
         FilesTreeItem foundFile = addNewItem(item.getFilePath());
         for (SearchOption searchOption : item.getSearchOptions()) {
-            foundFile.getChildren().add(new FilesTreeItem(searchOption.getFoundOption() + ": " + searchOption.getFoundValue(), null));
+            foundFile.getChildren().add(new FilesTreeItem(searchOption.getFoundOption() + ": " + searchOption.getFoundValue()));
         }
     }
 
@@ -67,7 +66,7 @@ public class FoundTreePanel{
     private void verifyPathIsAbsolute(Path... path) {
         for (Path aPath : path) {
             if (!aPath.isAbsolute()) {
-                throw new RuntimeException(String.format("A path '%s' is not absolute"));
+                throw new RuntimeException(String.format("A path '%s' is not absolute", aPath));
             }
         }
     }
@@ -80,11 +79,17 @@ public class FoundTreePanel{
     private FilesTreeItem addNewItem(Path path) {
         FilesTreeItem mostCorrespondingParent = findMostCorrespondingParentFor(path);
         FilesTreeItem newChildTreeItem;
-        if (mostCorrespondingParent.getItemPath() != null) {
-            Path newChildPath = extractChildPath(path, new File(buildPathForNode(mostCorrespondingParent)).toPath());
-            newChildTreeItem = new FilesTreeItem(newChildPath.toString(), newChildPath);
+        if (buildPathForNode(mostCorrespondingParent) != null) {
+            Path newChildPath;
+            if (mostCorrespondingParent != rootNode) {
+                Path mostCorrespondingParentPath = getNodeAbsolutePath(mostCorrespondingParent);
+                newChildPath = extractChildPath(path, mostCorrespondingParentPath);
+            } else {
+                newChildPath = path;
+            }
+            newChildTreeItem = new FilesTreeItem(newChildPath.toString());
         } else {
-            newChildTreeItem = new FilesTreeItem(path.toString(), path);
+            newChildTreeItem = new FilesTreeItem(path.toString());
         }
         mostCorrespondingParent.getChildren().add(newChildTreeItem);
         return extractFileNameToLeaf(newChildTreeItem);
@@ -99,14 +104,14 @@ public class FoundTreePanel{
         for (TreeItem<String> child : currentMostCorrespond.getChildren()) {
             FilesTreeItem treeItemChild = (FilesTreeItem) child;
 
-            System.err.println(treeItemChild + " 111111111");
-            Path absoluteChildPath = new File(buildPathForNode(treeItemChild)).toPath();
+            Path absoluteChildPath = getNodeAbsolutePath(treeItemChild);
             Path commonPath = getCommonPath(pathValue, absoluteChildPath);
             if (currentMostCorrespond == rootNode || commonPath.getNameCount() > getNodeAbsolutePath(currentMostCorrespond).getNameCount()) {
                 if (commonPath.getNameCount() < absoluteChildPath.getNameCount()) {
                     extractNewChildFromTreeItem(treeItemChild, commonPath, absoluteChildPath);
                 }
                 currentMostCorrespond = findMostCorrespondingParentFor(pathValue, treeItemChild);
+                break;
             }
         }
         return currentMostCorrespond;
@@ -116,12 +121,25 @@ public class FoundTreePanel{
         verifyPathIsAbsolute(parentForNewChild, childPath);
         Path newExtractedChild = extractChildPath(childPath, parentForNewChild);
 
-        FilesTreeItem newExtractedItem = new FilesTreeItem(newExtractedChild.toString(), newExtractedChild);
+        FilesTreeItem newExtractedItem = new FilesTreeItem(newExtractedChild.toString());
         newExtractedItem.getChildren().addAll(itemExtractFrom.getChildren());
         itemExtractFrom.getChildren().clear();
         itemExtractFrom.getChildren().add(newExtractedItem);
-        itemExtractFrom.setItemPath(parentForNewChild);
-        itemExtractFrom.setValue(parentForNewChild.toString());
+
+//        itemExtractFrom.setValue(parentForNewChild.toString());
+        String itemExtractFromValue = itemExtractFrom.getValue();
+        itemExtractFrom.setValue(itemExtractFromValue.substring(0, itemExtractFromValue.lastIndexOf(newExtractedItem.getValue())));
+
+        if(!getNodeAbsolutePath(newExtractedItem).toFile().exists()){
+            System.out.println("itemExtractFrom: " + itemExtractFrom);
+            System.out.println("parentForNewChild: " + parentForNewChild);
+            System.out.println("childPath: " + childPath);
+            System.out.println("newExtractedItem: " + newExtractedItem);
+            System.out.println("itemExtractFrom: " + itemExtractFrom);
+            System.out.println("getNodeAbsolutePath(newExtractedItem): "+getNodeAbsolutePath(newExtractedItem));
+            printTree();
+            System.exit(1);
+        }
     }
 
     /**
@@ -138,28 +156,21 @@ public class FoundTreePanel{
             return treeItem;
         }
 
-        Path itemPath = itemFile.toPath();
+        treeItem.setValue(treeItem.getValue().substring(0, treeItem.getValue().lastIndexOf(itemFile.getName())));
 
-//        treeItem.setValue(treeItem.getItemPath().getParent().toString());
-        treeItem.setValue(itemPath.getParent().toString());
-        treeItem.setItemPath(itemPath.getParent());
-
-        FilesTreeItem fileNameTreeItem = new FilesTreeItem(itemPath.getFileName().toString(), itemPath.getFileName());
+        FilesTreeItem fileNameTreeItem = new FilesTreeItem(itemFile.getName());
         treeItem.getChildren().add(fileNameTreeItem);
         return fileNameTreeItem;
     }
 
     private String buildPathForNode(TreeItem<String> node){
-        String path = node.getValue();
-        TreeItem<String> currentParent = node.getParent();
-        while (currentParent != null && currentParent != rootNode){
-            path = currentParent.getValue() + File.separator + path;
-            currentParent = currentParent.getParent();
+        if(node == rootNode){
+            return "";
         }
-        return path;
+        return buildPathForNode(node.getParent()) + File.separator + node.getValue();
     }
 
-    private Path getNodeAbsolutePath(TreeItem<String> node) {
+    private Path getNodeAbsolutePath(FilesTreeItem node) {
         return new File(buildPathForNode(node)).toPath();
     }
 
@@ -238,21 +249,9 @@ public class FoundTreePanel{
     }
 
     private class FilesTreeItem extends TreeItem<String> {
-
-        private Path itemPath;
-
-        public FilesTreeItem(String value, Path itemPath) {
+        public FilesTreeItem(String value) {
             super(value);
-            this.itemPath = itemPath;
         }
 
-        public void setItemPath(Path itemPath) {
-            this.itemPath = itemPath;
-        }
-
-        public Path getItemPath() {
-            return itemPath;
-        }
     }
-
 }
