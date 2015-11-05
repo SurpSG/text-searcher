@@ -21,8 +21,7 @@ public class FilterFileDateTest extends AFilterTest {
     private FilterFileDate filterFileDate;
 
     @Before
-    public void init() {
-        super.init();
+    public void initFilterFileDateTest() {
         fromDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24);
         toDate = new Date(System.currentTimeMillis());
         filterFileDate = new FilterFileDate(fromDate, toDate);
@@ -34,12 +33,12 @@ public class FilterFileDateTest extends AFilterTest {
     }
 
     @Test
-    public void upperIntervalTest() {
+    public void toDateTest() {
         assertTrue(filterFileDate.doFilter(testFile).getFilePath().toFile().lastModified() <= toDate.getTime());
     }
 
     @Test
-    public void lowerIntervalTest() {
+    public void fromDateTest() {
         assertTrue(filterFileDate.doFilter(testFile).getFilePath().toFile().lastModified() >= fromDate.getTime());
     }
 }

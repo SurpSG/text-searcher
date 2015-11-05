@@ -22,7 +22,7 @@ public abstract class AFilterTest {
     protected abstract IFilter getFilter();
 
     @Before
-    public void init() {
+    public final void init() {
         testFile = new File(TEST_FILE_NAME);
         try {
             testFile.createNewFile();

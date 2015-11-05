@@ -21,8 +21,7 @@ public class FilterFileSizeTest extends AFilterTest {
     private FilterFileSize filterFileSize;
 
     @Before
-    public void init(){
-        super.init();
+    public void initFilterFileSizeTest(){
         lowerInterval = 0;
         upperInterval = 1;
         sizeMeasure = SizeMeasure.KB;
