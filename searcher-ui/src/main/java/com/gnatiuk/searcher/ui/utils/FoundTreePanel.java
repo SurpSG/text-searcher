@@ -2,29 +2,52 @@ package com.gnatiuk.searcher.ui.utils;
 
 import com.gnatiuk.searcher.filters.util.FileSearchEvent;
 import com.gnatiuk.searcher.filters.util.SearchOption;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by sgnatiuk on 6/10/15.
  */
 public class FoundTreePanel{
 
-    private FilesTreeItem rootNode;
+    private static final String FILE_ICON_PATH = "searcher-ui/src/main/resources/file-icon.png";
+    private static final String FOLDER_ICON_PATH = "searcher-ui/src/main/resources/folder-icon.png";
+
+    private static final Node fileIcon = loadImage(FILE_ICON_PATH);
+    private static final Node folderIcon = loadImage(FOLDER_ICON_PATH);
+
+    private  static ImageView loadImage(String imagePath){
+        try {
+            return new ImageView(new Image(new File(imagePath).toURI().toURL().toString()));
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private TreeItem<String> rootNode;
     private TreeView<String> treeView;
 
     private FileOpener fileOpener;
 
     public FoundTreePanel(){
-        rootNode = new FilesTreeItem("Results");
-        rootNode.setExpanded(true);
+        rootNode = new TreeItem<>("Results");
         treeView = new TreeView<>(rootNode);
 
         fileOpener = new FileOpener();
@@ -36,9 +59,9 @@ public class FoundTreePanel{
     }
 
     public synchronized void addItem(FileSearchEvent item){
-        FilesTreeItem foundFile = addNewItem(item.getFilePath());
+        TreeItem<String> foundFile = addNewItem(item.getFilePath());
         for (SearchOption searchOption : item.getSearchOptions()) {
-            foundFile.getChildren().add(new FilesTreeItem(searchOption.getFoundOption() + ": " + searchOption.getFoundValue()));
+            foundFile.getChildren().add(new TreeItem<>(searchOption.getFoundOption() + ": " + searchOption.getFoundValue()));
         }
     }
 
@@ -76,9 +99,9 @@ public class FoundTreePanel{
      * @param path new file to add
      * @return a new node item
      */
-    private FilesTreeItem addNewItem(Path path) {
-        FilesTreeItem mostCorrespondingParent = findMostCorrespondingParentFor(path);
-        FilesTreeItem newChildTreeItem;
+    private TreeItem<String> addNewItem(Path path) {
+        TreeItem<String> mostCorrespondingParent = findMostCorrespondingParentFor(path);
+        TreeItem<String> newChildTreeItem;
         if (buildPathForNode(mostCorrespondingParent) != null) {
             Path newChildPath;
             if (mostCorrespondingParent != rootNode) {
@@ -87,59 +110,54 @@ public class FoundTreePanel{
             } else {
                 newChildPath = path;
             }
-            newChildTreeItem = new FilesTreeItem(newChildPath.toString());
+            newChildTreeItem = new TreeItem<>(newChildPath.toString(), fileIcon);
         } else {
-            newChildTreeItem = new FilesTreeItem(path.toString());
+            newChildTreeItem = new TreeItem<>(path.toString(), fileIcon);
         }
         mostCorrespondingParent.getChildren().add(newChildTreeItem);
         return extractFileNameToLeaf(newChildTreeItem);
     }
 
-    private FilesTreeItem findMostCorrespondingParentFor(Path pathValue) {
+    private TreeItem<String> findMostCorrespondingParentFor(Path pathValue) {
         return findMostCorrespondingParentFor(pathValue, rootNode);
     }
 
-    private FilesTreeItem findMostCorrespondingParentFor(Path pathValue, FilesTreeItem currentMostCorrespond) {
+    private TreeItem<String> findMostCorrespondingParentFor(Path pathValue, TreeItem<String> currentMostCorrespond) {
 
         for (TreeItem<String> child : currentMostCorrespond.getChildren()) {
-            FilesTreeItem treeItemChild = (FilesTreeItem) child;
 
-            Path absoluteChildPath = getNodeAbsolutePath(treeItemChild);
+            Path absoluteChildPath = getNodeAbsolutePath(child);
             Path commonPath = getCommonPath(pathValue, absoluteChildPath);
-            if (currentMostCorrespond == rootNode || commonPath.getNameCount() > getNodeAbsolutePath(currentMostCorrespond).getNameCount()) {
+            if (currentMostCorrespond == rootNode
+                    || commonPath.getNameCount() > getNodeAbsolutePath(currentMostCorrespond).getNameCount()) {
                 if (commonPath.getNameCount() < absoluteChildPath.getNameCount()) {
-                    extractNewChildFromTreeItem(treeItemChild, commonPath, absoluteChildPath);
+                    extractNewChildFromTreeItem(child, commonPath, absoluteChildPath);
                 }
-                currentMostCorrespond = findMostCorrespondingParentFor(pathValue, treeItemChild);
+                currentMostCorrespond = findMostCorrespondingParentFor(pathValue, child);
                 break;
             }
         }
         return currentMostCorrespond;
     }
 
-    private void extractNewChildFromTreeItem(FilesTreeItem itemExtractFrom, Path parentForNewChild, Path childPath) {
+    private void extractNewChildFromTreeItem(TreeItem<String> itemExtractFrom, Path parentForNewChild, Path childPath) {
         verifyPathIsAbsolute(parentForNewChild, childPath);
+
         Path newExtractedChild = extractChildPath(childPath, parentForNewChild);
 
-        FilesTreeItem newExtractedItem = new FilesTreeItem(newExtractedChild.toString());
-        newExtractedItem.getChildren().addAll(itemExtractFrom.getChildren());
-        itemExtractFrom.getChildren().clear();
-        itemExtractFrom.getChildren().add(newExtractedItem);
+        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), folderIcon);
+        moveAllChildren(itemExtractFrom, newExtractedItem);
 
-//        itemExtractFrom.setValue(parentForNewChild.toString());
         String itemExtractFromValue = itemExtractFrom.getValue();
-        itemExtractFrom.setValue(itemExtractFromValue.substring(0, itemExtractFromValue.lastIndexOf(newExtractedItem.getValue())));
+        itemExtractFrom.setValue(itemExtractFromValue.substring(0, itemExtractFromValue.lastIndexOf(File.separator + newExtractedItem.getValue())));
 
-        if(!getNodeAbsolutePath(newExtractedItem).toFile().exists()){
-            System.out.println("itemExtractFrom: " + itemExtractFrom);
-            System.out.println("parentForNewChild: " + parentForNewChild);
-            System.out.println("childPath: " + childPath);
-            System.out.println("newExtractedItem: " + newExtractedItem);
-            System.out.println("itemExtractFrom: " + itemExtractFrom);
-            System.out.println("getNodeAbsolutePath(newExtractedItem): "+getNodeAbsolutePath(newExtractedItem));
-            printTree();
-            System.exit(1);
-        }
+        itemExtractFrom.getChildren().add(newExtractedItem);
+    }
+
+    private void moveAllChildren(TreeItem<String> nodeChildrenFrom, TreeItem<String> nodeChildrenTo){
+        ObservableList<TreeItem<String>> children = nodeChildrenFrom.getChildren();
+        nodeChildrenFrom.getChildren().clear();
+        nodeChildrenTo.getChildren().addAll(children);
     }
 
     /**
@@ -149,7 +167,7 @@ public class FoundTreePanel{
      * @param treeItem item to divide.
      * @return new extracted item or item from argument
      */
-    private FilesTreeItem extractFileNameToLeaf(FilesTreeItem treeItem) {
+    private TreeItem<String> extractFileNameToLeaf(TreeItem<String> treeItem) {
         String currentItemValue = treeItem.getValue();
         File itemFile = new File(buildPathForNode(treeItem));
         if (itemFile.getName().equals(currentItemValue) || itemFile.isDirectory()) {
@@ -157,20 +175,20 @@ public class FoundTreePanel{
         }
 
         treeItem.setValue(treeItem.getValue().substring(0, treeItem.getValue().lastIndexOf(itemFile.getName())));
-
-        FilesTreeItem fileNameTreeItem = new FilesTreeItem(itemFile.getName());
+        treeItem.setGraphic(folderIcon);
+        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), fileIcon);
         treeItem.getChildren().add(fileNameTreeItem);
         return fileNameTreeItem;
     }
 
     private String buildPathForNode(TreeItem<String> node){
-        if(node == rootNode){
+        if(node == null || node == rootNode){
             return "";
         }
         return buildPathForNode(node.getParent()) + File.separator + node.getValue();
     }
 
-    private Path getNodeAbsolutePath(FilesTreeItem node) {
+    private Path getNodeAbsolutePath(TreeItem<String> node) {
         return new File(buildPathForNode(node)).toPath();
     }
 
@@ -191,6 +209,8 @@ public class FoundTreePanel{
                         return;
                     }
                     File file = new File(buildPathForNode(treeItem));
+                    System.out.println(treeItem);
+                    printTree(treeItem, "");
 
                     if (fileOpener.isSupported()) {
                         fileOpener.openFile(file);
@@ -237,21 +257,54 @@ public class FoundTreePanel{
         }
     }
 
+    /**
+     * just for debug
+     */
     private void printTree() {
         printTree(rootNode, "");
     }
 
-    private void printTree(FilesTreeItem filesTreeItem, String shift) {
-        System.out.println(shift + filesTreeItem.getValue());
-        for (TreeItem<String> stringTreeItem : filesTreeItem.getChildren()) {
-            printTree((FilesTreeItem) stringTreeItem, "    " + shift);
+    private void printTree(TreeItem<String> treeItem, String shift) {
+        System.out.println(shift + treeItem.getValue());
+        for (TreeItem<String> stringTreeItem : treeItem.getChildren()) {
+            printTree(stringTreeItem, "    " + shift);
         }
     }
 
-    private class FilesTreeItem extends TreeItem<String> {
-        public FilesTreeItem(String value) {
-            super(value);
-        }
+    public static void main(String[] args) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                FoundTreePanel foundTreePanel = new FoundTreePanel();
 
+                List<String> files = getFiles(new File("/home/sgnatiuk/workspace/t-searcher/text-searcher"));
+                Collections.shuffle(files);
+                for (String s : files) {
+                    foundTreePanel.addItem(new FileSearchEvent(new File(s)));
+                    foundTreePanel.printTree();
+                }
+                System.exit(0);
+            }
+        });
     }
+
+    private static java.util.List<String> getFiles(File root){
+        List<String> result = new ArrayList<>();
+
+        String[] children = root.list();
+        if(children == null){
+            return result;
+        }
+        for (String child : children) {
+            File childFile = new File(root.getAbsolutePath()+ File.separator + child);
+            if (childFile.isDirectory()){
+                result.addAll(getFiles(childFile));
+            }else{
+
+            result.add(childFile.getAbsolutePath());
+            }
+        }
+        return result;
+    }
+
 }
