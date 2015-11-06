@@ -6,6 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
@@ -122,8 +123,8 @@ public class FilesTreePanel{
             super.updateItem(item, empty);
 
             if(item != null){
-//                setBackground(new Background(new BackgroundFill(item.getBackgroundColorStatus().getStatusColor(), CornerRadii.EMPTY, Insets.EMPTY)));
                 setText(item.getName());
+                setGraphic(new ImageView(FileTreeItem.folderIcon));
             }
         }
 
@@ -140,19 +141,15 @@ public class FilesTreePanel{
             rootNode.getChildren().add(new FileTreeItem(new TreeFile(file.getAbsolutePath())));
         }
 
-        rootNode.addEventHandler(TreeItem.branchExpandedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
-            public void handle(TreeItem.TreeModificationEvent<Object> event) {
-                TreeItem expandedTreeItem = event.getTreeItem();
-                initChildren(expandedTreeItem);
-            }
+        rootNode.addEventHandler(TreeItem.branchExpandedEvent(), event -> {
+            TreeItem expandedTreeItem = event.getTreeItem();
+            initChildren(expandedTreeItem);
         });
 
-        rootNode.addEventHandler(TreeItem.branchCollapsedEvent(), new EventHandler<TreeItem.TreeModificationEvent<Object>>() {
-            public void handle(TreeItem.TreeModificationEvent<Object> event) {
-                TreeItem collapsedTreeItem = event.getTreeItem();
-                if (collapsedTreeItem != rootNode) {
-                    collapsedTreeItem.getChildren().clear();
-                }
+        rootNode.addEventHandler(TreeItem.branchCollapsedEvent(), event -> {
+            TreeItem collapsedTreeItem = event.getTreeItem();
+            if (collapsedTreeItem != rootNode) {
+                collapsedTreeItem.getChildren().clear();
             }
         });
 

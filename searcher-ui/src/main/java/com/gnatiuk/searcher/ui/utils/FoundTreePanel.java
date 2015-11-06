@@ -7,14 +7,12 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,21 +22,6 @@ import java.util.List;
  * Created by sgnatiuk on 6/10/15.
  */
 public class FoundTreePanel{
-
-    private static final String FILE_ICON_PATH = "searcher-ui/src/main/resources/file-icon.png";
-    private static final String FOLDER_ICON_PATH = "searcher-ui/src/main/resources/folder-icon.png";
-
-    private static final Image fileIcon = loadImage(FILE_ICON_PATH);
-    private static final Image folderIcon = loadImage(FOLDER_ICON_PATH);
-
-    private  static Image loadImage(String imagePath){
-        try {
-            return new Image(new File(imagePath).toURI().toURL().toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     private TreeItem<String> rootNode;
     private TreeView<String> treeView;
@@ -109,9 +92,9 @@ public class FoundTreePanel{
             } else {
                 newChildPath = path;
             }
-            newChildTreeItem = new TreeItem<>(newChildPath.toString(), new ImageView(fileIcon));
+            newChildTreeItem = new TreeItem<>(newChildPath.toString(), new ImageView(FileTreeItem.fileIcon));
         } else {
-            newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(fileIcon));
+            newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(FileTreeItem.fileIcon));
         }
         mostCorrespondingParent.getChildren().add(newChildTreeItem);
         return extractFileNameToLeaf(newChildTreeItem);
@@ -144,7 +127,7 @@ public class FoundTreePanel{
 
         Path newExtractedChild = extractChildPath(childPath, parentForNewChild);
 
-        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), new ImageView(folderIcon));
+        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), new ImageView(FileTreeItem.folderIcon));
         moveAllChildren(itemExtractFrom, newExtractedItem);
 
         String itemExtractFromValue = itemExtractFrom.getValue();
@@ -173,8 +156,8 @@ public class FoundTreePanel{
         }
 
         treeItem.setValue(treeItem.getValue().substring(0, treeItem.getValue().lastIndexOf(itemFile.getName())));
-        treeItem.setGraphic(new ImageView(folderIcon));
-        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(fileIcon));
+        treeItem.setGraphic(new ImageView(FileTreeItem.folderIcon));
+        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(FileTreeItem.fileIcon));
         treeItem.getChildren().add(fileNameTreeItem);
         return fileNameTreeItem;
     }
