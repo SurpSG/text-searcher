@@ -1,9 +1,10 @@
 package com.gnatiuk.filters.external;
 
-import com.gnatiuk.filters.AFilterTest;
-import com.gnatiuk.searcher.filters.IFilter;
+import com.gnatiuk.filters.ATextFilterTest;
+import com.gnatiuk.searcher.filters.ATextFilter;
 import com.gnatiuk.searcher.filters.external.FilterFileName;
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -12,14 +13,20 @@ import java.util.Random;
 /**
  * Created by sgnatiuk on 10/23/15.
  */
-public class FilterFileNameTest extends AFilterTest {
+public class FilterFileNameTest extends ATextFilterTest {
 
-    private FilterFileName filterFileName = new FilterFileName(Arrays.asList(TEST_FILE_NAME));
+    private FilterFileName filterFileName;
 
     @Override
-    protected IFilter getFilter() {
+    protected ATextFilter getTextFilter() {
         return filterFileName;
     }
+
+    @Before
+    public void initTextFilterTest() {
+        filterFileName = new FilterFileName(Arrays.asList(TEST_FILE_NAME), textPreprocessor);
+    }
+
 
     @Test
     public void doFilterTest(){

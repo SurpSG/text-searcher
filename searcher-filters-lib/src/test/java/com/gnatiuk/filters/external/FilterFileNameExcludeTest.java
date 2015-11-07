@@ -1,7 +1,6 @@
 package com.gnatiuk.filters.external;
 
-import com.gnatiuk.searcher.filters.IFilter;
-import com.gnatiuk.searcher.filters.external.FilterFileName;
+import com.gnatiuk.searcher.filters.ATextFilter;
 import com.gnatiuk.searcher.filters.external.FilterFileNameExclude;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -15,7 +14,7 @@ import java.util.Random;
 public class FilterFileNameExcludeTest extends FilterFileNameTest{
     private FilterFileNameExclude filterFileNameExclude = new FilterFileNameExclude(Arrays.asList(TEST_FILE_NAME));
     @Override
-    protected IFilter getFilter() {
+    protected ATextFilter getTextFilter() {
         return filterFileNameExclude;
     }
     @Test

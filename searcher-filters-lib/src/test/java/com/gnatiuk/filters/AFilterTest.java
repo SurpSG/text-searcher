@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
  */
 public abstract class AFilterTest {
 
-    protected final String TEST_FILE_NAME = "test.txt";
+    protected final String TEST_FILE_NAME = "Test.txt";
 
     protected File testFile;
 

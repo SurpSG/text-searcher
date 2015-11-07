@@ -26,8 +26,8 @@ public abstract class ATextFilter implements IFilter {
     }
 
     public ATextFilter(List<String> keywords, ITextPreprocessor textPreprocessor){
-        this.textPreprocessor = textPreprocessor;
-        this.keywords = processKeywords(keywords);
+        this.keywords = keywords;
+        setTextPreprocessor(textPreprocessor);
     }
 
     private List<String> processKeywords(List<String> keywords){
@@ -40,6 +40,11 @@ public abstract class ATextFilter implements IFilter {
 
     public void setTextPreprocessor(ITextPreprocessor textPreprocessor) {
         this.textPreprocessor = textPreprocessor;
+        this.keywords = processKeywords(keywords);
+    }
+
+    public void setKeywords(List<String> keywords) {
+        this.keywords = processKeywords(keywords);
     }
 
     @Override

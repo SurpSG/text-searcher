@@ -1,18 +1,13 @@
 package com.gnatiuk.filters.external;
 
 import com.gnatiuk.filters.ATextFilterTest;
-import com.gnatiuk.searcher.filters.IFilter;
+import com.gnatiuk.searcher.filters.ATextFilter;
 import com.gnatiuk.searcher.filters.external.FilterFileNameRegex;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 /**
@@ -31,16 +26,17 @@ public class FilterFileNameRegexTest extends ATextFilterTest {
             "[0-9]{1,}\\..*",
     };
 
+    @Override
+    protected ATextFilter getTextFilter() {
+        return filterFileNameRegex;
+    }
+
     public FilterFileNameRegexTest(){
         filesPatterns = Arrays.asList(keywords);
         filterFileNameRegex = new FilterFileNameRegex(filesPatterns);
     }
 
 
-    @Override
-    protected IFilter getFilter() {
-        return filterFileNameRegex;
-    }
     @Test
     public void doFilterTest(){
         FilterFileNameRegex filterFileNameRegexSaved = filterFileNameRegex;
