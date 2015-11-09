@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import utils.WordsLibManager;
+import utils.KeywordsLibManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public abstract class AKeywordItem {
         );
         keywordItemBox.setAlignment(Pos.CENTER_LEFT);
         keywordItemBox.setMinHeight(Double.valueOf(30));//TODO do something with magic
-        textField = new AutoCompleteTextField(WordsLibManager.getInstance().getKeywords());
+        textField = new AutoCompleteTextField(KeywordsLibManager.getInstance().getKeywords());
         textField.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(textField, Priority.ALWAYS);
         keywordItemBox.focusedProperty().addListener(focusChangeListener);

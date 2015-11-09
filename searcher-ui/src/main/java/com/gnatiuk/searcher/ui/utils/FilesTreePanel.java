@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
+import utils.RecentPathsManager;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -66,7 +67,7 @@ public class FilesTreePanel{
 
     private void initRecentChosenNode() {
         recentChosenPaths = new SelectedListView();
-        recentChosenPaths.getItems().addAll(OnBootManager.getRecentPaths());
+        recentChosenPaths.getItems().addAll(RecentPathsManager.getInstance().getKeywords());
         recentChosenPaths.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         recentChosenPaths.setOnKeyPressed(new AddPathKeyEventHandler(recentChosenPaths));
     }

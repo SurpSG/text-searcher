@@ -8,22 +8,17 @@ import java.util.stream.Collectors;
 /**
  * Created by sgnatiuk on 10/8/15.
  */
-public final class WordsLibManager {
+public abstract class LibManager {
 
     private static final String DATA_SEPARATOR = " ";
-    private static final int MAX_WORDS_TO_SAVE = 3;
 
-    private static final Object keywordsSynchronizer = new Object();
+    private final Object keywordsSynchronizer = new Object();
 
     private List<PriorityDateItem<String>> keywordsLib;
     private File wordsLibFile;
 
-    private WordsLibManager(){
-        wordsLibFile = new File(AppOptions.KEY_ASSIST_FILE_PATH);
-    }
-
-    static class InstanceContainer{
-        public static final WordsLibManager instance = new WordsLibManager();
+    protected LibManager(String libFilePath){
+        wordsLibFile = new File(libFilePath);
     }
 
     public Collection<String> getKeywords(){
@@ -43,12 +38,6 @@ public final class WordsLibManager {
     public void saveWords(Collection<String> words){
         synchronized (keywordsSynchronizer){
             for (String word : words) {
-        System.out.println("word="+word);
-//                keywordsLib.addAll(
-//                        Arrays.asList(word.split(DATA_SEPARATOR))
-//                                .stream()
-//                                .map(s -> new PriorityItem<>(1, s))
-//                                .collect(Collectors.toList()));
                 for (String s : word.split(DATA_SEPARATOR)) {
                     PriorityDateItem<String> newPriorityItem = new PriorityDateItem<>(1, System.currentTimeMillis(), s);
                     int index = keywordsLib.indexOf(newPriorityItem);
@@ -83,17 +72,13 @@ public final class WordsLibManager {
         }
     }
 
-    public static WordsLibManager getInstance(){
-        return InstanceContainer.instance;
-    }
-
     private void saveWordsLib(){
         synchronized (wordsLibFile){
             try {
                 keywordsLib.sort(new PriorityDateItem.PriorityDateItemComparator<>());
                 FileUtils.writeToFile(wordsLibFile,
                         keywordsLib.stream()
-                                .limit(MAX_WORDS_TO_SAVE)
+                                .limit(getMaxWordsToSave())
                                 .map(
                                         priorityItem ->
                                                 new String(
@@ -116,7 +101,7 @@ public final class WordsLibManager {
         synchronized (wordsLibFile){
             try {
 
-                return FileUtils.readFile(new File(AppOptions.KEY_ASSIST_FILE_PATH), true).stream()
+                return FileUtils.readFile(wordsLibFile, true).stream()
                         .map(s -> parseRowToPriorityItem(s))
                         .collect(Collectors.toList());
             } catch (IOException e) {
@@ -138,4 +123,6 @@ public final class WordsLibManager {
         }
         return new PriorityDateItem<>(Integer.MIN_VALUE, 0, "");
     }
+
+    protected abstract int getMaxWordsToSave();
 }

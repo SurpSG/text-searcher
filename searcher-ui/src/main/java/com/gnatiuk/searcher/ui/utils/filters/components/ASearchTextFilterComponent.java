@@ -6,7 +6,7 @@ import com.gnatiuk.searcher.filters.text_processors.ITextPreprocessor;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.KeywordsContainer;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
-import utils.WordsLibManager;
+import utils.KeywordsLibManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
             return IFilter.NONE_FILTER;
         }
 
-        WordsLibManager.getInstance().saveWords(keywordsContainer.getKeywords());
+        KeywordsLibManager.getInstance().saveWords(keywordsContainer.getKeywords());
 
         ATextFilter filter = build(keywordsContainer.getKeywords());
         filter.setTextPreprocessor(getTextProcessor());

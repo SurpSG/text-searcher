@@ -26,6 +26,7 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import utils.RecentPathsManager;
 
 import java.util.List;
 
@@ -155,7 +156,7 @@ public class SearcherApplication extends Application{
                     return;
                 }
 
-                OnBootManager.addRecentPaths(pathsToSearch);
+                RecentPathsManager.getInstance().saveWords(pathsToSearch);
 
                 SearcherHierarchyRunnable searcherHierarchyRunnable = new SearcherHierarchyRunnable(pathsToSearch, filter);
                 ThreadController.getInstance().registerThread(searcherHierarchyRunnable);

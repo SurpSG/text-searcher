@@ -22,6 +22,10 @@ public class AppOptions {
     public static final String KEY_ASSIST_FILE_NAME = "keywords-lib";
     public static final String KEY_ASSIST_FILE_PATH = KEY_ASSIST_DIR_PATH + File.separator + KEY_ASSIST_FILE_NAME;
 
+    public static String RECENT_PATHS_FILE_NAME = "on_boot_paths";
+    public static final String RECENT_PATHS_FILE_PATH = buildOnBootFilePath(ON_BOOT_DIR_PATH, RECENT_PATHS_FILE_NAME);
+
+
     /**
      *
      * @return path to on-duty directory
@@ -46,6 +50,10 @@ public class AppOptions {
         if(!file.exists()){
             file.mkdir();
         }
+    }
+
+    private static String buildOnBootFilePath(String dirPath, String fileName){
+        return dirPath + File.separator + fileName;
     }
 
 }

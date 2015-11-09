@@ -17,7 +17,6 @@ import java.util.*;
 public class OnBootManager {
 
     public static String ON_BOOT_FILTERS_FILE_NAME = "on_boot_filters";
-    public static String ON_BOOT_PATHS_FILE_NAME = "on_boot_paths";
 
     public static List<ASearchFilterComponent> getOnLoadSearchComponents(){
         File onBootFiltersFile = new File(buildOnBootFilePath(ON_BOOT_FILTERS_FILE_NAME));
@@ -87,10 +86,6 @@ public class OnBootManager {
         try {
             File onBootFiltersFile = new File(buildOnBootFilePath(ON_BOOT_FILTERS_FILE_NAME));
             List<String> onBootFilters = FileUtils.readFile(onBootFiltersFile);
-            System.out.println("unregisterOnBootFilter");
-            System.out.println("filter="+filter);
-            System.out.println("onBootFilters="+onBootFilters);
-            System.out.println("filterHash()="+filter.filterHash());
             onBootFilters.remove(filter.filterHash()+"");
             FileUtils.writeToFile(onBootFiltersFile, onBootFilters, true);
         } catch (IOException e) {
@@ -113,20 +108,4 @@ public class OnBootManager {
         return AppOptions.ON_BOOT_DIR_PATH + File.separator + fileName;
     }
 
-    public static Collection<String> getRecentPaths(){
-        try {
-            return FileUtils.readFile(new File(buildOnBootFilePath(ON_BOOT_PATHS_FILE_NAME)), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-           return Collections.emptyList();
-        }
-    }
-
-    public static void addRecentPaths(Collection<String> paths){
-        try {
-            FileUtils.writeToFile(new File(buildOnBootFilePath(ON_BOOT_PATHS_FILE_NAME)), paths, false);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }
