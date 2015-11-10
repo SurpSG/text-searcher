@@ -1,24 +1,19 @@
 package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
-import com.gnatiuk.searcher.ui.utils.AutoCompleteTextField;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.IKeywordItemChangedListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemFocusListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemRemovedListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import utils.KeywordsLibManager;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -26,22 +21,35 @@ import java.util.List;
  */
 public abstract class AKeywordItem {
 
-    protected TextField textField;
-    protected HBox keywordItemBox;
+    protected KeywordItemBoxWrapper keywordItemBoxWrapper;
+
     protected Button removeItselfButton;
+
     protected List<IKeywordItemChangedListener> keywordItemChangedListeners;
     protected List<KeywordItemFocusListener> focusListeners;
     protected FocusChangeListener focusChangeListener;
     protected List<KeywordItemRemovedListener> itemRemovedListeners;
-
-    boolean editNow = false;
 
     public AKeywordItem(){
         keywordItemChangedListeners = new ArrayList<>();
         focusListeners = new ArrayList<>();
         focusChangeListener = new FocusChangeListener();
         itemRemovedListeners = new ArrayList<>();
+//        keywordItemBox.focusedProperty().addListener(focusChangeListener);
 
+
+    }
+
+    private void buildKeywordNode(){
+
+
+        initRemoveButton();
+
+        keywordItemBoxWrapper.addNode(removeItselfButton);
+        keywordItemBoxWrapper.addAll(getKeywordItemNodes());
+    }
+
+    private void initRemoveButton(){
         removeItselfButton = new Button("-");
         removeItselfButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -49,81 +57,14 @@ public abstract class AKeywordItem {
                 itemRemovedListeners.forEach(KeywordItemRemovedListener::keywordRemoved);
             }
         });
-
-        keywordItemBox = new HBox(10);//TODO remove magic
-        keywordItemBox.setStyle(
-                "-fx-border-style: solid;"
-                        + "-fx-border-width: 1;"
-                        + "-fx-border-color: gray;"
-        );
-        keywordItemBox.setAlignment(Pos.CENTER_LEFT);
-        keywordItemBox.setMinHeight(Double.valueOf(30));//TODO do something with magic
-        textField = new AutoCompleteTextField(KeywordsLibManager.getInstance().getKeywords());
-        textField.setMaxWidth(Double.MAX_VALUE);
-        HBox.setHgrow(textField, Priority.ALWAYS);
-        keywordItemBox.focusedProperty().addListener(focusChangeListener);
-        textField.focusedProperty().addListener(focusChangeListener);
     }
 
-
-    public Node getKeywordNode() {
-        return keywordItemBox;
-    }
-
-    protected void initListeners(){
-        Node keywordItemNode = getKeywordItemNode();
-        keywordItemNode.setOnMouseClicked(
-                event -> {
-                    if (!editNow) {
-                        startEdit();
-                    }
-                }
-        );
-
-        textField.setOnKeyPressed(
-                event -> {
-                    if (editNow && event.getCode() == KeyCode.ENTER){
-                        cancelEdit();
-                    }
-                }
-        );
-
-        keywordItemNode.setOnKeyPressed(
-                event -> {
-                    if (!editNow && event.getCode() == KeyCode.ENTER) {
-                        startEdit();
-                    }
-                }
-        );
-    }
-
-    protected void startEdit(){
-        editNow = true;
-        ObservableList<Node> nodes = keywordItemBox.getChildren();
-        nodes.remove(getKeywordItemNode());
-        nodes.add(textField);
-        textField.setText(getData());
-        textField.requestFocus();
-        textField.selectAll();
-    }
-
-
-    protected void cancelEdit(){
-        if(!editNow){
-            return;
+    public final Node getKeywordNode() {
+        if(keywordItemBoxWrapper == null){
+            keywordItemBoxWrapper = new KeywordItemBoxWrapper();
+            buildKeywordNode();
         }
-        ObservableList<Node> nodes = keywordItemBox.getChildren();
-        int index = nodes.indexOf(textField);
-        nodes.remove(textField);
-        setData(textField.getText());
-        nodes.add(index, getKeywordItemNode());
-        editNow = false;
-        keywordItemChangedListeners.forEach(IKeywordItemChangedListener::valueChanged);
-        textField.requestFocus();
-    }
-
-    public List<IKeywordItemChangedListener> getKeywordItemChangedListener() {
-        return keywordItemChangedListeners;
+        return keywordItemBoxWrapper.getKeywordItemBox();
     }
 
     public void addKeywordItemChangedListener(IKeywordItemChangedListener keywordItemChangedListener) {
@@ -140,9 +81,9 @@ public abstract class AKeywordItem {
 
     public abstract String getData();
     public abstract void setData(String data);
-    protected abstract Node getKeywordItemNode();
+    protected abstract List<Node> getKeywordItemNodes();
 
-    private class FocusChangeListener implements ChangeListener<Boolean>{
+    protected class FocusChangeListener implements ChangeListener<Boolean>{
 
         @Override
         public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
@@ -155,6 +96,38 @@ public abstract class AKeywordItem {
                     }
                 }
             }
+        }
+    }
+
+
+    protected class KeywordItemBoxWrapper{
+        private HBox keywordItemBox;
+
+        public KeywordItemBoxWrapper(){
+            keywordItemBox = new HBox(10);//TODO remove magic
+            keywordItemBox.setMinHeight(Double.valueOf(30));//TODO do something with magic
+            keywordItemBox.setAlignment(Pos.CENTER_LEFT);
+            keywordItemBox.setStyle(
+                    "-fx-border-style: solid;"
+                            + "-fx-border-width: 1;"
+                            + "-fx-border-color: gray;"
+            );
+        }
+
+        private void addNode(Node node){
+            keywordItemBox.getChildren().add(node);
+        }
+
+        private void addAll(Node... node){
+            keywordItemBox.getChildren().addAll(node);
+        }
+
+        private void addAll(Collection<Node> nodes){
+            keywordItemBox.getChildren().addAll(nodes);
+        }
+
+        public HBox getKeywordItemBox() {
+            return keywordItemBox;
         }
     }
 }

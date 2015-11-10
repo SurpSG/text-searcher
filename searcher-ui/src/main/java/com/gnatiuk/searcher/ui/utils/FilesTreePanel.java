@@ -1,6 +1,7 @@
 package com.gnatiuk.searcher.ui.utils;
 
 
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.KeywordsContainer;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -28,7 +29,7 @@ public class FilesTreePanel{
 
     private SplitPane contentRootNode;
     private TabPane tabPaneNode;
-    private SelectedListView chosenPaths;
+    private KeywordsContainer chosenPaths;
 
 
     public FilesTreePanel() {
@@ -46,7 +47,7 @@ public class FilesTreePanel{
         initChosenPathsNode();
         contentRootNode.getItems().addAll(
                 tabPaneNode,
-                chosenPaths
+                chosenPaths.getKeywordsContainer()
         );
     }
 
@@ -62,7 +63,8 @@ public class FilesTreePanel{
     }
 
     private void initChosenPathsNode() {
-        chosenPaths = new SelectedListView();
+        chosenPaths = new KeywordsContainer();
+//        chosenPaths = new SelectedListView();
     }
 
     private void initRecentChosenNode() {
@@ -132,7 +134,7 @@ public class FilesTreePanel{
     }
 
     public List<String> getSelectedPaths(){
-        return chosenPaths.getItems();
+        return chosenPaths.getKeywords();
     }
 
     private TreeItem<TreeFile> initRootItem(){
@@ -178,18 +180,13 @@ public class FilesTreePanel{
         @Override
         public void handle(KeyEvent event) {
             if(event.getCode() == KeyCode.ADD){
-                ObservableList<String> items = FilesTreePanel.this.chosenPaths.getItems();
+
+                List<String> items = chosenPaths.getKeywords();
                 for (String selectedItem : itemsView.getSelectedItems()) {
                     if(!items.contains(selectedItem)){
-                        items.add(selectedItem);
+                        chosenPaths.addKeyword(selectedItem);
                     }
                 }
-                items.sort(new Comparator<String>() {
-                    @Override
-                    public int compare(String o1, String o2) {
-                        return o1.compareTo(o2);
-                    }
-                });
             }
         }
     }

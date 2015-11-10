@@ -3,7 +3,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 import com.gnatiuk.searcher.filters.ATextFilter;
 import com.gnatiuk.searcher.filters.IFilter;
 import com.gnatiuk.searcher.filters.text_processors.ITextPreprocessor;
-import com.gnatiuk.searcher.ui.utils.filters.components.tools.KeywordsContainer;
+import com.gnatiuk.searcher.ui.utils.filters.components.tools.EditableKeywordsContainer;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import utils.KeywordsLibManager;
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public abstract class ASearchTextFilterComponent extends ASearchFilterComponent {
 
-    protected KeywordsContainer keywordsContainer;
+    protected EditableKeywordsContainer keywordsContainer;
     protected CheckBox ignoreCaseCheck;
     protected CheckBox regexCheck;
 
@@ -25,7 +25,7 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
         ignoreCaseCheck = new CheckBox("Ignore case");
         ignoreCaseCheck.setSelected(true);
         regexCheck = new CheckBox("Regex");
-        keywordsContainer = new KeywordsContainer();
+        keywordsContainer = new EditableKeywordsContainer();
     }
 
     protected abstract ATextFilter build(List<String> keywords);

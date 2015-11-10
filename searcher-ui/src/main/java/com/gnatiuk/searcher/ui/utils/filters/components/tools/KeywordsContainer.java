@@ -1,13 +1,8 @@
 package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.IKeywordItemChangedListener;
-import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemFocusListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemRemovedListener;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.VBox;
 
@@ -20,15 +15,14 @@ import java.util.stream.Collectors;
  */
 public class KeywordsContainer {
 
-    private static final int ROW_HEIGHT = 24;
-    private static final int MAX_ROW_COUNT = 4;
-    private static final int MIN_ROW_COUNT = 1;
+    protected static final int ROW_HEIGHT = 24;
+    protected static final int MAX_ROW_COUNT = 4;
+    protected static final int MIN_ROW_COUNT = 1;
 
 
-    private List<AKeywordItem> aKeywordItems;
+    protected List<AKeywordItem> aKeywordItems;
 
-    private Button addKeywordButton;
-    private VBox keywordsContainerBox;
+    protected VBox keywordsContainerBox;
     private TitledPane titledPane;
 
     public KeywordsContainer(){
@@ -40,37 +34,14 @@ public class KeywordsContainer {
         );
         titledPane = new TitledPane("Keywords",keywordsContainerBox);
         aKeywordItems = new ArrayList<>();
-
-        addKeywordButton = new Button("Add keyword");
-        addKeywordButton.setMaxWidth(Double.valueOf(300));
-        addKeywordButton.setOnAction(
-                event -> {
-                    AKeywordItem keywordItem = buildKeywordItem("");
-                    addKeywordItem(keywordItem);
-                    keywordItem.startEdit();
-                }
-        );
-
-
-        keywordsContainerBox.focusedProperty().addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (newValue) {
-                    maximizeListView();
-                } else {
-                    minimizeListView();
-                }
-            }
-        });
-
-        keywordsContainerBox.getChildren().add(addKeywordButton);
     }
 
     public Node getKeywordsContainer() {
-        ScrollPane scrollPane = new ScrollPane();
-        scrollPane.setFitToWidth(true);
-        scrollPane.setContent(titledPane);
-        return scrollPane;
+//        ScrollPane scrollPane = new ScrollPane();
+//        scrollPane.setFitToWidth(true);
+//        scrollPane.setContent(titledPane);
+//        return scrollPane;
+        return keywordsContainerBox;
     }
 
     public List<String> getKeywords(){
@@ -81,42 +52,14 @@ public class KeywordsContainer {
         addKeywordItem(buildKeywordItem(keyword));
     }
 
-    private void minimizeListView(){
-        int size = keywordsContainerBox.getChildren().size();
-        int listRowCount = (size >= MIN_ROW_COUNT) ? size : MIN_ROW_COUNT;
-        listRowCount = (listRowCount > MAX_ROW_COUNT) ? MAX_ROW_COUNT : listRowCount;
-//        setVisibleRowCount(listRowCount);
-    }
-
-    private void maximizeListView(){
-//        setVisibleRowCount(keywordsContainerBox.getChildren().size());
-//        setVisibleRowCount(2);
-    }
-
-    private void setVisibleRowCount(int count){
-//        titledPane.setPrefHeight(ROW_HEIGHT * count);
-    }
-
-    private AKeywordItem buildKeywordItem(String keyword){
-        CheckableKeywordItem keywordItem = new CheckableKeywordItem();
+    protected SimpleKeywordItem buildKeywordItem(String keyword){
+        SimpleKeywordItem keywordItem = new SimpleKeywordItem();
         keywordItem.setData(keyword);
         keywordItem.addKeywordRemovedListener(new KeywordItemRemovedListener() {
             @Override
             public void keywordRemoved() {
                 keywordsContainerBox.getChildren().remove(keywordItem.getKeywordNode());
                 aKeywordItems.remove(keywordItem);
-            }
-        });
-        keywordItem.addFocusListener(new KeywordItemFocusListener() {
-            @Override
-            public void focusGained() {
-                maximizeListView();
-            }
-
-            @Override
-            public void focusLost() {
-                minimizeListView();
-                keywordItem.cancelEdit();
             }
         });
         keywordItem.addKeywordItemChangedListener(new IKeywordItemChangedListener() {
@@ -130,10 +73,10 @@ public class KeywordsContainer {
         return keywordItem;
     }
 
-    private void addKeywordItem(AKeywordItem keywordItem){
-        int buttonIndex = keywordsContainerBox.getChildren().indexOf(addKeywordButton);
+
+    protected void addKeywordItem(AKeywordItem keywordItem){
         aKeywordItems.add(keywordItem);
-        keywordsContainerBox.getChildren().add(buttonIndex, keywordItem.getKeywordNode());
+        keywordsContainerBox.getChildren().add(keywordItem.getKeywordNode());
     }
 
 }
