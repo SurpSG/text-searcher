@@ -127,7 +127,21 @@ public class FilesTreePanel{
 
             if(item != null){
                 setText(item.getName());
-                setGraphic(new ImageView(FileTreeItem.folderIcon));
+                setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
+            }
+        }
+
+    }
+
+    class ListIconCellImpl extends ListCell<String> {
+
+        @Override
+        public void updateItem(String item, boolean empty) {
+            super.updateItem(item, empty);
+
+            if(item != null){
+                setText(item);
+                setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
             }
         }
 
@@ -197,12 +211,19 @@ public class FilesTreePanel{
 
     private class SelectedListView extends ListView<String> implements ItemsView {
 
+        public SelectedListView(){
+            setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
+                @Override
+                public ListCell<String> call(ListView<String> param) {
+                    return new ListIconCellImpl();
+                }
+            });
+        }
+
         @Override
         public List<String> getSelectedItems() {
             return getSelectionModel().getSelectedItems();
         }
-
-
     }
 
     private class SelectedTreeView extends TreeView<TreeFile> implements ItemsView {
@@ -218,5 +239,6 @@ public class FilesTreePanel{
                     .map(treeFileTreeItem -> treeFileTreeItem.getValue().getAbsolutePath())
                     .collect(Collectors.toList());
         }
+
     }
 }

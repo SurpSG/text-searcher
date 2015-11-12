@@ -15,8 +15,8 @@ public class FileTreeItem extends TreeItem<TreeFile> {
     private static final String FILE_ICON_PATH = "searcher-ui/src/main/resources/file-icon.png";
     private static final String FOLDER_ICON_PATH = "searcher-ui/src/main/resources/folder-icon.png";
 
-    public static final Image fileIcon = loadImage(FILE_ICON_PATH);
-    public static final Image folderIcon = loadImage(FOLDER_ICON_PATH);
+    public static final Image FILE_ICON = loadImage(FILE_ICON_PATH);
+    public static final Image FOLDER_ICON = loadImage(FOLDER_ICON_PATH);
 
     public FileTreeItem(TreeFile treeFile) {
         super(treeFile);

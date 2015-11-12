@@ -3,6 +3,7 @@ package com.gnatiuk.searcher.ui.utils;
 import com.gnatiuk.searcher.filters.util.FileSearchEvent;
 import com.gnatiuk.searcher.filters.util.SearchOption;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeItem;
@@ -92,9 +93,9 @@ public class FoundTreePanel{
             } else {
                 newChildPath = path;
             }
-            newChildTreeItem = new TreeItem<>(newChildPath.toString(), new ImageView(FileTreeItem.fileIcon));
+            newChildTreeItem = new TreeItem<>(newChildPath.toString(), new ImageView(FileTreeItem.FILE_ICON));
         } else {
-            newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(FileTreeItem.fileIcon));
+            newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(FileTreeItem.FILE_ICON));
         }
         mostCorrespondingParent.getChildren().add(newChildTreeItem);
         return extractFileNameToLeaf(newChildTreeItem);
@@ -127,7 +128,7 @@ public class FoundTreePanel{
 
         Path newExtractedChild = extractChildPath(childPath, parentForNewChild);
 
-        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), new ImageView(FileTreeItem.folderIcon));
+        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), new ImageView(FileTreeItem.FOLDER_ICON));
         moveAllChildren(itemExtractFrom, newExtractedItem);
 
         String itemExtractFromValue = itemExtractFrom.getValue();
@@ -136,7 +137,10 @@ public class FoundTreePanel{
     }
 
     private void moveAllChildren(TreeItem<String> nodeChildrenFrom, TreeItem<String> nodeChildrenTo){
-        ObservableList<TreeItem<String>> children = nodeChildrenFrom.getChildren();
+        ObservableList<TreeItem<String>> children = FXCollections.observableArrayList();
+        for (TreeItem<String> treeItem : nodeChildrenFrom.getChildren()) {
+            children.add(treeItem);
+        }
         nodeChildrenFrom.getChildren().clear();
         nodeChildrenTo.getChildren().addAll(children);
     }
@@ -156,8 +160,8 @@ public class FoundTreePanel{
         }
 
         treeItem.setValue(treeItem.getValue().substring(0, treeItem.getValue().lastIndexOf(itemFile.getName())));
-        treeItem.setGraphic(new ImageView(FileTreeItem.folderIcon));
-        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(FileTreeItem.fileIcon));
+        treeItem.setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
+        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(FileTreeItem.FILE_ICON));
         treeItem.getChildren().add(fileNameTreeItem);
         return fileNameTreeItem;
     }
@@ -253,6 +257,7 @@ public class FoundTreePanel{
     }
 
     public static void main(String[] args) {
+        javafx.embed.swing.JFXPanel jfxPanel = new javafx.embed.swing.JFXPanel();
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
