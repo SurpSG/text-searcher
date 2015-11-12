@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -98,6 +99,7 @@ public class FoundTreePanel{
             newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(FileTreeItem.FILE_ICON));
         }
         mostCorrespondingParent.getChildren().add(newChildTreeItem);
+        sortChildren(mostCorrespondingParent);
         return extractFileNameToLeaf(newChildTreeItem);
     }
 
@@ -134,6 +136,7 @@ public class FoundTreePanel{
         String itemExtractFromValue = itemExtractFrom.getValue();
         itemExtractFrom.setValue(itemExtractFromValue.substring(0, itemExtractFromValue.lastIndexOf(File.separator + newExtractedItem.getValue())));
         itemExtractFrom.getChildren().add(newExtractedItem);
+        sortChildren(itemExtractFrom);
     }
 
     private void moveAllChildren(TreeItem<String> nodeChildrenFrom, TreeItem<String> nodeChildrenTo){
@@ -143,8 +146,27 @@ public class FoundTreePanel{
         }
         nodeChildrenFrom.getChildren().clear();
         nodeChildrenTo.getChildren().addAll(children);
+        sortChildren(nodeChildrenTo);
     }
 
+    private void sortChildren(TreeItem<String> root){
+
+        root.getChildren().sort(new Comparator<TreeItem<String>>() {
+            @Override
+            public int compare(TreeItem<String> o1, TreeItem<String> o2) {
+                int comparingFileWeightResult = getItemFileWeight(o1) - getItemFileWeight(o2);
+                if (comparingFileWeightResult != 0) {
+                    return comparingFileWeightResult;
+                } else {
+                    return o1.getValue().compareTo(o2.getValue());
+                }
+            }
+
+            private int getItemFileWeight(TreeItem<String> item) {
+                return (new File(buildPathForNode(item)).isDirectory()) ? 0 : 1;
+            }
+        });
+    }
     /**
      * Method extracts treeItem to separate node as a leaf if treeItem value is a file.
      * If file is extracted nothing to do.
@@ -163,6 +185,7 @@ public class FoundTreePanel{
         treeItem.setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
         TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(FileTreeItem.FILE_ICON));
         treeItem.getChildren().add(fileNameTreeItem);
+        sortChildren(treeItem);
         return fileNameTreeItem;
     }
 

@@ -2,10 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components.builders;
 
 import com.gnatiuk.searcher.filters.FiltersContainer;
 import com.gnatiuk.searcher.filters.IFilter;
-import com.gnatiuk.searcher.filters.external.FilterFileName;
-import com.gnatiuk.searcher.filters.external.FilterFileNameExclude;
-import com.gnatiuk.searcher.filters.external.FilterFileNameRegex;
-import com.gnatiuk.searcher.filters.external.FilterFileNameRegexExclude;
+import com.gnatiuk.searcher.filters.external.*;
 import com.gnatiuk.searcher.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.ui.utils.filters.components.*;
@@ -68,6 +65,12 @@ public enum FilterToComponentMap {
             ASearchTextFilterComponent filterComponent = new TextSearchComponentBuilder().buildByFilter(filter);
             filterComponent.setRegexCheck(true);
             return Arrays.asList(filterComponent);
+        }
+    },
+    DATE_FILTER(FilterFileDate.class, DateFilterComponent.class) {
+        @Override
+        protected List<ASearchFilterComponent> build(IFilter filter) {
+            return Arrays.asList(new DateFilterComponent());
         }
     },
 

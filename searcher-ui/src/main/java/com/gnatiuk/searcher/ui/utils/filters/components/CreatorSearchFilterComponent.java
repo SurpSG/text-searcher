@@ -124,7 +124,8 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
         List<Pair<Class<? extends ASearchFilterComponent>, String>> elements = Arrays.asList(
                 new Pair<>(FileNameFilterComponent.class, FileNameFilterComponent.NAME),
                 new Pair<>(KeywordFilterComponent.class, KeywordFilterComponent.NAME),
-                new Pair<>(FileNameExcludeFilterComponent.class, FileNameExcludeFilterComponent.NAME)
+                new Pair<>(FileNameExcludeFilterComponent.class, FileNameExcludeFilterComponent.NAME),
+                new Pair<>(DateFilterComponent.class, DateFilterComponent.NAME)
         );
         comboBox.getItems().addAll(elements);
 
