@@ -38,6 +38,7 @@ public interface IFilter {
     FileSearchEvent doFilter(File file);
     String filterHash();
 
+    CompareStatus compareToFilter(IFilter filter);
 
     IFilter NONE_FILTER = new IFilter() {
         @Override
@@ -48,6 +49,11 @@ public interface IFilter {
         @Override
         public String filterHash() {
             return "0";
+        }
+
+        @Override
+        public CompareStatus compareToFilter(IFilter filter) {
+            return this == filter ? CompareStatus.EQUALS : CompareStatus.NOT_EQUALS;
         }
     };
 }

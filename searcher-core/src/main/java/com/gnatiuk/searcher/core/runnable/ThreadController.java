@@ -1,6 +1,5 @@
-package com.gnatiuk.searcher.core;
+package com.gnatiuk.searcher.core.runnable;
 
-import com.gnatiuk.searcher.core.runnable.SearchRunnable;
 import com.gnatiuk.searcher.core.utils.*;
 
 import java.util.ArrayList;
@@ -14,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by sgnatiuk on 6/2/15.
  */
-public class ThreadController {
+final class ThreadController {
 
     private static final int CPU_UNITS = Runtime.getRuntime().availableProcessors();
 
@@ -38,11 +37,11 @@ public class ThreadController {
         executorService = buildThreadPoolExecutor();
     }
 
-    public static class ThreadControllerHolder {
+    static class ThreadControllerHolder {
         public static final ThreadController HOLDER_INSTANCE = new ThreadController();
     }
 
-    public static ThreadController getInstance(){
+    static ThreadController getInstance(){
         return ThreadControllerHolder.HOLDER_INSTANCE;
     }
 
@@ -90,7 +89,7 @@ public class ThreadController {
                 && executorService.getActiveCount() == 0;
     }
 
-    public void registerThread(SearchRunnable searchThread){
+    void registerThread(SearchRunnable searchThread){
         searchThread.addTaskStartedListener(taskStartedListener);
         searchThread.addTaskCompleteListener(taskCompleteListener);
         searchThread.addFileFoundListener(fileFoundListener);
@@ -102,20 +101,20 @@ public class ThreadController {
         }
     }
 
-    public void addWorkCompleteListener(IWorkCompleteListener workCompleteListener){
+    void addWorkCompleteListener(IWorkCompleteListener workCompleteListener){
         this.workCompleteListener = workCompleteListener;
     }
 
 
-    public void registerTaskCompleteListener(ITaskCompleteListener taskCompleteListener){
+    void registerTaskCompleteListener(ITaskCompleteListener taskCompleteListener){
         this.externalTaskCompleteListener = taskCompleteListener;
     }
 
-    public void registerTaskStartedListener(ITaskStartedListener taskStartedListener){
+    void registerTaskStartedListener(ITaskStartedListener taskStartedListener){
         this.taskStartedListener = taskStartedListener;
     }
 
-    public void registerFileFoundListener(IFileFoundListener fileFoundListener){
+    void registerFileFoundListener(IFileFoundListener fileFoundListener){
         this.fileFoundListener = fileFoundListener;
     }
 
@@ -135,7 +134,7 @@ public class ThreadController {
         }));
     }
 
-    public void start(){
+    void start(){
         if(controllerState == ControllerState.STARTED){
             throw new UnsupportedOperationException("Controller already started. Current state = "+controllerState);
         }
@@ -146,13 +145,13 @@ public class ThreadController {
         }
     }
 
-    public void stop(){
+    void stop(){
         controllerState = ControllerState.STOPPED;
         scheduledTasks.clear();
         executorService.getQueue().clear();
     }
 
-    public void pause(){
+    void pause(){
         if(controllerState != ControllerState.STARTED){
             throw new UnsupportedOperationException("Controller is not started. Current state = "+controllerState);
         }
@@ -164,18 +163,22 @@ public class ThreadController {
         }
     }
 
-    public void resume(){
+    void resume(){
         if(controllerState != ControllerState.PAUSED){
             throw new UnsupportedOperationException("Controller is not paused. Current state = "+controllerState);
         }
         start();
     }
 
-    public void shutdown(){
+    ControllerState getControllerState() {
+        return controllerState;
+    }
+
+    void shutdown(){
         executorService.shutdown();
     }
 
-    private enum ControllerState{
+    enum ControllerState{
         PAUSED, STARTED, STOPPED;
     }
 }

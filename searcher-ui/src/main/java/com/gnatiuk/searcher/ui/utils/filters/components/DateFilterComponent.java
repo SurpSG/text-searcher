@@ -4,6 +4,7 @@ import com.gnatiuk.searcher.filters.IFilter;
 import com.gnatiuk.searcher.filters.external.FilterFileDate;
 import javafx.scene.Node;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -50,7 +51,9 @@ public class DateFilterComponent extends ASearchFilterComponent {
 
     @Override
     protected Node layoutComponents(List<Node> components) {
+        components.add(new Label("From:"));
         components.add(datePickerFrom);
+        components.add(new Label("To:"));
         components.add(datePickerTo);
         return super.layoutComponents(components);
     }

@@ -1,5 +1,6 @@
 package com.gnatiuk.searcher.filters.external;
 
+import com.gnatiuk.searcher.filters.CompareStatus;
 import com.gnatiuk.searcher.filters.IFilter;
 import com.gnatiuk.searcher.filters.util.FileSearchEvent;
 
@@ -34,6 +35,17 @@ public class FilterFileDate implements ExternalFilterMarker, IFilter {
         stringBuilder.append(fromDate.getTime());
         stringBuilder.append(toDate.getTime());
         return stringBuilder.toString();
+    }
+
+    @Override
+    public CompareStatus compareToFilter(IFilter filter) {
+        if(this.getClass() != filter.getClass()){
+            return CompareStatus.NOT_EQUALS;
+        }
+
+        FilterFileDate dateFilter = (FilterFileDate) filter;
+        return this.fromDate.equals(dateFilter.fromDate) && this.toDate.equals(dateFilter.toDate)
+                ? CompareStatus.EQUALS : CompareStatus.NOT_EQUALS;
     }
 
 }

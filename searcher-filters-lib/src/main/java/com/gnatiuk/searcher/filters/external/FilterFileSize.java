@@ -1,5 +1,6 @@
 package com.gnatiuk.searcher.filters.external;
 
+import com.gnatiuk.searcher.filters.CompareStatus;
 import com.gnatiuk.searcher.filters.IFilter;
 import com.gnatiuk.searcher.filters.util.FileSearchEvent;
 import utils.SizeMeasure;
@@ -42,5 +43,17 @@ public class FilterFileSize implements ExternalFilterMarker, IFilter {
                 "lowInterval=" + lowInterval + " bytes" +
                 ", upInterval=" + upInterval + " bytes" +
                 '}';
+    }
+
+    @Override
+    public CompareStatus compareToFilter(IFilter filter) {
+        if(this.getClass() != filter.getClass()){
+            return CompareStatus.NOT_EQUALS;
+        }
+
+        FilterFileSize sizeFilter = (FilterFileSize) filter;
+        return (this.lowInterval == sizeFilter.lowInterval
+                && this.upInterval == sizeFilter.upInterval)
+                ? CompareStatus.EQUALS : CompareStatus.NOT_EQUALS;
     }
 }

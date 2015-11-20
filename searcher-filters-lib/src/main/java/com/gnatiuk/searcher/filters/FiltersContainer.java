@@ -67,6 +67,20 @@ public class FiltersContainer implements IFilter, ExternalFilterMarker {
         return result.toString();
     }
 
+    @Override
+    public CompareStatus compareToFilter(IFilter filter) {
+        if(this.getClass() != filter.getClass()){
+            return CompareStatus.NOT_EQUALS;
+        }
+
+        FiltersContainer filtersContainer = (FiltersContainer) filter;
+
+        for (IFilter iFilter : filtersContainer.filters) {
+            // TODO detect if filter extended of changed
+        }
+        return CompareStatus.NOT_EQUALS;
+    }
+
     public Collection<IFilter> getFilters() {
         return filters;
     }

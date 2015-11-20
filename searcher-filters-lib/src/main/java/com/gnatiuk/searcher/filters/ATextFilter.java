@@ -75,4 +75,24 @@ public abstract class ATextFilter implements IFilter {
         }
         return stringBuilder.toString();
     }
+
+    @Override
+    public CompareStatus compareToFilter(IFilter filter) {
+        if(this.getClass() != filter.getClass()){
+            return CompareStatus.NOT_EQUALS;
+        }
+
+        ATextFilter textFilter = (ATextFilter) filter;
+        if(textPreprocessor != textFilter.textPreprocessor){
+            return CompareStatus.NOT_EQUALS;
+        }
+
+        for (String keyword : textFilter.keywords) {
+            if (!keywords.contains(keyword)){
+                return CompareStatus.NOT_EQUALS;
+            }
+        }
+
+        return this.keywords.size() == textFilter.keywords.size() ? CompareStatus.EQUALS : CompareStatus.EXTENDED;
+    }
 }

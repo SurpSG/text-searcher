@@ -1,6 +1,5 @@
 package com.gnatiuk.searcher.core.runnable;
 
-import com.gnatiuk.searcher.core.ThreadController;
 import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 import com.gnatiuk.searcher.filters.IFilter;
