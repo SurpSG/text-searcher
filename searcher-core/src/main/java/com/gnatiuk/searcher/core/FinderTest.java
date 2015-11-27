@@ -1,6 +1,6 @@
 package com.gnatiuk.searcher.core;
 
-import com.gnatiuk.searcher.core.runnable.SearcherHierarchyRunnable;
+import com.gnatiuk.searcher.core.runnable.SearchController;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
 import com.gnatiuk.searcher.filters.FiltersContainer;
@@ -24,22 +24,79 @@ public class FinderTest {
     public static void main(String[] args) {
 
         String[] filePaths = {
-                "/home",
+//                "/cryptfs/builds/sh10/490/buildroot/build_mips",
+//                "/cryptfs/builds/sh10/490_v4/buildroot/build_mips/",
+//                "/cryptfs/builds/sh10/490_v4/scripts/",
+//                "/cryptfs/builds/sh10/486/buildroot/build_mips/",
+//
+//
+//                "/cryptfs/builds/sh20-merge/original/scripts/",
+//                "/cryptfs/builds/sh20-merge/original/buildroot/build_mips",
+//                "/cryptfs/builds/sh20-merge/clean_3/buildroot",
+
+//                "/cryptfs/builds/sh10/490_v1_orig/buildroot/dl",
+
+
+
+
+
+//                "/cryptfs/builds/sh10/490_v1_clean/build_scripts/root_pac/build_mips/",
+//                "/cryptfs/builds/sh10/490_v1_orig",
+
+
+//                "/cryptfs/builds/sh10/490_v1_orig/buildroot/",
+//                "/cryptfs/builds/sh10/490_v1_orig/scripts/",
+//                "/cryptfs/builds/sh10/490_v1_orig/buildroot/package",
+//                "/cryptfs/builds/sh10/490_v1_orig/buildroot/build_mips/",
+
+//                "/cryptfs/builds/sh10/root20scriptMerge/root_pac/build_mips",
+//
+
+//                "/cryptfs/builds/sh10/490_v1_clean/build_scripts/root_pac/build_mips",
+//                "/cryptfs/builds/sh10/490_v1_clean/build_scripts/scripts_sh10",
+//                "/cryptfs/builds/sh10/490_v1_clean/build_scripts/scripts_sh20",
+                "/cryptfs/builds/sh10/root20scriptMerge/merge-buildroot/10root_pac"
+
         };
 
         String[] fileFiltersKeywordsArray = new String[]{
-                ".java"
+//                "IDtcpInfo.h",
+                "sh-10",
+                "sh10",
         };
 
         String[] fileFiltersRegexArray = new String[]{
-//                "\\.java$",
-                "\\.c$",
-                "\\.cpp$",
-                "\\.cc$",
-                "\\.h$",
+//                "\\.log",
+//                "\\.xml$",
+//                "\\.sh",
+//                "\\.sh$",
+//                "\\.c$",
+//                "\\.sh$",
+//                "\\.cpp$",
+//                "\\.cc$",
+//                "\\.h$",
+//                "\\.xml$",
+//                "^ProgressTestRegistrator.java$",
+//                "^EventManager.java$",
         };
 
         String[] fileFiltersRegexExcludeArray = new String[]{
+//                "\\.so$",
+//                "\\.so.1$",
+//                "\\.cache$",
+//                "\\.o$",
+//                "\\.log$",
+//                "\\.a$",
+//                "\\.tgz$",
+//                "\\.ko$",
+//                "\\.jar$",
+//                "\\.patch$",
+//                "\\.i$",
+                "\\.bz2$",
+                "\\.gz$",
+                "Tag$",
+                "Entries$",
+                "Repository$",
 //                "\\.txt$",
 //                "\\.java$",
 //                "\\.h$",
@@ -49,10 +106,23 @@ public class FinderTest {
         };
 
         String[] filterKeywordsArray = new String[]{
+//                "Parallel mksquashfs",
+//                "Use fakeroot to pretend to create all needed device nodes",
+//                "se fakeroot to munge permissions and do root-like things",
+//                "se fakeroot to munge permissions and do root-like things",
+                "sh10",
+                "sh-10",
+                "h20",
         };
 
         String[] filterKeywordsRegexArray = new String[]{
-                "regex",
+//                "[^A-Za-z]dlSurfaceRequest[^A-Za-z]",
+//                "#define.*[^A-Z]shr2",
+//                "#define.*[^A-Z]shr",
+                "sh10",
+                "sh-10",
+                "[^a-z]h20",
+//                "#define.*h10",
         };
 
 
@@ -93,30 +163,39 @@ public class FinderTest {
 //        searchFilter.addFilter(filterFileNameCaseSensitive);
 //        searchFilter.addFilter(filterFileNameIgnoreCase);
 
-        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
+//        searchFilter.addFilter(filterFileNameRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileNameRegexCaseSensitive);
 
 //        searchFilter.addFilter(filterFileNameRegexExcludeIgnoreCase);
-//        searchFilter.addFilter(filterFileNameRegexExcludeCaseSensitive);
+        searchFilter.addFilter(filterFileNameRegexExcludeCaseSensitive);
 
 
-        searchFilter.addFilter(filterFileKeywordIgnoreCase);
+//        searchFilter.addFilter(filterFileKeywordIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordCaseSensitive);
 
-//        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
+        searchFilter.addFilter(filterFileKeywordRegexIgnoreCase);
 //        searchFilter.addFilter(filterFileKeywordRegexCaseSensitive);
-        searchFilter.addFilter(filterFileSize);
+//        searchFilter.addFilter(filterFileSize);
 
-        ThreadController.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
+        System.out.println(Arrays.toString(filePaths));
+        System.out.println(searchFilter);
+
+        SearchController.getInstance().registerWorkCompleteListener(new IWorkCompleteListener() {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
-                JOptionPane.showMessageDialog(null, "Done!");
-
-                ThreadController.getInstance().shutdown();
+                SearchController.getInstance().shutdown();
+                JOptionPane.showMessageDialog(null, "Done");
             }
         });
 
-        ThreadController.getInstance().registerThread(new SearcherHierarchyRunnable(Arrays.asList(filePaths), searchFilter));
-        ThreadController.getInstance().start();
+        SearchController.getInstance().setPathsToSearch(Arrays.asList(filePaths));
+        SearchController.getInstance().setFilter(searchFilter);
+        SearchController.getInstance().startSearching();
     }
 }
+
+
+/*
+
+
+ */

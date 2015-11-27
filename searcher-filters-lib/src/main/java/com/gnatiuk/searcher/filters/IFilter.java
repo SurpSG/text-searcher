@@ -1,10 +1,7 @@
 package com.gnatiuk.searcher.filters;
 
 
-import com.gnatiuk.searcher.filters.external.FilterFileName;
-import com.gnatiuk.searcher.filters.external.FilterFileNameExclude;
-import com.gnatiuk.searcher.filters.external.FilterFileNameRegex;
-import com.gnatiuk.searcher.filters.external.FilterFileNameRegexExclude;
+import com.gnatiuk.searcher.filters.external.*;
 import com.gnatiuk.searcher.filters.internal.FilterFileKeyword;
 import com.gnatiuk.searcher.filters.internal.FilterFileKeywordRegex;
 import com.gnatiuk.searcher.filters.util.FileSearchEvent;
@@ -29,6 +26,9 @@ import java.io.File;
 
         @JsonSubTypes.Type(value = FilterFileKeyword.class, name = "FilterFileKeyword"),
         @JsonSubTypes.Type(value = FilterFileKeywordRegex.class, name = "FilterFileKeywordRegex"),
+
+        @JsonSubTypes.Type(value = FilterFileDate.class, name = "FilterFileDate"),
+        @JsonSubTypes.Type(value = FilterFileSize.class, name = "FilterFileSize"),
 
         @JsonSubTypes.Type(value = FiltersContainer.class, name = "FiltersContainer"),
 })

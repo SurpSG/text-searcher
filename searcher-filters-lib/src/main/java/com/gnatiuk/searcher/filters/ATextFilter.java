@@ -78,7 +78,7 @@ public abstract class ATextFilter implements IFilter {
 
     @Override
     public CompareStatus compareToFilter(IFilter filter) {
-        if(this.getClass() != filter.getClass()){
+        if(filter == null || this.getClass() != filter.getClass()){
             return CompareStatus.NOT_EQUALS;
         }
 

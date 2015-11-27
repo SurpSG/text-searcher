@@ -1,6 +1,6 @@
 package com.gnatiuk.searcher.ui;
 
-import com.gnatiuk.searcher.core.runnable.SearchCotroller;
+import com.gnatiuk.searcher.core.runnable.SearchController;
 import com.gnatiuk.searcher.core.utils.IFileFoundListener;
 import com.gnatiuk.searcher.core.utils.IWorkCompleteListener;
 import com.gnatiuk.searcher.core.utils.WorkCompleteEvent;
@@ -85,7 +85,7 @@ public class SearcherApplication extends Application{
     }
 
     private void createOnFileFoundAction(){
-        SearchCotroller.getInstance().registerFileFoundListener(new IFileFoundListener() {
+        SearchController.getInstance().registerFileFoundListener(new IFileFoundListener() {
             @Override
             public void alertFileFound(FileSearchEvent fileFoundEvent) {
                 if (fileFoundEvent != FileSearchEvent.NOT_FOUND) {
@@ -104,7 +104,7 @@ public class SearcherApplication extends Application{
     }
 
     private void createOnSearchCompleteAction(){
-        SearchCotroller.getInstance().addWorkCompleteListener(new IWorkCompleteListener() {
+        SearchController.getInstance().registerWorkCompleteListener(new IWorkCompleteListener() {
             @Override
             public void actionPerformed(WorkCompleteEvent event) {
                 Platform.runLater(new Runnable() {
@@ -157,9 +157,9 @@ public class SearcherApplication extends Application{
 
                 RecentPathsManager.getInstance().saveWords(pathsToSearch);
 
-                SearchCotroller.getInstance().setPathsToSearch(pathsToSearch);
-                SearchCotroller.getInstance().setFilter(filter);
-                SearchCotroller.getInstance().startSearching();
+                SearchController.getInstance().setPathsToSearch(pathsToSearch);
+                SearchController.getInstance().setFilter(filter);
+                SearchController.getInstance().startSearching();
                 pauseButton.setDisable(false);
                 stopButton.setDisable(false);
                 runButton.setDisable(true);
@@ -172,7 +172,7 @@ public class SearcherApplication extends Application{
         resumeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchCotroller.getInstance().resumeSearching();
+                SearchController.getInstance().resumeSearching();
                 runButton.setDisable(true);
                 resumeButton.setDisable(true);
                 pauseButton.setDisable(false);
@@ -185,7 +185,7 @@ public class SearcherApplication extends Application{
         stopButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchCotroller.getInstance().stopSearching();
+                SearchController.getInstance().stopSearching();
                 runButton.setDisable(false);
                 stopButton.setDisable(true);
                 pauseButton.setDisable(true);
@@ -197,7 +197,7 @@ public class SearcherApplication extends Application{
         pauseButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchCotroller.getInstance().pauseSearching();
+                SearchController.getInstance().pauseSearching();
 
                 runButton.setDisable(false);
                 stopButton.setDisable(false);
@@ -273,7 +273,7 @@ public class SearcherApplication extends Application{
 
     @Override
     public void stop(){
-        SearchCotroller.getInstance().shutdown();
+        SearchController.getInstance().shutdown();
         System.exit(0);
     }
 

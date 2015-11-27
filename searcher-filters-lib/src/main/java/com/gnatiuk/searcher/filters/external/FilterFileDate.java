@@ -39,7 +39,7 @@ public class FilterFileDate implements ExternalFilterMarker, IFilter {
 
     @Override
     public CompareStatus compareToFilter(IFilter filter) {
-        if(this.getClass() != filter.getClass()){
+        if(filter == null || this.getClass() != filter.getClass()){
             return CompareStatus.NOT_EQUALS;
         }
 

@@ -69,16 +69,24 @@ public class FiltersContainer implements IFilter, ExternalFilterMarker {
 
     @Override
     public CompareStatus compareToFilter(IFilter filter) {
-        if(this.getClass() != filter.getClass()){
+        if(filter == null || this.getClass() != filter.getClass()){
             return CompareStatus.NOT_EQUALS;
         }
 
         FiltersContainer filtersContainer = (FiltersContainer) filter;
 
-        for (IFilter iFilter : filtersContainer.filters) {
-            // TODO detect if filter extended of changed
+        for (IFilter otherFilter : filtersContainer.filters) {
+            CompareStatus compareStatus = CompareStatus.NOT_EQUALS;
+            for (IFilter thisFilter : filters) {
+                if((compareStatus = otherFilter.compareToFilter(thisFilter)) != CompareStatus.NOT_EQUALS){
+                    break;
+                }
+            }
+            if(compareStatus == CompareStatus.NOT_EQUALS){
+                return compareStatus;
+            }
         }
-        return CompareStatus.NOT_EQUALS;
+        return (this.filters.size() > filtersContainer.filters.size()) ? CompareStatus.EXTENDED : CompareStatus.EQUALS;
     }
 
     public Collection<IFilter> getFilters() {

@@ -27,7 +27,7 @@ final class ThreadController {
 
     private final ThreadPoolExecutor executorService;
 
-    private ControllerState controllerState;
+    private volatile ControllerState controllerState;
 
 
     private ThreadController(){
@@ -68,8 +68,8 @@ final class ThreadController {
                 synchronized (controllerState) {
                     if (controllerState != ControllerState.STOPPED) {
                         if (isWorkFinished()) {
-                            notifyWorkFinished();
                             controllerState = ControllerState.STOPPED;
+                            notifyWorkFinished();
                         }
                     }
                 }
@@ -101,7 +101,7 @@ final class ThreadController {
         }
     }
 
-    void addWorkCompleteListener(IWorkCompleteListener workCompleteListener){
+    void registerWorkCompleteListener(IWorkCompleteListener workCompleteListener){
         this.workCompleteListener = workCompleteListener;
     }
 
