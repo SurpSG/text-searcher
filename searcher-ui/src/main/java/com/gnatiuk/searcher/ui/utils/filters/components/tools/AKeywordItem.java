@@ -1,5 +1,6 @@
 package com.gnatiuk.searcher.ui.utils.filters.components.tools;
 
+import com.gnatiuk.searcher.ui.utils.ImageLoader;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.IKeywordItemChangedListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemFocusListener;
 import com.gnatiuk.searcher.ui.utils.filters.components.tools.listeners.KeywordItemRemovedListener;
@@ -10,8 +11,10 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -50,7 +53,10 @@ public abstract class AKeywordItem {
     }
 
     private void initRemoveButton(){
-        removeItselfButton = new Button("-");
+        removeItselfButton = new Button("", new ImageView(
+                ImageLoader.loadImageByPath(Paths.get(ImageLoader.IMAGE_RESOURCES, "delete16.png"))
+            )
+        );
         removeItselfButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

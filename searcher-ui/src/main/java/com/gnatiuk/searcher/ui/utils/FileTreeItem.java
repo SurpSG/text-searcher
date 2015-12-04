@@ -4,19 +4,13 @@ import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 
-import java.io.File;
-import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Created by sgnatiuk on 6/22/15.
  */
 public class FileTreeItem extends TreeItem<TreeFile> {
-
-    private static final String FILE_ICON_PATH = "searcher-ui/src/main/resources/file-icon.png";
-    private static final String FOLDER_ICON_PATH = "searcher-ui/src/main/resources/folder-icon.png";
-
-    public static final Image FILE_ICON = loadImage(FILE_ICON_PATH);
-    public static final Image FOLDER_ICON = loadImage(FOLDER_ICON_PATH);
 
     public FileTreeItem(TreeFile treeFile) {
         super(treeFile);
@@ -31,15 +25,19 @@ public class FileTreeItem extends TreeItem<TreeFile> {
         return getValue().isFile();
     }
 
+    public static enum FileType{
 
+        FILE(Paths.get(ImageLoader.IMAGE_RESOURCES, "file-icon.png")),
+        DIRECTORY(Paths.get(ImageLoader.IMAGE_RESOURCES, "folder-icon.png"));
 
+        private Image image;
 
-    private  static Image loadImage(String imagePath){
-        try {
-            return new Image(new File(imagePath).toURI().toURL().toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        FileType(Path imagePath){
+            image = ImageLoader.loadImageByPath(imagePath);
         }
-        return null;
+
+        public Image getImage() {
+            return image;
+        }
     }
 }

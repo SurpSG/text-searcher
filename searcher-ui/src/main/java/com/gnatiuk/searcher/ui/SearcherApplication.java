@@ -77,7 +77,7 @@ public class SearcherApplication extends Application{
     }
 
     private void createScene(Stage primaryStage){
-        Scene scene = new Scene(root,800,600);
+        Scene scene = new Scene(root,900,600);
         scene.setFill(Color.GHOSTWHITE);
         primaryStage.setScene(scene);
         primaryStage.setTitle("");

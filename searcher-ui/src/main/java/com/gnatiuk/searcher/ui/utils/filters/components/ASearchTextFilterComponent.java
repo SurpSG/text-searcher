@@ -8,7 +8,6 @@ import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import utils.KeywordsLibManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -36,11 +35,6 @@ public abstract class ASearchTextFilterComponent extends ASearchFilterComponent 
         components.add(ignoreCaseCheck);
         components.add(regexCheck);
         return super.layoutComponents(components);
-    }
-
-    @Override
-    public Node getSearchCriteriaComponentsPane() {
-        return layoutComponents(new ArrayList<>());
     }
 
     @Override

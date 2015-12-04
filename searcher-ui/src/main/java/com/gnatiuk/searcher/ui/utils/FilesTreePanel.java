@@ -127,7 +127,7 @@ public class FilesTreePanel{
 
             if(item != null){
                 setText(item.getName());
-                setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
+                setGraphic(new ImageView(FileTreeItem.FileType.DIRECTORY.getImage()));
             }
         }
 
@@ -141,7 +141,8 @@ public class FilesTreePanel{
 
             if(item != null){
                 setText(item);
-                setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
+                setGraphic(new ImageView(FileTreeItem.FileType.DIRECTORY.getImage())
+                );
             }
         }
 

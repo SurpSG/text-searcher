@@ -94,9 +94,9 @@ public class FoundTreePanel{
             } else {
                 newChildPath = path;
             }
-            newChildTreeItem = new TreeItem<>(newChildPath.toString(), new ImageView(FileTreeItem.FILE_ICON));
+            newChildTreeItem = new TreeItem<>(newChildPath.toString(), new ImageView(FileTreeItem.FileType.FILE.getImage()));
         } else {
-            newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(FileTreeItem.FILE_ICON));
+            newChildTreeItem = new TreeItem<>(path.toString(), new ImageView(FileTreeItem.FileType.FILE.getImage()));
         }
         mostCorrespondingParent.getChildren().add(newChildTreeItem);
         sortChildren(mostCorrespondingParent);
@@ -130,7 +130,7 @@ public class FoundTreePanel{
 
         Path newExtractedChild = extractChildPath(childPath, parentForNewChild);
 
-        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), new ImageView(FileTreeItem.FOLDER_ICON));
+        TreeItem<String> newExtractedItem = new TreeItem<>(newExtractedChild.toString(), new ImageView(FileTreeItem.FileType.DIRECTORY.getImage()));
         moveAllChildren(itemExtractFrom, newExtractedItem);
 
         String itemExtractFromValue = itemExtractFrom.getValue();
@@ -182,8 +182,8 @@ public class FoundTreePanel{
         }
 
         treeItem.setValue(treeItem.getValue().substring(0, treeItem.getValue().lastIndexOf(itemFile.getName())));
-        treeItem.setGraphic(new ImageView(FileTreeItem.FOLDER_ICON));
-        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(FileTreeItem.FILE_ICON));
+        treeItem.setGraphic(new ImageView(FileTreeItem.FileType.DIRECTORY.getImage()));
+        TreeItem<String> fileNameTreeItem = new TreeItem<>(itemFile.getName(), new ImageView(FileTreeItem.FileType.FILE.getImage()));
         treeItem.getChildren().add(fileNameTreeItem);
         sortChildren(treeItem);
         return fileNameTreeItem;

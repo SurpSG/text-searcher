@@ -27,11 +27,6 @@ public class KeywordsContainer {
 
     public KeywordsContainer(){
         keywordsContainerBox = new VBox(10);//TODO remove magic
-        keywordsContainerBox.setStyle(
-                "-fx-border-style: solid;"
-                        + "-fx-border-width: 1;"
-                        + "-fx-border-color: black;"
-        );
         titledPane = new TitledPane("Keywords",keywordsContainerBox);
         aKeywordItems = new ArrayList<>();
     }

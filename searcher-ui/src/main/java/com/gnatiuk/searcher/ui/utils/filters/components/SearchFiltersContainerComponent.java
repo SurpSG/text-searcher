@@ -20,10 +20,9 @@ import java.util.List;
 /**
  * Created by Sergiy on 8/9/2015.
  */
-//public class SearchFiltersContainerComponent extends ASearchFilterComponent {
 public class SearchFiltersContainerComponent {
 
-    public static final String NAME = "Search com.gnatiuk.filters";
+    public static final String NAME = "Search Filters";
 
     private List<ASearchFilterComponent> filtersComponents;
 
@@ -42,14 +41,14 @@ public class SearchFiltersContainerComponent {
         rootBox = new VBox();
         newFiltersBox = new VBox();
 
-        rootBox.getChildren().add(creatorSearchFilterComponent.getSearchCriteriaComponentsPane());
+        rootBox.getChildren().add(creatorSearchFilterComponent.getSearchComponentPane());
 
         titledPane.setPaneContent(newFiltersBox);
 
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(titledPane);
-
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         rootBox.getChildren().add(scrollPane);
     }
 
@@ -122,7 +121,7 @@ public class SearchFiltersContainerComponent {
     }
 
     public void addFilterComponent(final ASearchFilterComponent filterComponent) {
-        final Node pane = filterComponent.getSearchCriteriaComponentsPane();
+        final Node pane = filterComponent.getSearchComponentPane();
         filterComponent.setFilterRemovedListener(new FilterRemovedListener() {
             @Override
             public void notifyFilterRemoved() {

@@ -9,7 +9,6 @@ import javafx.scene.control.Label;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,11 +41,6 @@ public class DateFilterComponent extends ASearchFilterComponent {
         LocalDate localDate = datePicker.getValue();
         Instant instant = Instant.from(localDate.atStartOfDay(ZoneId.systemDefault()));
         return Date.from(instant);
-    }
-
-    @Override
-    public Node getSearchCriteriaComponentsPane() {
-        return layoutComponents(new ArrayList<>());
     }
 
     @Override

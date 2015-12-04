@@ -54,6 +54,9 @@ public class EditableKeywordsContainer extends KeywordsContainer {
         ScrollPane scrollPane = new ScrollPane();
         scrollPane.setFitToWidth(true);
         scrollPane.setContent(titledPane);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setMinWidth(200);
+        scrollPane.setMaxWidth(250);
         return scrollPane;
     }
 

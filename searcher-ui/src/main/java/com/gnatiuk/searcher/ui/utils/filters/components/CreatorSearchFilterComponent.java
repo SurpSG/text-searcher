@@ -1,6 +1,6 @@
 package com.gnatiuk.searcher.ui.utils.filters.components;
 
-import com.gnatiuk.searcher.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.ImageLoader;
 import com.gnatiuk.searcher.ui.utils.filters.components.builders.ASearchComponentBuilder;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -9,20 +9,24 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.util.Callback;
 import javafx.util.Pair;
 
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by surop on 04.08.15.
  */
-public class CreatorSearchFilterComponent extends ASearchFilterComponent {
+public class CreatorSearchFilterComponent {
 
-    public static final String NAME = "Create new filter";
+    public static final int ITEMS_HORIZONTAL_PADDING = 10;
+    public static final int COMPONENT_PADDING = 10;
+    public static final int ITEMS_VERTICAL_PADDING = 10;
 
     private static final ComboBox<Pair<Class<? extends ASearchFilterComponent>, String>>
             FILTERS_COMBO_BOX = createFiltersComboBox();
@@ -38,7 +42,9 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
     }
 
     private Button createAddFilterButton() {
-        Button button = new Button("+");
+        Button button = new Button("",new ImageView(
+                ImageLoader.loadImageByPath(Paths.get(ImageLoader.IMAGE_RESOURCES, "add32.png")))
+        );
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -58,13 +64,7 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
         return button;
     }
 
-    @Override
-    public IFilter buildFilter() {
-        return IFilter.NONE_FILTER;
-    }
-
     private Pane createSearchCriteriaComponentsPane() {
-
         Pane box = new HBox(ITEMS_HORIZONTAL_PADDING);
         box.setPadding(new Insets(COMPONENT_PADDING));
         box.getChildren().add(addFiltersButton);
@@ -72,16 +72,9 @@ public class CreatorSearchFilterComponent extends ASearchFilterComponent {
         return box;
     }
 
-    @Override
-    public Pane getSearchCriteriaComponentsPane() {
+    public Pane getSearchComponentPane() {
         return searchCriteriaComponents;
     }
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
 
     public void setCreateButtonListener(CreateButtonListener createButtonListener) {
         buttonListener = createButtonListener;

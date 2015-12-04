@@ -2,6 +2,7 @@ package com.gnatiuk.searcher.ui.utils.filters.components;
 
 
 import com.gnatiuk.searcher.filters.IFilter;
+import com.gnatiuk.searcher.ui.utils.ImageLoader;
 import com.gnatiuk.searcher.ui.utils.OnBootManager;
 import com.gnatiuk.searcher.ui.utils.dialog.FilterSaveDialog;
 import com.gnatiuk.searcher.ui.utils.filters.components.builders.FilterToComponentMap;
@@ -15,12 +16,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -71,7 +74,9 @@ public abstract class ASearchFilterComponent {
             }
         });
 
-        removeFilterComponent = new Button("-");
+        removeFilterComponent = new Button("", new ImageView(
+                ImageLoader.loadImageByPath(Paths.get(ImageLoader.IMAGE_RESOURCES, "delete32.png"))
+        ));
         removeFilterComponent.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -91,7 +96,9 @@ public abstract class ASearchFilterComponent {
 
     public abstract String getName();
     protected abstract IFilter buildFilter();
-    public abstract Node getSearchCriteriaComponentsPane();
+    public final Node getSearchComponentPane(){
+        return layoutComponents(new ArrayList<>());
+    }
 
     public boolean isAutoLoad() {
         return autoLoad.isSelected();
@@ -168,11 +175,6 @@ public abstract class ASearchFilterComponent {
     private void initFilterComponentRootBox(){
         filterComponentRootBox = new HBox(ITEMS_HORIZONTAL_PADDING);
         filterComponentRootBox.setPadding(new Insets(COMPONENT_PADDING));
-        filterComponentRootBox.setStyle(
-                "-fx-border-style: solid;"
-                        + "-fx-border-width: 1;"
-                        + "-fx-border-color: gray;"
-        );
         filterComponentRootBox.setAlignment(Pos.CENTER_LEFT);
     }
 
