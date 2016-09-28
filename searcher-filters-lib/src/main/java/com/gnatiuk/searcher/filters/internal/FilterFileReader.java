@@ -41,17 +41,16 @@ public abstract class FilterFileReader extends ATextFilter implements InternalFi
             while ((line = reader.readLine()) != null) {
                 rowNumber++;
                 if (isLineContainsKeywords(textPreprocessor.process(line))) {
-                    System.out.println("\t\t[LINE]: " + rowNumber + ") " + line);
-                    fileSearchEvent.addFoundOption(FoundOption.FOUND_ROW, line);
+                    fileSearchEvent.addFoundOption(FoundOption.FOUND_ROW, rowNumber + ": " + line);
                 }
 
             }
 
             return fileSearchEvent.getOptionsCount() > 0 ? fileSearchEvent : FileSearchEvent.NOT_FOUND;
         } catch (FileNotFoundException e) {
-            System.err.println(e.getMessage());
+//            System.err.println(e.getMessage());
         } catch (IOException e) {
-            System.err.println(e.getMessage());
+//            System.err.println(e.getMessage());
         }
         return FileSearchEvent.NOT_FOUND;
     }

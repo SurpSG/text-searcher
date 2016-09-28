@@ -4,6 +4,7 @@ import com.gnatiuk.searcher.core.utils.TaskCompleteEvent;
 import com.gnatiuk.searcher.core.utils.TaskStartedEvent;
 import com.gnatiuk.searcher.filters.IFilter;
 import com.gnatiuk.searcher.filters.util.FileSearchEvent;
+import com.gnatiuk.searcher.filters.util.SearchOption;
 
 import java.io.File;
 import java.util.Arrays;
@@ -21,12 +22,17 @@ public class FilterExecutor extends SearchRunnable {
         this.filter = filter;
         this.file = file;
     }
-
+    private static Object sync = new Object();
     @Override
     protected void doWork() {
         FileSearchEvent fileSearchEvent;
         if((fileSearchEvent = filter.doFilter(file)) != FileSearchEvent.NOT_FOUND){
-            System.out.println("gedit " + file.getAbsolutePath());
+            synchronized (sync){
+                System.out.println("gedit " + file.getAbsolutePath());
+                for (SearchOption searchOption : fileSearchEvent.getSearchOptions()) {
+                    System.out.println("\t\t"+searchOption.getFoundOption()+": "+searchOption.getFoundValue());
+                }
+            }
             alertFileFound(fileSearchEvent);
         }
     }
